@@ -20,7 +20,7 @@ Page {
                 id: aboutMenu;
                 text: qsTr("About");
                 onClicked: {
-                    console.log("About clicked");
+                    //console.log("About clicked");
                     pageStack.push(aboutPage);
                 }
             }
@@ -40,7 +40,7 @@ Page {
                 id: refreshMenu;
                 text: qsTr("Refresh");
                 onClicked: {
-                    console.log("Refresh clicked");
+                    //console.log("Refresh clicked");
                     Imgur.processGalleryMode(false);
                 }
             }
@@ -65,7 +65,7 @@ Page {
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
-                                console.log("Main gallery selected");
+                                //console.log("Main gallery selected");
                                 settings.mode = "main";
                                 galgrid.scrollToTop();
                                 Imgur.processGalleryMode(false);
@@ -86,7 +86,7 @@ Page {
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
-                                console.log("Random mode selected");
+                                //console.log("Random mode selected");
                                 settings.mode = "random";
                                 galgrid.scrollToTop();
                                 Imgur.processGalleryMode(false);
@@ -118,7 +118,7 @@ Page {
                 // is called when user presses the Return key
                 function searchEntered() {
                     query = text;
-                    console.log("Searched: " + query);
+                    //console.log("Searched: " + query);
                     settings.galleryModeText = "Gallery results for \"" + query + "\"";
                     Imgur.getGallerySearch(query);
                     //pullDownMenu.close();
@@ -148,7 +148,7 @@ Page {
                                 if (page > 0) {
                                     page -= 1;
                                 }
-                                console.log("Previous clicked!: " + page);
+                                //console.log("Previous clicked!: " + page);
                                 Imgur.processGalleryMode(false);
                                 if (page == 0) {
                                     prevEnabled = false;
@@ -171,7 +171,7 @@ Page {
                             anchors.fill: parent;
                             onClicked: {
                                 page += 1;
-                                console.log("Next clicked!: " + page);
+                                //console.log("Next clicked!: " + page);
                                 Imgur.processGalleryMode(false);
                                 prevEnabled = true;
                             }
@@ -218,7 +218,7 @@ Page {
                 MouseArea {
                     anchors.fill: parent;
                     onClicked: {
-                        console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
+                        //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
                         currentIndex = index;
                         pageStack.push(galleryPage);
                         galleryPage.load();

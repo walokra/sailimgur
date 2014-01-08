@@ -17,7 +17,7 @@ function getGallery() {
 
     var url = settings.endpoint_gallery_main;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
-    console.log("getGallery: " + url);
+    //console.log("getGallery: " + url);
     sendJSONRequest(url, 1);
 }
 
@@ -28,7 +28,7 @@ function sendJSONRequest(url, actiontype) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             if (xhr.status == 200) {
-                console.log("ok");
+                //console.log("ok");
                 if (actiontype === 1) {
                     handleGalleryJSON(xhr.responseText);
                 } else if (actiontype === 2) {
@@ -39,10 +39,9 @@ function sendJSONRequest(url, actiontype) {
                     handleCommentsJSON(xhr.responseText);
                 }
                 //infoBanner.showText("Fetched images from imgur.");
-                console.log("X-RateLimit-ClientRemaining: " + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
+                //console.log("X-RateLimit-ClientRemaining: " + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
             } else {
-                console.log("error: " + xhr.status+"; "+xhr.responseText);
-                //infoBanner.showText("Getting images failed. Error: " + xhr.responseText);
+                //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
                 loadingRect.visible = false;
             }
@@ -70,7 +69,7 @@ function getGallerySearch(query) {
     var xhr = new XMLHttpRequest();
     var url = settings.endpoint_gallery_search;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
-    console.log("getGallerySearch: " + url);
+    //console.log("getGallerySearch: " + url);
 
     sendJSONRequest(url, 1);
 }
@@ -89,7 +88,7 @@ function getRandomGalleryImages() {
     var xhr = new XMLHttpRequest();
     var url = settings.endpoint_gallery_random;
     url += "/" + page;
-    console.log("getRandomGalleryImages: " + url);
+    //console.log("getRandomGalleryImages: " + url);
 
     sendJSONRequest(url, 1);
 }
@@ -101,7 +100,7 @@ function getAlbum(id) {
     var xhr = new XMLHttpRequest();
     var url = settings.endpoint_gallery_album;
     url += "/" + id;
-    console.log("getAlbum: " + url);
+    //console.log("getAlbum: " + url);
 
     sendJSONRequest(url, 2);
 }
@@ -113,7 +112,7 @@ function getGalleryImage(id) {
     var xhr = new XMLHttpRequest();
     var url = settings.endpoint_gallery_image;
     url += "/" + id;
-    console.log("getGalleryImage: " + url);
+    //console.log("getGalleryImage: " + url);
 
     sendJSONRequest(url, 3);
 }
@@ -136,7 +135,7 @@ function getAlbumComments(id) {
     var xhr = new XMLHttpRequest();
     var url = settings.endpoint_gallery;
     url += "/" + id + "/comments";
-    console.log("getGalleryImage: " + url);
+    //console.log("getGalleryImage: " + url);
 
     sendJSONRequest(url, 4);
 }
@@ -146,7 +145,7 @@ function getAlbumComments(id) {
 */
 function handleGalleryJSON(response) {
     var jsonObject = JSON.parse(response);
-    console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
@@ -198,7 +197,7 @@ function onLoading() {
 */
 function handleAlbumJSON(response) {
     var jsonObject = JSON.parse(response);
-    console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     var data = jsonObject.data;
     for (var i in jsonObject.data.images) {
@@ -234,7 +233,7 @@ function handleAlbumJSON(response) {
                                 link: output.link
                             });
     }
-    console.log("count=" + albumImagesModel.count);
+    //console.log("count=" + albumImagesModel.count);
 
     if (output.account_url) {
         account_url = output.account_url;
@@ -249,7 +248,7 @@ function handleAlbumJSON(response) {
     upsPercent = Math.floor(100 * (ups/total));
     downsPercent = Math.ceil(100 * (downs/total));
 
-    console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
+    //console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
     loadingRect.visible = false;
 }
 
@@ -259,7 +258,7 @@ function handleAlbumJSON(response) {
 */
 function handleImageJSON(response) {
     var jsonObject = JSON.parse(response);
-    console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     var output = jsonObject.data;
 
@@ -305,13 +304,13 @@ function handleImageJSON(response) {
     upsPercent = Math.floor(100 * (ups/total));
     downsPercent = Math.ceil(100 * (downs/total));
 
-    console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
+    //console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
     loadingRect.visible = false;
 }
 
 function handleCommentsJSON(response) {
     var jsonObject = JSON.parse(response);
-    console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
     //console.log("comments: " + JSON.stringify(jsonObject));
 
     for (var i in jsonObject.data) {
@@ -326,7 +325,7 @@ function handleCommentsJSON(response) {
                             datetime: output.datetime
                          });
     }
-    console.log("comments=" + commentsModel.count);
+    //console.log("comments=" + commentsModel.count);
     //commentListView.model = commentsModel;
 }
 
@@ -343,13 +342,16 @@ function processGalleryMode(refreshGallery) {
     }
 
     loadingRect.visible = true;
-    if (settings.mode === "main") {
+    if (query) {
+        getGallerySearch(query);
+        pullDownMenu.close();
+    }
+    else if (settings.mode === "main") {
         //console.log("main");
         settings.galleryModeText = settings.galleryModeTextDefault;
         getGallery();
         pullDownMenu.close();
-    }
-    if (settings.mode === "random") {
+    } else if (settings.mode === "random") {
         //console.log("random");
         settings.galleryModeText = settings.galleryModeTextRandom;
         getRandomGalleryImages();

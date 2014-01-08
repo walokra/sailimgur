@@ -1,7 +1,3 @@
-#ifdef QT_QML_DEBUG
-#include <QtQuick>
-#endif
-
 #include <sailfishapp.h>
 #include <QScopedPointer>
 #include <QQuickView>
@@ -14,6 +10,10 @@ int main(int argc, char *argv[])
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
+
+    app->setApplicationName("Sailimgur");
+    app->setOrganizationName("Sailimgur");
+    app->setApplicationVersion(APP_VERSION);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);

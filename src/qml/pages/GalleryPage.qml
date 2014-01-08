@@ -30,7 +30,7 @@ Page {
 
     onLoad: {
         loadingRect.visible = true;
-        console.log("galleryPage.onLoad: total=" + galleryModel.count + ", currentIndex=" + currentIndex);
+        //console.log("galleryPage.onLoad: total=" + galleryModel.count + ", currentIndex=" + currentIndex);
         albumTitle = galleryModel.get(currentIndex).title;
         if (galleryModel.get(currentIndex).is_album) {
             Imgur.getAlbum(galleryModel.get(currentIndex).id);
@@ -55,9 +55,9 @@ Page {
         PageHeader {
             id: header;
             title: "Sailimgur";
-            property bool busy: false;
         }
 
+        /*
         PullDownMenu {
             id: pullDownMenu
 
@@ -65,7 +65,9 @@ Page {
 
             }
         }
+        */
 
+        /*
         PushUpMenu {
             id: pushUpMenu;
 
@@ -74,6 +76,7 @@ Page {
                 onClicked: albumListView.scrollToTop();
             }
         }
+        */
 
         anchors.fill: parent;
         contentHeight: contentArea.height;
@@ -107,12 +110,12 @@ Page {
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
-                                console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
+                                //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
                                 if (currentIndex > 0 && page >= 0) {
                                     currentIndex -= 1;
                                     load();
                                 } else if (currentIndex === 0 && page >= 1) {
-                                    console.log("Getting previous list of images");
+                                    //console.log("Getting previous list of images");
                                     page -= 1;
                                     currentIndex = -1;
                                     Imgur.processGalleryMode(true);
@@ -134,15 +137,15 @@ Page {
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
-                                console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
+                                //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
                                 if (currentIndex < galleryModel.count-1) {
-                                    console.log("Getting next image");
+                                    //console.log("Getting next image");
                                     currentIndex += 1;
                                     load();
                                 }
                                 prevEnabled = true;
                                 if (currentIndex === galleryModel.count-1) {
-                                    console.log("Getting new list of images");
+                                    //console.log("Getting new list of images");
                                     page += 1;
                                     currentIndex = 0;
                                     Imgur.processGalleryMode(true);
@@ -160,136 +163,136 @@ Page {
                     text: albumTitle;
                 }
 
-                SilicaListView {
+                Flow {
                     id: albumListView;
                     anchors { left: parent.left; right: parent.right; }
                     height: childrenRect.height;
                     spacing: Theme.paddingSmall;
-                    model: albumImagesModel;
 
-                    clip: true;
+                    Repeater {
+                        model: albumImagesModel;
 
-                    delegate: Column {
-                        id: imageColumn;
-                        height: childrenRect.height;
-                        anchors { left: parent.left; right: parent.right; }
-                        width: parent.width;
+                        Column {
+                            id: imageColumn;
+                            height: childrenRect.height;
+                            width: albumListView.width;
 
-                        ListItem {
-                            anchors { left: parent.left; right: parent.right; }
-                            width: parent.width;
-                            height: image.height;
-
-                            AnimatedImage {
-                                id: image;
-                                anchors { left: parent.left; top: parent.top; }
-
-                                fillMode: Image.PreserveAspectFit;
-                                source: link;
+                            ListItem {
                                 width: parent.width;
-                                playing: false;
-                                paused: true;
-                                onStatusChanged: playing;
-                                smooth: false;
-                                MouseArea{
-                                    anchors.fill: parent;
-                                    onClicked: {
-                                        console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +"; playing=" + image.playing + "; paused=" + image.paused);
-                                        console.log("id=" + id
-                                                    + "; title=" + title
-                                                    + "; desc="  + description
-                                                    + "; link=" + link
-                                                    + "; animated=" + animated
-                                                    + "; width=" + width
-                                                    + "; height=" + height
-                                                    + "; size=" + size
-                                                    + "; views=" + views
-                                                    + "; bandwidth=" + bandwidth
-                                                    );
-                                        if (!image.playing) {
-                                            image.playing = true;
-                                            image.paused = false;
-                                            playIcon.visible = false;
+                                height: image.height;
+
+                                AnimatedImage {
+                                    id: image;
+                                    anchors { left: parent.left; top: parent.top; }
+
+                                    fillMode: Image.PreserveAspectFit;
+                                    source: link;
+                                    width: parent.width;
+                                    playing: settings.autoplayAnim;
+                                    paused: false;
+                                    onStatusChanged: playing;
+                                    smooth: false;
+                                    MouseArea{
+                                        anchors.fill: parent;
+                                        onClicked: {
+                                            //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +"; playing=" + image.playing + "; paused=" + image.paused);
+                                            /*
+                                            console.log("id=" + id
+                                                        + "; title=" + title
+                                                        + "; desc="  + description
+                                                        + "; link=" + link
+                                                        + "; animated=" + animated
+                                                        + "; width=" + width
+                                                        + "; height=" + height
+                                                        + "; size=" + size
+                                                        + "; views=" + views
+                                                        + "; bandwidth=" + bandwidth
+                                                        );
+                                            */
+                                            if (animated) {
+                                                if (!image.playing) {
+                                                    image.playing = true;
+                                                    image.paused = false;
+                                                    playIcon.visible = false;
+                                                }
+                                                if (image.paused) {
+                                                    image.paused = false;
+                                                    playIcon.visible = false;
+                                                } else {
+                                                    image.paused = true;
+                                                    playIcon.visible = true;
+                                                }
+                                                //console.log("playing=" + image.playing + "; paused=" + image.paused);
+                                            }
                                         }
-                                        if (image.paused) {
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        } else {
+                                    }
+
+                                    PinchArea {
+                                        anchors.fill: parent;
+                                        pinch.target: parent;
+                                        pinch.minimumScale: 1;
+                                        pinch.maximumScale: 4;
+                                    }
+                                }
+                                Image {
+                                    anchors { centerIn: image; }
+                                    id: playIcon;
+                                    source: "../images/icons/play.svg";
+                                    visible: animated && !image.playing;
+                                    MouseArea{
+                                        anchors.fill: parent;
+                                        onClicked: {
+                                            if (animated) {
+                                                if (!image.playing) {
+                                                    image.playing = true;
+                                                    image.paused = false;
+                                                    playIcon.visible = false;
+                                                }
+                                                if (image.paused) {
+                                                    image.paused = false;
+                                                    playIcon.visible = false;
+                                                } else {
+                                                    image.paused = true;
+                                                    playIcon.visible = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                /*
+                                Image {
+                                    id: stopIcon;
+                                    source: "../images/icons/stop.svg";
+                                    visible: animated && !playIcon.visible;
+                                    MouseArea{
+                                        anchors.fill: parent;
+                                        onClicked: {
+                                            //image.playing = false;
                                             image.paused = true;
                                             playIcon.visible = true;
-                                        }
-                                        console.log("playing=" + image.playing + "; paused=" + image.paused);
-                                    }
-                                }
-
-                                PinchArea {
-                                    anchors.fill: parent;
-                                    pinch.target: parent;
-                                    pinch.minimumScale: 1;
-                                    pinch.maximumScale: 4;
-                                }
-                            }
-                            Image {
-                                anchors { centerIn: image; }
-                                id: playIcon;
-                                source: "../images/icons/play.svg";
-                                visible: animated;
-                                MouseArea{
-                                    anchors.fill: parent;
-                                    onClicked: {
-                                        if (animated) {
-                                            if (!image.playing) {
-                                                image.playing = true;
-                                                image.paused = false;
-                                                playIcon.visible = false;
-                                            }
-                                            if (image.paused) {
-                                                image.paused = false;
-                                                playIcon.visible = false;
-                                            } else {
-                                                image.paused = true;
-                                                playIcon.visible = true;
-                                            }
+                                            stopIcon.visible = false;
                                         }
                                     }
                                 }
+                                */
                             }
-                            /*
-                            Image {
-                                id: stopIcon;
-                                source: "../images/icons/stop.svg";
-                                visible: animated && !playIcon.visible;
-                                MouseArea{
-                                    anchors.fill: parent;
-                                    onClicked: {
-                                        //image.playing = false;
-                                        image.paused = true;
-                                        playIcon.visible = true;
-                                        stopIcon.visible = false;
-                                    }
-                                }
+
+                            Label {
+                                id: imageTitleText;
+                                wrapMode: Text.Wrap;
+                                text: title;
+                                font.pixelSize: Theme.fontSizeExtraSmall;
                             }
-                            */
-                        }
-
-                        Label {
-                            id: imageTitleText;
-                            anchors { left: parent.left; right: parent.right; }
-                            wrapMode: Text.Wrap;
-                            text: title;
-                            font.pixelSize: Theme.fontSizeExtraSmall;
-                        }
-                        Label {
-                            id: imageDescText;
-                            anchors { left: parent.left; right: parent.right; }
-                            wrapMode: Text.Wrap;
-                            textFormat: Text.RichText;
-                            text: description;
-                            font.pixelSize: Theme.fontSizeExtraSmall;
-                        }
-                    }
-                } // SilicaListView
-
+                            Label {
+                                id: imageDescText;
+                                wrapMode: Text.Wrap;
+                                textFormat: Text.RichText;
+                                text: description;
+                                font.pixelSize: Theme.fontSizeExtraSmall;
+                            }
+                        } // imageColumn
+                    } // Repeater
+                } // Flow
             } // galleryColumn
 
             Column {

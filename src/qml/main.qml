@@ -26,27 +26,31 @@ ApplicationWindow
 
     Rectangle {
         id: infoBanner;
-        x: Theme.paddingSmall;
         y: Theme.paddingSmall;
         z: 1;
         width: parent.width;
 
-        height: infoLabel.height + 2 * Theme.paddingSmall;
+        height: infoLabel.height + 2 * Theme.paddingMedium;
         color: Theme.highlightBackgroundColor;
         opacity: 0;
 
         Label {
             id: infoLabel;
             text : ''
-            color: Theme.highlightColor;
             font.pixelSize: Theme.fontSizeExtraSmall;
             width: parent.width - 2 * Theme.paddingSmall
             anchors.top: parent.top;
             anchors.topMargin: Theme.paddingMedium;
-            x: Theme.paddingSmall;
             y: Theme.paddingSmall;
             horizontalAlignment: Text.AlignHCenter;
             wrapMode: Text.WrapAnywhere;
+
+            MouseArea {
+                anchors.fill: parent;
+                onClicked: {
+                    infoBanner.opacity = 0.0;
+                }
+            }
         }
 
         function showText(text) {
@@ -56,37 +60,43 @@ ApplicationWindow
             closeTimer.restart();
         }
 
+        function showError(text) {
+            infoLabel.text = text;
+            opacity = 0.9;
+            console.log("infoBanner: " + text);
+        }
+
         function showHttpError(errorCode, errorMessage) {
             switch (errorCode) {
                 case 0:
-                    showText(qsTr("Server or connection error"));
+                    showError(qsTr("Server or connection error"));
                     break;
                 case 400:
-                    showText(qsTr("Required parameter is missing or a parameter has a value that is out of bounds or otherwise incorrect."));
+                    showError(qsTr("Required parameter is missing or a parameter has a value that is out of bounds or otherwise incorrect."));
                     // This status code is also returned when image uploads fail due to images that are corrupt
                     // or do not meet the format requirements.
                     break;
                 case 401:
-                    showText(qsTr("The request requires user authentication."));
+                    showError(qsTr("The request requires user authentication."));
                     // Either you didn't send send OAuth credentials, or the ones you sent were invalid.
                     break;
                 case 403:
-                    showText(qsTr("Forbidden. You don't have access to this action."));
+                    showError(qsTr("Forbidden. You don't have access to this action."));
                     // If you're getting this error, check that you haven't run out of API credits
                     // or make sure you're sending the OAuth headers correctly and have valid tokens/secrets.
                     break;
                 case 404:
-                    showText(qsTr("Resource does not exist. You have requested a resource that does not exist."));
+                    showError(qsTr("Resource does not exist. You have requested a resource that does not exist."));
                     // For example, requesting an image that doesn't exist.
                     break;
                 case 429:
-                    showText(qsTr("Rate limiting. You have hit the rate limiting on the app or on the IP address. Please try again later."));
+                    showError(qsTr("Rate limiting. You have hit the rate limiting on the app or on the IP address. Please try again later."));
                     break;
                 case 500:
-                    showText(qsTr("Unexpected internal error. Something is broken with the Imgur service."));
+                    showError(qsTr("Unexpected internal error. Something is broken with the Imgur service."));
                     break;
                 default:
-                    showText(qsTr("Error: %1").arg(errorMessage + " (" + errorCode + ")"));
+                    showError(qsTr("Error: %1").arg(errorMessage + " (" + errorCode + ")"));
             }
         }
 

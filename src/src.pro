@@ -3,7 +3,7 @@ TARGET = harbour-sailimgur
 
 # Application version
 VERSION = 0.1.0
-DEFINES += APP_VERSION=\"\\\"$$VERSION\\\"\"
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 # Qt Library
 QT += svg
