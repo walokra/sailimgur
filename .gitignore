@@ -1,0 +1,20 @@
+# Final packages
+RPMS/*
+
+# Binaries are created in the project folder (Sailfish SDK doesn't support shadow building yet)
+harbour-sailimgur
+src/harbour-sailimgur
+tests/tst-harbour-sailimgur
+
+# Something Qt Creator generates
+debugsources.list
+documentation.list
+debugfiles.list
+debuglinks.list
+
+# object files, makefiles, environment-specific Creator settings
+*.o
+Makefile
+*.pro.user
+*.pro.user.*
+*.spec
