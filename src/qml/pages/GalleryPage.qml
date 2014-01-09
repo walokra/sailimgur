@@ -103,7 +103,7 @@ Page {
                     Label {
                         id: prev;
                         text: qsTr("« Previous");
-                        font.pixelSize: Theme.fontSizeExtraSmall;
+                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.left: parent.left;
 
@@ -130,7 +130,7 @@ Page {
                     Label {
                         id: next;
                         text: qsTr("Next »");
-                        font.pixelSize: Theme.fontSizeExtraSmall;
+                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.right: parent.right;
 
@@ -282,6 +282,7 @@ Page {
                                 wrapMode: Text.Wrap;
                                 text: title;
                                 font.pixelSize: Theme.fontSizeExtraSmall;
+                                anchors { left: parent.left; right: parent.right; }
                             }
                             Label {
                                 id: imageDescText;
@@ -289,6 +290,7 @@ Page {
                                 textFormat: Text.RichText;
                                 text: description;
                                 font.pixelSize: Theme.fontSizeExtraSmall;
+                                anchors { left: parent.left; right: parent.right; }
                             }
                         } // imageColumn
                     } // Repeater

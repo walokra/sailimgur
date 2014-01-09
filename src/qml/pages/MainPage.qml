@@ -121,7 +121,8 @@ Page {
                     //console.log("Searched: " + query);
                     settings.galleryModeText = "Gallery results for \"" + query + "\"";
                     Imgur.getGallerySearch(query);
-                    //pullDownMenu.close();
+                    pullDownMenu.close();
+                    searchTextField.focus = false;
                 }
             }
 
@@ -137,7 +138,7 @@ Page {
                     Label {
                         id: prev;
                         text: qsTr("« Previous");
-                        font.pixelSize: Theme.fontSizeExtraSmall;
+                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.left: parent.left;
                         anchors.leftMargin: Theme.paddingMedium;
@@ -153,6 +154,8 @@ Page {
                                 if (page == 0) {
                                     prevEnabled = false;
                                 }
+                                pushUpMenu.close();
+                                galgrid.scrollToTop();
                             }
                         }
                         enabled: prevEnabled;
@@ -162,7 +165,7 @@ Page {
                     Label {
                         id: next;
                         text: qsTr("Next »");
-                        font.pixelSize: Theme.fontSizeExtraSmall;
+                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.right: parent.right;
                         anchors.rightMargin: Theme.paddingMedium;
@@ -174,6 +177,8 @@ Page {
                                 //console.log("Next clicked!: " + page);
                                 Imgur.processGalleryMode(false);
                                 prevEnabled = true;
+                                pushUpMenu.close();
+                                galgrid.scrollToTop();
                             }
                         }
                     }
