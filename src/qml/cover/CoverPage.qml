@@ -7,7 +7,7 @@ CoverBackground {
     anchors.fill: parent;
 
     CoverPlaceholder {
-        icon.source: "../images/sailimgur-logo_150x108.svg";
+        icon.source: "../images/sailimgur-logo_86x86.svg";
     }
 
     Column {
