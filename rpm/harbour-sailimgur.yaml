@@ -10,7 +10,7 @@ Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
   Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt, QML
-  and JavaScript.\nIt has a simple, native and easy-to-use UI. At the moment it provides
+  and JavaScript. It has a simple, native and easy-to-use UI. At the moment it provides
   basic anonymous user\u2019s imgur functionality like browsing and search.
 Configure: none
 Builder: qtc5
@@ -34,5 +34,4 @@ Files:
 - /usr/share/harbour-sailimgur
 - /usr/share/applications
 - /usr/share/icons/hicolor/86x86/apps
--
 PkgBR: []
