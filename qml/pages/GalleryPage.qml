@@ -100,56 +100,48 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     height: prev.height;
 
-                    Label {
+                    Button {
                         id: prev;
                         text: qsTr("« Previous");
-                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.left: parent.left;
 
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
-                                if (currentIndex > 0 && page >= 0) {
-                                    currentIndex -= 1;
-                                    load();
-                                } else if (currentIndex === 0 && page >= 1) {
-                                    //console.log("Getting previous list of images");
-                                    page -= 1;
-                                    currentIndex = -1;
-                                    Imgur.processGalleryMode(true);
-                                }
-                                setPrevButton();
+                        onClicked: {
+                            //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
+                            if (currentIndex > 0 && page >= 0) {
+                                currentIndex -= 1;
+                                load();
+                            } else if (currentIndex === 0 && page >= 1) {
+                                //console.log("Getting previous list of images");
+                                page -= 1;
+                                currentIndex = -1;
+                                Imgur.processGalleryMode(true);
                             }
+                            setPrevButton();
                         }
                         enabled: prevEnabled;
                         visible: prevEnabled;
                     }
 
-                    Label {
+                    Button {
                         id: next;
                         text: qsTr("Next »");
-                        font.pixelSize: Theme.fontSizeSmall;
 
                         anchors.right: parent.right;
 
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
-                                if (currentIndex < galleryModel.count-1) {
-                                    //console.log("Getting next image");
-                                    currentIndex += 1;
-                                    load();
-                                }
-                                prevEnabled = true;
-                                if (currentIndex === galleryModel.count-1) {
-                                    //console.log("Getting new list of images");
-                                    page += 1;
-                                    currentIndex = 0;
-                                    Imgur.processGalleryMode(true);
-                                }
+                        onClicked: {
+                            //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
+                            if (currentIndex < galleryModel.count-1) {
+                                //console.log("Getting next image");
+                                currentIndex += 1;
+                                load();
+                            }
+                            prevEnabled = true;
+                            if (currentIndex === galleryModel.count-1) {
+                                //console.log("Getting new list of images");
+                                page += 1;
+                                currentIndex = 0;
+                                Imgur.processGalleryMode(true);
                             }
                         }
                     }

@@ -189,12 +189,12 @@ Page {
         anchors.fill: parent;
         //contentHeight: mainArea.height;
 
-        anchors.leftMargin: Theme.paddingMedium;
-        anchors.rightMargin: Theme.paddingMedium;
-
         Label {
             id: galleryModeField;
             anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: Theme.paddingMedium; }
+            anchors.leftMargin: Theme.paddingSmall;
+            anchors.rightMargin: Theme.paddingSmall;
+
             width: parent.width;
             text: settings.galleryModeText;
             font.pixelSize: Theme.fontSizeExtraSmall;
@@ -210,6 +210,8 @@ Page {
             model: galleryModel;
 
             anchors { top: galleryModeField.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
+            anchors.leftMargin: Theme.paddingSmall;
+            anchors.rightMargin: Theme.paddingSmall;
 
             delegate: Image {
                 id: animatedImage;
@@ -230,6 +232,8 @@ Page {
                     }
                 }
             }
+
+            VerticalScrollDecorator {}
         } // SilicaGridView
     }
 
