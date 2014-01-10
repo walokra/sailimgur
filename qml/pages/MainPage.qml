@@ -239,6 +239,7 @@ Page {
 
     Component.onCompleted: {
         //console.log("onCompleted");
+        galleryModel.clear();
         Imgur.processGalleryMode(false);
     }
 
