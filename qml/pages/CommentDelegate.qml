@@ -4,7 +4,7 @@ import Sailfish.Silica 1.0
 Item {
     id: commentDelegate;
 
-    width: ListView.view.width
+    width: ListView.view.width;
     height: commentItem.height;
 
     ListItem {
@@ -15,10 +15,7 @@ Item {
 
         Column {
             id: commentColumn
-            anchors {
-                left: parent.left; right: parent.right; margins: Theme.paddingMedium
-                verticalCenter: parent.verticalCenter
-            }
+            anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
             height: commentText.paintedHeight + commentMeta.height;
             spacing: Theme.paddingSmall;
 

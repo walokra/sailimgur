@@ -15,6 +15,7 @@ Page {
     property string images_count;
     property int upsPercent;
     property int downsPercent;
+    property bool is_album: false;
 
     property bool prevEnabled: currentIndex > 0 || page > 0;
 
@@ -157,138 +158,26 @@ Page {
                 text: albumTitle;
             }
 
-            Flow {
-                id: albumListView;
+            Column {
+                id: galleryColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: childrenRect.height;
-                spacing: Theme.paddingSmall;
+                height: albumListView.height;
+                width: parent.width;
 
-                Repeater {
-                model: albumImagesModel;
-
-                Column {
-                    id: imageColumn;
+                Flow {
+                    id: albumListView;
                     height: childrenRect.height;
-                    width: albumListView.width;
+                    width: parent.width;
 
-                    ListItem {
-                        width: parent.width;
-                        height: image.height;
+                    Repeater {
+                        model: albumImagesModel;
 
-                        AnimatedImage {
-                            id: image;
-                            anchors { left: parent.left; top: parent.top; }
-
-                            fillMode: Image.PreserveAspectFit;
-                            source: link;
-                            width: parent.width;
-                            playing: settings.autoplayAnim;
-                            paused: false;
-                            onStatusChanged: playing;
-                            smooth: false;
-                            MouseArea{
-                                anchors.fill: parent;
-                                onClicked: {
-                                    //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +"; playing=" + image.playing + "; paused=" + image.paused);
-                                    /*
-                                    console.log("id=" + id
-                                                + "; title=" + title
-                                                + "; desc="  + description
-                                                + "; link=" + link
-                                                + "; animated=" + animated
-                                                + "; width=" + width
-                                                + "; height=" + height
-                                                + "; size=" + size
-                                                + "; views=" + views
-                                                + "; bandwidth=" + bandwidth
-                                                );
-                                    */
-                                    if (animated) {
-                                        if (!image.playing) {
-                                            image.playing = true;
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        }
-                                        if (image.paused) {
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        } else {
-                                            image.paused = true;
-                                            playIcon.visible = true;
-                                        }
-                                        //console.log("playing=" + image.playing + "; paused=" + image.paused);
-                                    }
-                                }
-                            }
-
-                            PinchArea {
-                                anchors.fill: parent;
-                                pinch.target: parent;
-                                pinch.minimumScale: 1;
-                                pinch.maximumScale: 4;
-                            }
+                        delegate: GalleryDelegate {
+                            id: galleryDelegate;
                         }
-                        Image {
-                            anchors { centerIn: image; }
-                            id: playIcon;
-                            source: "../images/icons/play.svg";
-                            visible: animated && !image.playing;
-                            MouseArea{
-                                anchors.fill: parent;
-                                onClicked: {
-                                    if (animated) {
-                                        if (!image.playing) {
-                                            image.playing = true;
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        }
-                                        if (image.paused) {
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        } else {
-                                            image.paused = true;
-                                            playIcon.visible = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        /*
-                        Image {
-                            id: stopIcon;
-                            source: "../images/icons/stop.svg";
-                            visible: animated && !playIcon.visible;
-                            MouseArea{
-                                anchors.fill: parent;
-                                onClicked: {
-                                    //image.playing = false;
-                                    image.paused = true;
-                                    playIcon.visible = true;
-                                    stopIcon.visible = false;
-                                }
-                            }
-                        }
-                        */
                     }
-
-                    Label {
-                        id: imageTitleText;
-                        wrapMode: Text.Wrap;
-                        text: title;
-                        font.pixelSize: Theme.fontSizeExtraSmall;
-                        anchors { left: parent.left; right: parent.right; }
-                    }
-                    Label {
-                        id: imageDescText;
-                        wrapMode: Text.Wrap;
-                        textFormat: Text.RichText;
-                        text: description;
-                        font.pixelSize: Theme.fontSizeExtraSmall;
-                        anchors { left: parent.left; right: parent.right; }
-                    }
-                } // imageColumn
                 }
-            } // Flow
+            } // galleryColumn
 
             Column {
                 id: albumInfoColumn;
@@ -398,7 +287,7 @@ Page {
                 width: parent.width;
 
                 SilicaListView {
-                    id: commentListView
+                    id: commentListView;
                     model: commentsModel;
                     height: childrenRect.height;
                     width: parent.width;
