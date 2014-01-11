@@ -38,7 +38,7 @@ Item {
                 paused: false;
                 onStatusChanged: playing;
                 smooth: false;
-                MouseArea{
+                MouseArea {
                     anchors.fill: parent;
                     onClicked: {
                         //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +"; playing=" + image.playing + "; paused=" + image.paused);

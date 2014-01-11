@@ -201,6 +201,10 @@ function fillAlbumImagesModel(output) {
     if (output.description) {
         description = output.description;
     }
+    var link = "";
+    if (output.link) {
+        link = output.link;
+    }
 
     // https://api.imgur.com/models/image/
     albumImagesModel.append({
@@ -214,7 +218,7 @@ function fillAlbumImagesModel(output) {
                             size: output.size,
                             views: output.views,
                             bandwidth: output.bandwidth,
-                            link: output.link
+                            link: link
                         });
 }
 
@@ -298,7 +302,7 @@ function handleCommentsJSON(response) {
 
         commentsModel.append({
                             id: output.id,
-                            comment: output.comment,
+                            comment: replaceURLWithHTMLLinks(output.comment),
                             author: output.author,
                             ups: output.ups,
                             downs: output.downs,
@@ -343,4 +347,9 @@ function processGalleryMode(refreshGallery) {
         getRandomGalleryImages();
         pullDownMenu.close();
     }
+}
+
+function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>");
 }

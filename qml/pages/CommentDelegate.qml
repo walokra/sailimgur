@@ -3,18 +3,20 @@ import Sailfish.Silica 1.0
 
 Item {
     id: commentDelegate;
+    property Item contextMenu;
+    property bool menuOpen: contextMenu != null && contextMenu.parent === commentDelegate;
+    property string url;
 
     width: ListView.view.width;
-    height: commentItem.height;
+    height: menuOpen ? contextMenu.height + commentItem.height : commentItem.height;
 
     ListItem {
         id: commentItem;
         anchors { left: parent.left; right: parent.right; }
-        //height: commentText.height + commentMeta.height;
         contentHeight: commentColumn.height + 2 * Theme.paddingMedium;
 
         Column {
-            id: commentColumn
+            id: commentColumn;
             anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
             height: commentText.paintedHeight + commentMeta.height;
             spacing: Theme.paddingSmall;
@@ -28,8 +30,12 @@ Item {
                 font.pixelSize: Theme.fontSizeExtraSmall;
                 height: commentText.paintedHeight;
                 onLinkActivated: {
-                    console.log("Link clicked!");
-                    //basicHapticEffect.play();
+                    //console.log("Link clicked! " + link);
+                    url = link;
+                    if (!contextMenu) {
+                        contextMenu = commentContextMenu.createObject(commentDelegate);
+                    }
+                    contextMenu.show(commentDelegate);
                 }
             }
 
@@ -58,7 +64,6 @@ Item {
                     anchors { left: commentPoints.right; leftMargin: Theme.paddingSmall; right: parent.right; }
                     text: ": " + datetime;
                     font.pixelSize: Theme.fontSizeExtraSmall;
-                    // if text is too wide, adds ...
                     elide: Text.ElideRight;
                 }
             }
@@ -83,7 +88,37 @@ Item {
         Separator {
             anchors { left: parent.left; right: parent.right; }
             color: Theme.secondaryColor;
-            //alignment: Qt.AlignHCenter;
         }
     }
+
+    Component {
+        id: commentContextMenu;
+
+        ContextMenu {
+            Label {
+                id: linkLabel;
+                anchors { left: parent.left; right: parent.right; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                color: Theme.highlightColor;
+                wrapMode: Text.Wrap;
+                elide: Text.ElideRight;
+                text: url;
+            }
+            Separator {
+                anchors { left: parent.left; right: parent.right; }
+                color: Theme.secondaryColor;
+            }
+
+            MenuItem {
+                anchors { left: parent.left; right: parent.right; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Open link in browser");
+                onClicked: {
+                    Qt.openUrlExternally(url);
+                    infoBanner.alert(qsTr("Launching browser."));
+                }
+            }
+        }
+    }
+
 }
