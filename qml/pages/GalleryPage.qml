@@ -37,7 +37,9 @@ Page {
         } else {
             Imgur.getGalleryImage(galleryModel.get(currentIndex).id);
         }
-        //Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
+        if (settings.showComments) {
+            Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
+        }
         setPrevButton();
     }
 
@@ -291,7 +293,7 @@ Page {
             Column {
                 id: albumInfoColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: 350;
+                height: 150;
                 spacing: Theme.paddingSmall;
 
                 ListItem {
@@ -389,48 +391,98 @@ Page {
                 }
             } // albumInfoColumn
 
-            /*
             Column {
                 id: commentsColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: childrenRect.height;
+                height: childrenRect.height + 200;
+                width: parent.width;
 
                 SilicaListView {
                     id: commentListView
-                    //snapMode: ListView.SnapOneItem
-                    //orientation: ListView.HorizontalFlick;
-                    //highlightRangeMode: ListView.StrictlyEnforceRange
-                    //cacheBuffer: width;
                     model: commentsModel;
                     height: childrenRect.height;
+                    width: parent.width;
+                    spacing: Theme.paddingSmall;
 
-                    delegate: Item {
+                    delegate: Column {
                         id: commentListArea;
                         anchors { left: parent.left; right: parent.right; }
-                        height: commentText.height + authorText.height + 2 * Theme.paddingSmall;
+                        height: childrenRect.height;
 
-                        Label {
-                            id: commentText;
-                            wrapMode: Text.Wrap;
-                            text: comment;
-                            textFormat: Text.RichText;
-                            font.pixelSize: Theme.fontSizeExtraSmall;
-                            onLinkActivated: {
-                                console.log("Link clicked!");
-                                basicHapticEffect.play();
+                        ListItem {
+                            id: commentUpperHalf;
+                            anchors { left: parent.left; right: parent.right; }
+                            height: commentText.height + commentMeta.height;
+
+                            Label {
+                                id: commentText;
+                                anchors { left: parent.left; right: more.right; }
+                                //anchors.verticalCenter: parent.verticalCenter;
+                                width: parent.width - more.width - 2 * Theme.paddingMedium;
+
+                                wrapMode: Text.Wrap;
+                                text: comment;
+                                textFormat: Text.RichText;
+                                font.pixelSize: Theme.fontSizeExtraSmall;
+                                onLinkActivated: {
+                                    console.log("Link clicked!");
+                                    //basicHapticEffect.play();
+                                }
+                            }
+
+                            IconButton {
+                                id: more;
+                                anchors { right: parent.right; leftMargin: Theme.paddingMedium; rightMargin: Theme.paddingMedium; }
+                                icon.source: "../images/icons/more-comments.svg";
+                                width: 31;
+                                height: 31;
+                                onClicked: {
+                                    console.log("Show comment's childrens");
+                                }
+                                //anchors.verticalCenter: parent.verticalCenter;
+                                enabled: false;
+                                visible: hasChildren;
+                            }
+
+                            ListItem {
+                                id: commentMeta;
+                                anchors { top: commentText.bottom; left: parent.left; right: parent.right; }
+                                height: childrenRect.height;
+
+                                Label {
+                                    id: commentAuthor;
+                                    anchors { left: parent.left; }
+                                    wrapMode: Text.Wrap;
+                                    text: "by " + author;
+                                    font.pixelSize: Theme.fontSizeExtraSmall;
+                                }
+                                Label {
+                                    id: commentDatetime;
+                                    anchors { left: commentAuthor.right; }
+                                    wrapMode: Text.Wrap;
+                                    text: " on " + datetime;
+                                    font.pixelSize: Theme.fontSizeExtraSmall;
+                                }
+                                Label {
+                                    id: commentPoints;
+                                    anchors { left: commentDatetime.right; right: parent.right; }
+                                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
+                                    text: ", " + points;
+                                    font.pixelSize: Theme.fontSizeExtraSmall;
+                                }
                             }
                         }
-                        Label {
-                            id: authorText;
-                            anchors { top: commentText.bottom; left: commentText.right; }
-                            wrapMode: Text.Wrap;
-                            text: author;
-                            font.pixelSize: Theme.fontSizeExtraSmall
+
+                        Separator {
+                            anchors { left: parent.left; right: parent.right; }
+                            color: Theme.secondaryColor;
+                            //alignment: Qt.AlignHCenter;
                         }
-                    }
+                        Item { anchors { left: parent.left; right: parent.right } height: 1 }
+                    } // delegate
                 }
+
             } // commentsColumn
-            */
         }
     }
 

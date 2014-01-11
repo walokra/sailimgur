@@ -39,7 +39,8 @@ function sendJSONRequest(url, actiontype) {
                     handleCommentsJSON(xhr.responseText);
                 }
                 //infoBanner.showText("Fetched images from imgur.");
-                //console.log("X-RateLimit-ClientRemaining: " + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
+                console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
+                            + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
             } else {
                 //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
@@ -315,6 +316,17 @@ function handleCommentsJSON(response) {
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
+        var hasChildren = false;
+        if (output.children.length > 0) {
+            hasChildren = true;
+        }
+
+        var date = new Date(output.datetime * 1000);
+        var datetime = date.getHours() + ":" +
+                date.getMinutes() + ":" +
+                date.getSeconds() + ", " +
+                date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+
         commentsModel.append({
                             id: output.id,
                             comment: output.comment,
@@ -322,11 +334,16 @@ function handleCommentsJSON(response) {
                             ups: output.ups,
                             downs: output.downs,
                             points: output.points,
-                            datetime: output.datetime
+                            datetime: datetime,
+                            children: output.children,
+                            hasChildren: hasChildren
                          });
+        //if (output.children.length > 0) {
+        //    console.log("childrens: " + JSON.stringify(output.children));
+        //}
     }
+
     //console.log("comments=" + commentsModel.count);
-    //commentListView.model = commentsModel;
 }
 
 function getExt(link) {
