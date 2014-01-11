@@ -21,6 +21,7 @@ OTHER_FILES = \
     qml/pages/SettingsPage.qml \
     qml/pages/GalleryPage.qml \
     qml/pages/AboutPage.qml \
-    qml/pages/MainPage.qml
+    qml/pages/MainPage.qml \
+    qml/pages/CommentDelegate.qml
 
 INCLUDEPATH += $$PWD
