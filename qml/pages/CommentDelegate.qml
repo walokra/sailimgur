@@ -115,8 +115,22 @@ Item {
                 text: qsTr("Open link in browser");
                 onClicked: {
                     Qt.openUrlExternally(url);
-                    infoBanner.alert(qsTr("Launching browser."));
+                    infoBanner.showText(qsTr("Launching browser."));
                 }
+            }
+            MenuItem {
+                anchors { left: parent.left; right: parent.right; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Copy link to clipboard");
+                onClicked: {
+                    textArea.text = url; textArea.selectAll(); textArea.copy();
+                    infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
+                }
+            }
+
+            TextArea {
+                id: textArea;
+                visible: false;
             }
         }
     }
