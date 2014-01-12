@@ -65,6 +65,8 @@ Page {
                             anchors.fill: parent;
                             onClicked: {
                                 //console.log("Main gallery selected");
+                                query = "";
+                                searchTextField.text = "";
                                 settings.mode = "main";
                                 galgrid.scrollToTop();
                                 Imgur.processGalleryMode(false, query);
@@ -86,6 +88,8 @@ Page {
                             anchors.fill: parent;
                             onClicked: {
                                 //console.log("Random mode selected");
+                                query = "";
+                                searchTextField.text = "";
                                 settings.mode = "random";
                                 galgrid.scrollToTop();
                                 Imgur.processGalleryMode(false, query);
