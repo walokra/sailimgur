@@ -30,6 +30,7 @@ Item {
             AnimatedImage {
                 id: image;
                 anchors { left: parent.left; right: parent.right; }
+                asynchronous: true;
 
                 fillMode: Image.PreserveAspectFit;
                 source: link;

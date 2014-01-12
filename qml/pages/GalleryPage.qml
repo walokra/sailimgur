@@ -81,7 +81,7 @@ Page {
                         //console.log("Getting previous list of images");
                         page -= 1;
                         currentIndex = -1;
-                        Imgur.processGalleryMode(true);
+                        Imgur.processGalleryMode(true, query);
                     }
                     setPrevButton();
                 }
@@ -108,7 +108,7 @@ Page {
                         //console.log("Getting new list of images");
                         page += 1;
                         currentIndex = 0;
-                        Imgur.processGalleryMode(true);
+                        Imgur.processGalleryMode(true, query);
                     }
                 }
             }

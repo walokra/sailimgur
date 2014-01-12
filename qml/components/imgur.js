@@ -203,9 +203,20 @@ function fillAlbumImagesModel(output) {
     if (output.description) {
         description = output.description;
     }
-    var link = "";
+
     if (output.link) {
-        link = output.link;
+        if (parseInt(output.width) > 640) {
+            var link = "http://i.imgur.com/";
+            // if image isn't gif then get the smaller one
+            var ext = getExt(output.link);
+            if (ext === "gif" || ext === "GIF") {
+                link = output.link;
+            } else {
+                link += output.id+"l."+ext; // l=640x640 aspec
+            }
+        } else {
+            link = output.link;
+        }
     }
 
     // https://api.imgur.com/models/image/
@@ -281,11 +292,10 @@ function handleImageJSON(response) {
     fillAlbumImagesModel(jsonObject.data);
     fillGalleryVariables(jsonObject.data);
 
-    loadingRect.visible = false;
+    //loadingRect.visible = false;
 }
 
 function handleCommentsJSON(response) {
-    loadingRectSmall.visible = true;
     var jsonObject = JSON.parse(response);
     //console.log("comments: " + JSON.stringify(jsonObject));
 
@@ -295,7 +305,7 @@ function handleCommentsJSON(response) {
     }
 
     //console.log("comments=" + commentsModel.count);
-    loadingRectSmall.visible = false;
+    loadingRect.visible = false;
 }
 
 function parseComments(output, depth) {
@@ -339,4 +349,26 @@ function getExt(link) {
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(exp,"<a href='$1'>$1</a>");
+}
+
+function processGalleryMode(refreshGallery, query) {
+    if (refreshGallery) {
+        reloadGalleryPage = true;
+    }else {
+        reloadGalleryPage = false;
+    }
+
+    loadingRect.visible = true;
+    if (query) {
+        getGallerySearch(query);
+    }
+    else if (settings.mode === "main") {
+        //console.log("main");
+        settings.galleryModeText = settings.galleryModeTextDefault;
+        getGallery();
+    } else if (settings.mode === "random") {
+        //console.log("random");
+        settings.galleryModeText = settings.galleryModeTextRandom;
+        getRandomGalleryImages();
+    }
 }

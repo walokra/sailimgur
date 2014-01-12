@@ -9,6 +9,7 @@ ApplicationWindow
 
     property int page : 0;
     property int currentIndex: 0;
+    property string query : "";
 
     initialPage: Component { MainPage { id: mainPage; } }
 
