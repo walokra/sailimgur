@@ -6,7 +6,6 @@ Sailimgur is an imgur app for Sailfish OS and provides basic imgur browsing func
 ToDo
 ----
 
-* Showing comment's child comments
 * Accounts
 * Up/downvote
 * Add comment

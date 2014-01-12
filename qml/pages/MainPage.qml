@@ -11,7 +11,7 @@ Page {
     SilicaFlickable {
         id: flickable;
 
-        PageHeader { id: header; title: "Sailimgur"; }
+        PageHeader { id: header; title: settings.appName; }
 
         PullDownMenu {
             id: pullDownMenu;
@@ -41,7 +41,7 @@ Page {
                 text: qsTr("Refresh");
                 onClicked: {
                     //console.log("Refresh clicked");
-                    Imgur.processGalleryMode(false);
+                    processGalleryMode(false);
                 }
             }
 
@@ -68,7 +68,7 @@ Page {
                                 //console.log("Main gallery selected");
                                 settings.mode = "main";
                                 galgrid.scrollToTop();
-                                Imgur.processGalleryMode(false);
+                                processGalleryMode(false);
                             }
                         }
                     }
@@ -89,7 +89,7 @@ Page {
                                 //console.log("Random mode selected");
                                 settings.mode = "random";
                                 galgrid.scrollToTop();
-                                Imgur.processGalleryMode(false);
+                                processGalleryMode(false);
                             }
                         }
                     }
@@ -150,7 +150,7 @@ Page {
                                     page -= 1;
                                 }
                                 //console.log("Previous clicked!: " + page);
-                                Imgur.processGalleryMode(false);
+                                processGalleryMode(false);
                                 if (page == 0) {
                                     prevEnabled = false;
                                 }
@@ -175,7 +175,7 @@ Page {
                             onClicked: {
                                 page += 1;
                                 //console.log("Next clicked!: " + page);
-                                Imgur.processGalleryMode(false);
+                                processGalleryMode(false);
                                 prevEnabled = true;
                                 pushUpMenu.close();
                                 galgrid.scrollToTop();
@@ -240,7 +240,31 @@ Page {
     Component.onCompleted: {
         //console.log("onCompleted");
         galleryModel.clear();
-        Imgur.processGalleryMode(false);
+        processGalleryMode(false);
     }
 
+    function processGalleryMode(refreshGallery) {
+        if (refreshGallery) {
+            Imgur.reloadGalleryPage = true;
+        }else {
+            Imgur.reloadGalleryPage = false;
+        }
+
+        loadingRect.visible = true;
+        if (query) {
+            Imgur.getGallerySearch(query);
+            pullDownMenu.close();
+        }
+        else if (settings.mode === "main") {
+            //console.log("main");
+            settings.galleryModeText = settings.galleryModeTextDefault;
+            Imgur.getGallery();
+            pullDownMenu.close();
+        } else if (settings.mode === "random") {
+            //console.log("random");
+            settings.galleryModeText = settings.galleryModeTextRandom;
+            Imgur.getRandomGalleryImages();
+            pullDownMenu.close();
+        }
+    }
 }

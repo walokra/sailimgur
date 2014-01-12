@@ -3,6 +3,7 @@ import QtQuick 2.0
 QtObject {
     id: settings;
 
+    property string appName : "Sailimgur";
     property string baseurl : "https://api.imgur.com/3";
 
     // http://api.imgur.com/endpoints/gallery
@@ -32,5 +33,7 @@ QtObject {
 
     property bool autoplayAnim: true; // play anim gifs automatically?
     property bool showComments: true;
+
+    property int commentPointsLimit: 1;
 
 }

@@ -10,9 +10,29 @@ Item {
     width: ListView.view.width;
     height: menuOpen ? contextMenu.height + commentItem.height : commentItem.height;
 
+    Row {
+        id: depthRow;
+        anchors { left: parent.left; top: parent.top; bottom: parent.bottom; }
+
+        Repeater {
+            model: depth;
+
+            Item {
+                anchors { top: parent.top; bottom: parent.bottom; }
+                width: 10;
+
+                Rectangle {
+                    anchors { top: parent.top; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter; }
+                    width: 2;
+                    color: "darkgray";
+                }
+            }
+        }
+    }
+
     ListItem {
         id: commentItem;
-        anchors { left: parent.left; right: parent.right; }
+        anchors { left: depthRow.right; right: parent.right; leftMargin: Theme.paddingSmall; }
         contentHeight: commentColumn.height + 2 * Theme.paddingMedium;
 
         Column {
@@ -38,6 +58,21 @@ Item {
                     contextMenu.show(commentDelegate);
                 }
             }
+
+            /*
+            IconButton {
+                id: more;
+                anchors { left: commentText.right; right: parent.right; leftMargin: Theme.paddingMedium; rightMargin: Theme.paddingMedium; }
+                icon.source: "../images/icons/more-comments.svg";
+                width: 31;
+                height: 31;
+                onClicked: {
+                    console.log("Show comment's childrens");
+                }
+                enabled: false;
+                visible: childrens > 0;
+            }
+            */
 
             Item {
                 id: commentMeta;
@@ -67,22 +102,6 @@ Item {
                     elide: Text.ElideRight;
                 }
             }
-
-            /*
-            IconButton {
-                id: more;
-                anchors { right: parent.right; leftMargin: Theme.paddingMedium; rightMargin: Theme.paddingMedium; }
-                icon.source: "../images/icons/more-comments.svg";
-                width: 31;
-                height: 31;
-                onClicked: {
-                    console.log("Show comment's childrens");
-                }
-                //anchors.verticalCenter: parent.verticalCenter;
-                enabled: false;
-                visible: hasChildren;
-            }
-            */
         }
 
         Separator {
@@ -97,7 +116,7 @@ Item {
         ContextMenu {
             Label {
                 id: linkLabel;
-                anchors { left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
                 font.pixelSize: Theme.fontSizeExtraSmall;
                 color: Theme.highlightColor;
                 wrapMode: Text.Wrap;

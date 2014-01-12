@@ -5,7 +5,7 @@ import "../components/imgur.js" as Imgur
 Page {
     id: galleryPage;
 
-    property string albumTitle: "";
+    property string albumTitle : "";
 
     property string account_url;
     property string views;
@@ -16,6 +16,7 @@ Page {
     property int upsPercent;
     property int downsPercent;
     property bool is_album: false;
+    property string galleryPageTitle : "Sailimgur";
 
     property bool prevEnabled: currentIndex > 0 || page > 0;
 
@@ -30,12 +31,13 @@ Page {
     signal load();
 
     onLoad: {
-        loadingRect.visible = true;
         //console.log("galleryPage.onLoad: total=" + galleryModel.count + ", currentIndex=" + currentIndex);
         albumTitle = galleryModel.get(currentIndex).title;
         if (galleryModel.get(currentIndex).is_album) {
+            galleryPageTitle = qsTr("Gallery album");
             Imgur.getAlbum(galleryModel.get(currentIndex).id);
         } else {
+            galleryPageTitle = qsTr("Gallery image");
             Imgur.getGalleryImage(galleryModel.get(currentIndex).id);
         }
         if (settings.showComments) {
@@ -116,7 +118,7 @@ Page {
     SilicaFlickable {
         id: galleryFlickable;
 
-        PageHeader { id: header; title: "Sailimgur"; }
+        PageHeader { id: header; title: galleryPageTitle; }
 
         /*
         PullDownMenu {

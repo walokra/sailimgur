@@ -96,6 +96,7 @@ function getRandomGalleryImages() {
 
 // get gallery album
 function getAlbum(id) {
+    loadingRect.visible = true;
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
@@ -108,6 +109,7 @@ function getAlbum(id) {
 
 // get gallery image
 function getGalleryImage(id) {
+    loadingRect.visible = true;
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
@@ -283,70 +285,55 @@ function handleImageJSON(response) {
 }
 
 function handleCommentsJSON(response) {
+    loadingRectSmall.visible = true;
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
     //console.log("comments: " + JSON.stringify(jsonObject));
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
-        var hasChildren = false;
-        if (output.children.length > 0) {
-            hasChildren = true;
-        }
-
-        var date = new Date(output.datetime * 1000);
-        var datetime = date.getHours() + ":" +
-                date.getMinutes() + ":" +
-                date.getSeconds() + ", " +
-                date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
-
-        commentsModel.append({
-                            id: output.id,
-                            comment: replaceURLWithHTMLLinks(output.comment),
-                            author: output.author,
-                            ups: output.ups,
-                            downs: output.downs,
-                            points: output.points,
-                            datetime: datetime,
-                            children: output.children,
-                            hasChildren: hasChildren
-                         });
-        //if (output.children.length > 0) {
-        //    console.log("childrens: " + JSON.stringify(output.children));
-        //}
+        parseComments(output, 0);
     }
 
     //console.log("comments=" + commentsModel.count);
+    loadingRectSmall.visible = false;
+}
+
+function parseComments(output, depth) {
+    var date = new Date(output.datetime * 1000);
+    var datetime = date.getHours() + ":" +
+            date.getMinutes() + ":" +
+            date.getSeconds() + ", " +
+            date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+
+    var childrens = parseInt(output.children.length);
+    commentsModel.append({
+                        id: output.id,
+                        comment: replaceURLWithHTMLLinks(output.comment),
+                        author: output.author,
+                        ups: output.ups,
+                        downs: output.downs,
+                        points: output.points,
+                        datetime: datetime,
+                        children: output.children,
+                        childrens: childrens,
+                        depth: depth
+                     });
+
+    // console.log("childrens: " + JSON.stringify(output.children));
+
+    if (childrens > 0) {
+        depth += 1;
+        for (var j=0; j < childrens; j++) {
+            if (output.children[j].points > 1) {
+                parseComments(output.children[j], depth);
+            }
+        }
+    }
 }
 
 function getExt(link) {
     var ext = link.substr(link.lastIndexOf('.') + 1);
     return ext;
-}
-
-function processGalleryMode(refreshGallery) {
-    if (refreshGallery) {
-        reloadGalleryPage = true;
-    }else {
-        reloadGalleryPage = false;
-    }
-
-    loadingRect.visible = true;
-    if (query) {
-        getGallerySearch(query);
-        pullDownMenu.close();
-    }
-    else if (settings.mode === "main") {
-        //console.log("main");
-        settings.galleryModeText = settings.galleryModeTextDefault;
-        getGallery();
-        pullDownMenu.close();
-    } else if (settings.mode === "random") {
-        //console.log("random");
-        settings.galleryModeText = settings.galleryModeTextRandom;
-        getRandomGalleryImages();
-        pullDownMenu.close();
-    }
 }
 
 function replaceURLWithHTMLLinks(text) {
