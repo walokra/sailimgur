@@ -184,12 +184,13 @@ Page {
             Column {
                 id: albumInfoColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: 150;
+                height: albumInfo.height + infoColumn.height + Theme.paddingSmall;
                 spacing: Theme.paddingSmall;
 
                 ListItem {
                     id: albumInfo;
                     anchors { left: parent.left; right: parent.right; }
+                    height: childrenRect.height;
 
                     ListItem {
                         id: actionAndPointsItem;

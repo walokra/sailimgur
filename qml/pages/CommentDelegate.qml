@@ -52,9 +52,7 @@ Item {
                 onLinkActivated: {
                     //console.log("Link clicked! " + link);
                     url = link;
-                    if (!contextMenu) {
-                        contextMenu = commentContextMenu.createObject(commentDelegate);
-                    }
+                    contextMenu = commentContextMenu.createObject(commentListView);
                     contextMenu.show(commentDelegate);
                 }
             }

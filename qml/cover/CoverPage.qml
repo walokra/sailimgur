@@ -36,7 +36,7 @@ CoverBackground {
         CoverAction {
             iconSource: "image://theme/icon-cover-previous";
             onTriggered: {
-                console.log("CoverAction.previous: count=" + galleryModel.count + "; index=" + image.currentIndex);
+                //console.log("CoverAction.previous: count=" + galleryModel.count + "; index=" + image.currentIndex);
                 image.currentIndex = (image.currentIndex - 1) % galleryModel.count;
             }
         }
@@ -44,7 +44,7 @@ CoverBackground {
         CoverAction {
             iconSource: "image://theme/icon-cover-next";
             onTriggered: {
-                console.log("CoverAction.next: count=" + galleryModel.count + "; index=" + image.currentIndex);
+                //console.log("CoverAction.next: count=" + galleryModel.count + "; index=" + image.currentIndex);
                 image.currentIndex = (image.currentIndex + 1) % galleryModel.count;
             }
         }

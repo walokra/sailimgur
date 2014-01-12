@@ -33,14 +33,15 @@ function sendJSONRequest(url, actiontype) {
                     handleGalleryJSON(xhr.responseText);
                 } else if (actiontype === 2) {
                     handleAlbumJSON(xhr.responseText);
+                    console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
+                                + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
                 } else if (actiontype === 3) {
                     handleImageJSON(xhr.responseText);
+                    console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
+                                + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText);
                 }
-                //infoBanner.showText("Fetched images from imgur.");
-                console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
-                            + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
             } else {
                 //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
