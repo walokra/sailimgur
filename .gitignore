@@ -17,4 +17,3 @@ debuglinks.list
 Makefile
 *.pro.user
 *.pro.user.*
-*.spec
