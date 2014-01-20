@@ -12,6 +12,7 @@ CONFIG += sailfishapp
 SOURCES += main.cpp
 
 OTHER_FILES = \
+    rpm/harbour-sailimgur.spec \
     rpm/harbour-sailimgur.yaml \
     harbour-sailimgur.desktop \
     qml/main.qml \
