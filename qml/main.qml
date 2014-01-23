@@ -57,7 +57,7 @@ ApplicationWindow
         function showText(text) {
             infoLabel.text = text;
             opacity = 0.9;
-            console.log("infoBanner: " + text);
+            //console.log("infoBanner: " + text);
             closeTimer.restart();
         }
 

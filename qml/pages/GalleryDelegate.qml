@@ -68,6 +68,19 @@ Item {
                     }
                 }
 
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Show image info");
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                            infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
+                                                + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
+                        }
+                    }
+                }
+
                 TextArea {
                     id: textArea;
                     visible: false;
