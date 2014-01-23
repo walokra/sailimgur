@@ -224,7 +224,7 @@ function fillAlbumImagesModel(output) {
     albumImagesModel.append({
                             id: output.id,
                             title: title,
-                            description: description,
+                            description: replaceURLWithHTMLLinks(description),
                             datetime: output.datetime,
                             animated: output.animated,
                             width: output.width,
@@ -348,8 +348,11 @@ function getExt(link) {
 }
 
 function replaceURLWithHTMLLinks(text) {
-    var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(exp,"<a href='$1'>$1</a>");
+    if (text) {
+        var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(exp,"<a href='$1'>$1</a>");
+    }
+    return text;
 }
 
 function processGalleryMode(refreshGallery, query) {
