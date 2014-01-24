@@ -12,87 +12,86 @@ Item {
     height: galleryContent.height;
 
     Drawer {
-        id: drawer
+        id: drawer;
 
-        anchors.fill: parent
-        dock: page.isPortrait ? Dock.Top : Dock.Left
+        anchors.fill: parent;
+        dock: page.isPortrait ? Dock.Top : Dock.Left;
 
-        background: SilicaFlickable {
+        background: Column {
+            id: drawerContextMenu;
             anchors.fill: parent;
+            spacing: Theme.paddingMedium;
 
-            Column {
-                id: column;
-                anchors.fill: parent;
-                anchors.centerIn: parent;
-                height: childrenRect.height;
-                spacing: Theme.paddingLarge;
+            Label {
+                id: drawerLink;
+                anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                color: Theme.highlightColor;
+                wrapMode: Text.Wrap;
+                elide: Text.ElideRight;
+                text: link;
+            }
+            Separator {
+                id: drawerSep;
+                anchors { left: parent.left; right: parent.right; }
+                color: Theme.secondaryColor;
+            }
 
-                Label {
-                    id: linkLabel;
-                    anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    color: Theme.highlightColor;
-                    wrapMode: Text.Wrap;
-                    elide: Text.ElideRight;
-                    text: link;
-                }
-                Separator {
-                    anchors { left: parent.left; right: parent.right; }
-                    color: Theme.secondaryColor;
-                }
-
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Open link in browser");
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: {
-                            Qt.openUrlExternally(link);
-                            infoBanner.showText(qsTr("Launching browser."));
-                        }
+            Label {
+                id: drawerBrowser;
+                anchors { left: parent.left; right: parent.right; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Open link in browser");
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        Qt.openUrlExternally(link);
+                        infoBanner.showText(qsTr("Launching browser."));
                     }
                 }
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.topMargin: Theme.paddingExtraLarge;
-                    anchors.bottomMargin: Theme.paddingExtraLarge;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Copy link to clipboard");
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: {
-                            textArea.text = link; textArea.selectAll(); textArea.copy();
-                            infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
-                        }
+            }
+
+            Label {
+                id: drawerClipboard;
+                anchors { left: parent.left; right: parent.right; }
+                anchors.topMargin: Theme.paddingExtraLarge;
+                anchors.bottomMargin: Theme.paddingExtraLarge;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Copy link to clipboard");
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        textArea.text = link; textArea.selectAll(); textArea.copy();
+                        infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
                     }
                 }
+            }
 
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Show image info");
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: {
-                            infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
-                                                + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
-                        }
+            Label {
+                id: drawerImage;
+                anchors { left: parent.left; right: parent.right; }
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Show image info");
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
+                                            + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
                     }
                 }
+            }
 
-                TextArea {
-                    id: textArea;
-                    visible: false;
-                }
+            TextArea {
+                id: textArea;
+                visible: false;
             }
         }
 
-        ListItem {
+        foreground: ListItem {
             id: galleryContent;
             width: parent.width;
             contentHeight: imageColumn.height + 2 * Theme.paddingMedium;
-
+            clip: true;
 
             MouseArea {
                 enabled: drawer.open;
@@ -162,6 +161,7 @@ Item {
                             }
                         }
                         onPressAndHold: {
+                            imageColumn.height = drawerContextMenu.height;
                             drawer.open = true;
                         }
                     }

@@ -170,6 +170,7 @@ Page {
                     id: albumListView;
                     height: childrenRect.height;
                     width: parent.width;
+                    clip: true;
 
                     Repeater {
                         model: albumImagesModel;
@@ -295,6 +296,7 @@ Page {
                     height: childrenRect.height;
                     width: parent.width;
                     spacing: Theme.paddingSmall;
+                    clip: true;
 
                     delegate: CommentDelegate {
                         id: commentDelegate;

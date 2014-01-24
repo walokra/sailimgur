@@ -209,6 +209,7 @@ Page {
 
             cellWidth: width / 3;
             cellHeight: 175;
+            clip: true;
 
             model: galleryModel;
 
