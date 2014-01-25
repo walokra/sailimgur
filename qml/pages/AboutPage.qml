@@ -101,6 +101,16 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                     font.pixelSize: Theme.fontSizeLarge;
                 }
             }
+
+            SectionHeader { text: qsTr("imgur API Rate limits") }
+
+            Label {
+                id: creditsText;
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: "Remaining: user = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;
+            }
         }
         ScrollDecorator {}
     }

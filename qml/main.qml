@@ -11,6 +11,9 @@ ApplicationWindow
     property int currentIndex: 0;
     property string query : "";
 
+    property string creditsUserRemaining: "";
+    property string creditsClientRemaining: "";
+
     initialPage: Component { MainPage { id: mainPage; } }
 
     cover: CoverPage { id: coverPage; }

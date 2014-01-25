@@ -15,7 +15,8 @@ QtObject {
     // https://api.imgur.com/3/gallery/random/random/{page}
     property string endpoint_gallery_random : baseurl + "/" + "gallery/random/random";
     // https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
-    property string endpoint_gallery_search : baseurl + "/" + "gallery/search";
+    property string endpoint_gallery_search : baseurl + "/gallery/search";
+    property string endpoint_credits: baseurl + "/credits";
 
     property string client_id : "";
     property string client_secret : "";

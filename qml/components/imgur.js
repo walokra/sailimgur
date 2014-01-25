@@ -37,15 +37,16 @@ function sendJSONRequest(url, actiontype) {
                     handleGalleryJSON(xhr.responseText);
                 } else if (actiontype === 2) {
                     handleAlbumJSON(xhr.responseText);
-                    console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
-                                + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
                 } else if (actiontype === 3) {
                     handleImageJSON(xhr.responseText);
-                    console.log("RateLimit: user=" + xhr.getResponseHeader("X-RateLimit-UserRemaining")
-                                + ", client=" + xhr.getResponseHeader("X-RateLimit-ClientRemaining"));
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText);
+                } else if (actiontype === 5) {
+                    handleCreditsJSON(xhr.responseText);
                 }
+                creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
+                creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
+                //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
             } else {
                 //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
@@ -144,6 +145,14 @@ function getAlbumComments(id) {
     //console.log("getGalleryImage: " + url);
 
     sendJSONRequest(url, 4);
+}
+
+/**
+  Check the current rate limit status
+*/
+function getCredits() {
+    var url = settings.endpoint_credits;
+    sendJSONRequest(url, 5);
 }
 
 /*
@@ -305,6 +314,17 @@ function handleCommentsJSON(response) {
 
     //console.log("comments=" + commentsModel.count);
     loadingRectComments.visible = false;
+}
+
+function handleCreditsJSON(response) {
+    var jsonObject = JSON.parse(response);
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+    //console.log("output=" + JSON.stringify(jsonObject));
+
+    var data = jsonObject.data;
+    //console.log("output=" + JSON.stringify(data));
+    creditsUserRemaining = data.UserRemaining;
+    creditsClientRemaining = data.ClientRemaining;
 }
 
 function parseComments(output, depth) {
