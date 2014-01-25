@@ -1,7 +1,7 @@
 TARGET = harbour-sailimgur
 
 # Application version
-VERSION = 0.1.0
+VERSION = 0.1.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 # Qt Library
@@ -24,6 +24,9 @@ OTHER_FILES = \
     qml/pages/AboutPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/CommentDelegate.qml \
-    qml/pages/GalleryDelegate.qml
+    qml/pages/GalleryDelegate.qml \
+    qml/pages/ImageButtons.qml \
+    qml/pages/ImageContextMenu.qml \
+    qml/pages/GalleryNavigation.qml
 
 INCLUDEPATH += $$PWD

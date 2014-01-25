@@ -5,9 +5,8 @@ Item {
     id: commentDelegate;
     property Item contextMenu;
     property bool menuOpen: contextMenu != null && contextMenu.parent === commentDelegate;
-    property string url;
+    property string contextLink;
 
-    width: ListView.view.width;
     height: menuOpen ? contextMenu.height + commentItem.height : commentItem.height;
 
     Row {
@@ -51,7 +50,7 @@ Item {
                 height: commentText.paintedHeight;
                 onLinkActivated: {
                     //console.log("Link clicked! " + link);
-                    url = link;
+                    contextLink = link;
                     contextMenu = commentContextMenu.createObject(commentListView);
                     contextMenu.show(commentDelegate);
                 }
@@ -111,44 +110,8 @@ Item {
     Component {
         id: commentContextMenu;
 
-        ContextMenu {
-            Label {
-                id: linkLabel;
-                anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                color: Theme.highlightColor;
-                wrapMode: Text.Wrap;
-                elide: Text.ElideRight;
-                text: url;
-            }
-            Separator {
-                anchors { left: parent.left; right: parent.right; }
-                color: Theme.secondaryColor;
-            }
-
-            MenuItem {
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Open link in browser");
-                onClicked: {
-                    Qt.openUrlExternally(url);
-                    infoBanner.showText(qsTr("Launching browser."));
-                }
-            }
-            MenuItem {
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Copy link to clipboard");
-                onClicked: {
-                    textArea.text = url; textArea.selectAll(); textArea.copy();
-                    infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
-                }
-            }
-
-            TextArea {
-                id: textArea;
-                visible: false;
-            }
+        ImageContextMenu {
+            url: contextLink;
         }
     }
 

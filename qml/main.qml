@@ -131,27 +131,6 @@ ApplicationWindow
         }
     }
 
-    Item {
-        id: loadingRectSmall;
-        anchors.bottom: parent.bottom;
-        anchors.horizontalCenter: parent.horizontalCenter;
-        visible: false;
-        z: 2;
-
-        Rectangle {
-            anchors.fill: parent;
-            color: "black";
-            opacity: 0.5;
-        }
-
-        BusyIndicator {
-            anchors.centerIn: parent;
-            visible: loadingRectSmall.visible;
-            running: visible;
-            size: BusyIndicatorSize.Small;
-            Behavior on opacity { FadeAnimation {} }
-        }
-    }
 }
 
 

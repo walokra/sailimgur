@@ -24,6 +24,10 @@ function getGallery() {
 function sendJSONRequest(url, actiontype) {
     var xhr = new XMLHttpRequest();
 
+    if (actiontype === 4) {
+        loadingRectComments.visible = true;
+    }
+
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
@@ -45,7 +49,7 @@ function sendJSONRequest(url, actiontype) {
             } else {
                 //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
-                loadingRect.visible = false;
+                loadingRectSmall.visible = false;
             }
         }
     }
@@ -97,7 +101,6 @@ function getRandomGalleryImages() {
 
 // get gallery album
 function getAlbum(id) {
-    loadingRect.visible = true;
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
@@ -110,7 +113,6 @@ function getAlbum(id) {
 
 // get gallery image
 function getGalleryImage(id) {
-    loadingRect.visible = true;
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
@@ -278,8 +280,6 @@ function handleAlbumJSON(response) {
     //console.log("count=" + albumImagesModel.count);
 
     fillGalleryVariables(data);
-
-    loadingRect.visible = false;
 }
 
 /*
@@ -292,8 +292,6 @@ function handleImageJSON(response) {
 
     fillAlbumImagesModel(jsonObject.data);
     fillGalleryVariables(jsonObject.data);
-
-    //loadingRect.visible = false;
 }
 
 function handleCommentsJSON(response) {
@@ -306,7 +304,7 @@ function handleCommentsJSON(response) {
     }
 
     //console.log("comments=" + commentsModel.count);
-    loadingRect.visible = false;
+    loadingRectComments.visible = false;
 }
 
 function parseComments(output, depth) {

@@ -6,7 +6,7 @@ Item {
 
     property Item contextMenu;
     property bool menuOpen: contextMenu != null && contextMenu.parent === galleryDelegate;
-    property string url;
+    property string contextLink;
 
     width: albumListView.width;
     height: galleryContent.height;
@@ -17,73 +17,13 @@ Item {
         anchors.fill: parent;
         dock: page.isPortrait ? Dock.Top : Dock.Left;
 
-        background: Column {
+        background: Item {
             id: drawerContextMenu;
-            anchors.fill: parent;
-            spacing: Theme.paddingMedium;
+            anchors.left: parent.left; anchors.right: parent.right;
+            height: childrenRect.height;
 
-            Label {
-                id: drawerLink;
-                anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                color: Theme.highlightColor;
-                wrapMode: Text.Wrap;
-                elide: Text.ElideRight;
-                text: link;
-            }
-            Separator {
-                id: drawerSep;
-                anchors { left: parent.left; right: parent.right; }
-                color: Theme.secondaryColor;
-            }
-
-            Label {
-                id: drawerBrowser;
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Open link in browser");
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        Qt.openUrlExternally(link);
-                        infoBanner.showText(qsTr("Launching browser."));
-                    }
-                }
-            }
-
-            Label {
-                id: drawerClipboard;
-                anchors { left: parent.left; right: parent.right; }
-                anchors.topMargin: Theme.paddingExtraLarge;
-                anchors.bottomMargin: Theme.paddingExtraLarge;
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Copy link to clipboard");
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        textArea.text = link; textArea.selectAll(); textArea.copy();
-                        infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
-                    }
-                }
-            }
-
-            Label {
-                id: drawerImage;
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Show image info");
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
-                                            + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
-                    }
-                }
-            }
-
-            TextArea {
-                id: textArea;
-                visible: false;
+            ImageButtons {
+                id: imageButtons;
             }
         }
 
@@ -161,7 +101,7 @@ Item {
                             }
                         }
                         onPressAndHold: {
-                            imageColumn.height = drawerContextMenu.height;
+                            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
                             drawer.open = true;
                         }
                     }
@@ -171,6 +111,14 @@ Item {
                         pinch.target: parent;
                         pinch.minimumScale: 1;
                         pinch.maximumScale: 4;
+                    }
+
+                    BusyIndicator {
+                        id: loadingImageIndicator;
+                        anchors.horizontalCenter: parent.horizontalCenter;
+                        anchors.top: parent.top;
+                        running: image.status != AnimatedImage.Ready;
+                        size: BusyIndicatorSize.Medium;
                     }
 
                     Image {
@@ -202,17 +150,17 @@ Item {
 
                 Label {
                     id: imageDescText;
-                    wrapMode: (drawer.open) ? Text.NoWrap : Text.Wrap;
+                    wrapMode: Text.Wrap;
                     textFormat: Text.RichText;
                     text: description;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     anchors { left: parent.left; right: parent.right; }
                     width: parent.width;
-                    visible: (description && !drawer.open) ? true : false;
+                    visible: (description) ? true : false;
                     elide: Text.ElideRight;
                     onLinkActivated: {
                         //console.log("Link clicked! " + link);
-                        url = link;
+                        contextLink = link;
                         contextMenu = commentContextMenu.createObject(galleryContent);
                         contextMenu.show(galleryDelegate);
                     }
@@ -224,44 +172,8 @@ Item {
     Component {
         id: commentContextMenu;
 
-        ContextMenu {
-            Label {
-                id: linkLabel;
-                anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                color: Theme.highlightColor;
-                wrapMode: Text.Wrap;
-                elide: Text.ElideRight;
-                text: url;
-            }
-            Separator {
-                anchors { left: parent.left; right: parent.right; }
-                color: Theme.secondaryColor;
-            }
-
-            MenuItem {
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Open link in browser");
-                onClicked: {
-                    Qt.openUrlExternally(url);
-                    infoBanner.showText(qsTr("Launching browser."));
-                }
-            }
-            MenuItem {
-                anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Copy link to clipboard");
-                onClicked: {
-                    textArea.text = url; textArea.selectAll(); textArea.copy();
-                    infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
-                }
-            }
-
-            TextArea {
-                id: textArea;
-                visible: false;
-            }
+        ImageContextMenu {
+            url: contextLink;
         }
     }
 }
