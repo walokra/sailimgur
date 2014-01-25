@@ -50,7 +50,7 @@ function sendJSONRequest(url, actiontype) {
             } else {
                 //console.log("error: " + xhr.status+"; "+xhr.responseText);
                 infoBanner.showHttpError(xhr.status, xhr.responseText);
-                loadingRectSmall.visible = false;
+                loadingRect.visible = false;
             }
         }
     }
