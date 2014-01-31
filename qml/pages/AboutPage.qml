@@ -50,7 +50,7 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                         width: parent.width;
                         font.pixelSize: Theme.fontSizeMedium;
                         wrapMode: Text.Wrap;
-                        text: APP_VERSION;
+                        text: APP_VERSION + "-" + APP_RELEASE;
                     }
             }
 

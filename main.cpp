@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
+    view->rootContext()->setContextProperty("APP_RELEASE", APP_RELEASE);
 
     view->show();
 
