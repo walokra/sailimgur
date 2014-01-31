@@ -28,6 +28,8 @@ ApplicationWindow
 
     Settings { id: settings; }
 
+    SignInPage { id: signInPage; }
+
     Rectangle {
         id: infoBanner;
         y: Theme.paddingSmall;
@@ -100,7 +102,7 @@ ApplicationWindow
                     showError(qsTr("Unexpected internal error. Something is broken with the Imgur service."));
                     break;
                 default:
-                    showError(qsTr("Error: %1").arg(errorMessage + " (" + errorCode + ")"));
+                    showError("Error: " + errorMessage + " (" + errorCode + ")");
             }
         }
 

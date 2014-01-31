@@ -35,6 +35,15 @@ Page {
             }
             */
 
+
+            MenuItem {
+                id: signInMenu;
+                text: qsTr("Sign In");
+                onClicked: {
+                    pageStack.push(signInPage);
+                }
+            }
+
             MenuItem {
                 id: refreshMenu;
                 text: qsTr("Refresh");

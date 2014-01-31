@@ -27,6 +27,7 @@ OTHER_FILES = \
     qml/pages/GalleryDelegate.qml \
     qml/pages/ImageButtons.qml \
     qml/pages/ImageContextMenu.qml \
-    qml/pages/GalleryNavigation.qml
+    qml/pages/GalleryNavigation.qml \
+    qml/pages/SignInPage.qml
 
 INCLUDEPATH += $$PWD

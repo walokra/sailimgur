@@ -4,22 +4,11 @@ QtObject {
     id: settings;
 
     property string appName : "Sailimgur";
-    property string baseurl : "https://api.imgur.com/3";
 
-    // http://api.imgur.com/endpoints/gallery
-    // https://api.imgur.com/3/gallery/{section}/{sort}/{page}?showViral=bool
-    property string endpoint_gallery_main : baseurl + "/" + "gallery/hot/viral/0.json";
-    property string endpoint_gallery_image : baseurl + "/" + "gallery/image"
-    property string endpoint_gallery_album : baseurl + "/" + "gallery/album";
-    property string endpoint_gallery : baseurl + "/" + "gallery";
-    // https://api.imgur.com/3/gallery/random/random/{page}
-    property string endpoint_gallery_random : baseurl + "/" + "gallery/random/random";
-    // https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
-    property string endpoint_gallery_search : baseurl + "/gallery/search";
-    property string endpoint_credits: baseurl + "/credits";
+    property string client_id : "956cdde55ca20c8";
+    property string client_secret : "249aaad000f45839c2cf517a200a5be8072cd0ca";
 
-    property string client_id : "";
-    property string client_secret : "";
+    property string user_agent : appName + " " + APP_VERSION + "-" + APP_RELEASE + "(Jolla; Qt; SailfishOS)";
 
     // default options for gallery
     property string mode : "main";

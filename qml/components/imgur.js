@@ -1,4 +1,31 @@
+var OAUTH_CONSUMER_KEY
+var OAUTH_CONSUMER_SECRET
+var OAUTH_TOKEN
+var OAUTH_TOKEN_SECRET
+var USER_AGENT
+
+// OAUTH
+var ADD_CLIENT_URL = "https://api.imgur.com/oauth2/addclient"
+var REQUEST_TOKEN_URL = "https://api.imgur.com/oauth2/authorize"
+var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
+
+var BASEURL = "https://api.imgur.com/3";
+
+// GET
+// http://api.imgur.com/endpoints/gallery
+// https://api.imgur.com/3/gallery/{section}/{sort}/{page}?showViral=bool
+var ENDPOINT_GET_GALLERY_MAIN = BASEURL + "/" + "gallery/hot/viral/0.json";
+var ENDPOINT_GET_GALLERY_IMAGE = BASEURL + "/" + "gallery/image"
+var ENDPOINT_GET_GALLERY_ALBUM = BASEURL + "/" + "gallery/album";
+var ENDPOINT_GET_GALLERY = BASEURL + "/" + "gallery";
+// https://api.imgur.com/3/gallery/random/random/{page}
+var ENDPOINT_GET_GALLERY_RANDOM = BASEURL + "/" + "gallery/random/random";
+// https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
+var ENDPOINT_GET_GALLERY_SEARCH = BASEURL + "/gallery/search";
+var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
+
 var reloadGalleryPage = false;
+
 
 /*
 Gallery
@@ -15,7 +42,7 @@ showViral 	optional 	true | false - Show or hide viral images from the 'user' se
 function getGallery() {
     galleryModel.clear();
 
-    var url = settings.endpoint_gallery_main;
+    var url = ENDPOINT_GET_GALLERY_MAIN;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
     //console.log("getGallery: " + url);
     sendJSONRequest(url, 1);
@@ -74,7 +101,7 @@ function getGallerySearch(query) {
     galleryModel.clear();
 
     var xhr = new XMLHttpRequest();
-    var url = settings.endpoint_gallery_search;
+    var url = ENDPOINT_GET_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
 
@@ -93,7 +120,7 @@ function getRandomGalleryImages() {
     galleryModel.clear();
 
     var xhr = new XMLHttpRequest();
-    var url = settings.endpoint_gallery_random;
+    var url = ENDPOINT_GET_GALLERY_RANDOM;
     url += "/" + page;
     //console.log("getRandomGalleryImages: " + url);
 
@@ -105,7 +132,7 @@ function getAlbum(id) {
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
-    var url = settings.endpoint_gallery_album;
+    var url = ENDPOINT_GET_GALLERY_ALBUM;
     url += "/" + id;
     //console.log("getAlbum: " + url);
 
@@ -117,7 +144,7 @@ function getGalleryImage(id) {
     albumImagesModel.clear();
 
     var xhr = new XMLHttpRequest();
-    var url = settings.endpoint_gallery_image;
+    var url = ENDPOINT_GET_GALLERY_IMAGE;
     url += "/" + id;
     //console.log("getGalleryImage: " + url);
 
@@ -140,7 +167,7 @@ function getAlbumComments(id) {
     commentsModel.clear();
 
     var xhr = new XMLHttpRequest();
-    var url = settings.endpoint_gallery;
+    var url = ENDPOINT_GET_GALLERY;
     url += "/" + id + "/comments";
     //console.log("getGalleryImage: " + url);
 
@@ -151,7 +178,7 @@ function getAlbumComments(id) {
   Check the current rate limit status
 */
 function getCredits() {
-    var url = settings.endpoint_credits;
+    var url = ENDPOINT_GET_CREDITS;
     sendJSONRequest(url, 5);
 }
 
