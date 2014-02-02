@@ -19,7 +19,6 @@ Page {
                 id: aboutMenu;
                 text: qsTr("About");
                 onClicked: {
-                    //console.log("About clicked");
                     pageStack.push(aboutPage);
                 }
             }
@@ -35,7 +34,6 @@ Page {
             }
             */
 
-
             MenuItem {
                 id: signInMenu;
                 text: qsTr("Sign In");
@@ -48,63 +46,7 @@ Page {
                 id: refreshMenu;
                 text: qsTr("Refresh");
                 onClicked: {
-                    //console.log("Refresh clicked");
                     Imgur.processGalleryMode(false, query);
-                }
-            }
-
-            MenuItem {
-                id: galleryModeMenu;
-
-                ListItem {
-                    width: mainPage.width;
-                    anchors {left: parent.left; right: parent.right; }
-
-                    Label {
-                        id: galleryLabel;
-                        text: qsTr("Gallery mode: ");
-                        anchors {left: parent.left;}
-                    }
-
-                    Label {
-                        id: mainLabel;
-                        text: qsTr("Main");
-                        anchors {left: galleryLabel.right; leftMargin: Theme.paddingMedium; }
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                //console.log("Main gallery selected");
-                                query = "";
-                                searchTextField.text = "";
-                                settings.mode = "main";
-                                galgrid.scrollToTop();
-                                Imgur.processGalleryMode(false, query);
-                            }
-                        }
-                    }
-
-                    Label {
-                        id: separatorLabel;
-                        text: qsTr("|");
-                        anchors {left: mainLabel.right; leftMargin: Theme.paddingMedium; }
-                    }
-
-                    Label {
-                        id: randomLabel;
-                        text: qsTr("Random");
-                        anchors {left: separatorLabel.right; leftMargin: Theme.paddingMedium; }
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                //console.log("Random mode selected");
-                                query = "";
-                                searchTextField.text = "";
-                                settings.mode = "random";
-                                galgrid.scrollToTop();
-                                Imgur.processGalleryMode(false, query);
-                            }
-                        }
-                    }
                 }
             }
 
@@ -199,19 +141,119 @@ Page {
         } // Pushup menu
 
         anchors.fill: parent;
-        //contentHeight: mainArea.height;
 
-        Label {
-            id: galleryModeField;
+        Row {
+            id: galleryMode;
             anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: Theme.paddingMedium; }
-            anchors.leftMargin: Theme.paddingSmall;
-            anchors.rightMargin: Theme.paddingSmall;
+            width: mainPage.width;
+            height: childrenRect.height;
+            z: 1;
 
-            width: parent.width;
-            text: settings.galleryModeText;
-            font.pixelSize: Theme.fontSizeExtraSmall;
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-        }
+            ComboBox {
+                id: modeBox;
+                currentIndex: 0;
+                width: 250;
+
+                menu: ContextMenu {
+
+                    MenuItem {
+                        id: mainMode;
+                        text: qsTr("most viral");
+                        onClicked: {
+                            sortBox.visible = true;
+                            query = "";
+                            searchTextField.text = "";
+                            settings.mode = "main";
+                            settings.section = "hot";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+
+                    MenuItem {
+                        id: userMode;
+                        text: qsTr("user submitted");
+                        onClicked: {
+                            sortBox.visible = true;
+                            query = "";
+                            searchTextField.text = "";
+                            settings.mode = "user";
+                            settings.section = "user";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+
+                    MenuItem {
+                        id: randomMode;
+                        text: qsTr("random");
+                        onClicked: {
+                            sortBox.visible = false;
+                            query = "";
+                            searchTextField.text = "";
+                            settings.mode = "random";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+
+                    MenuItem {
+                        id: scoreMode;
+                        text: qsTr("highest scoring");
+                        onClicked: {
+                            sortBox.visible = false;
+                            query = "";
+                            searchTextField.text = "";
+                            settings.mode = "score";
+                            settings.section = "top";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+
+                    MenuItem {
+                        id: memesMode;
+                        text: qsTr("memes");
+                        onClicked: {
+                            sortBox.visible = true;
+                            query = "";
+                            searchTextField.text = "";
+                            settings.mode = "memes";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+                }
+            }
+
+            ComboBox {
+                id: sortBox;
+                currentIndex: 0;
+                label: qsTr("sort:");
+
+                menu: ContextMenu {
+                    MenuItem {
+                        id: viralSort;
+                        text: qsTr("popularity");
+                        onClicked: {
+                            settings.sort = "viral";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+
+                    MenuItem {
+                        id: newestSort;
+                        text: qsTr("newest first");
+                        onClicked: {
+                            settings.sort = "time";
+                            galgrid.scrollToTop();
+                            Imgur.processGalleryMode(false, query);
+                        }
+                    }
+                }
+            }
+        } // galleryMode
 
         SilicaGridView {
             id: galgrid;
@@ -222,7 +264,7 @@ Page {
 
             model: galleryModel;
 
-            anchors { top: galleryModeField.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
+            anchors { top: galleryMode.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
             anchors.leftMargin: Theme.paddingSmall;
             anchors.rightMargin: Theme.paddingSmall;
 

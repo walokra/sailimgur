@@ -14,18 +14,19 @@ var BASEURL = "https://api.imgur.com/3";
 // GET
 // http://api.imgur.com/endpoints/gallery
 // https://api.imgur.com/3/gallery/{section}/{sort}/{page}?showViral=bool
-var ENDPOINT_GET_GALLERY_MAIN = BASEURL + "/" + "gallery/hot/viral/0.json";
+var ENDPOINT_GET_GALLERY_MAIN = BASEURL + "/" + "gallery";
+// https://api.imgur.com/3/gallery/random/random/{page}
+var ENDPOINT_GET_GALLERY_RANDOM = BASEURL + "/" + "gallery/random/random";
+// https://api.imgur.com/3/gallery/g/memes/{sort}/{window}/{page}
+var ENDPOINT_GET_GALLERY_MEMES = BASEURL + "/" + "gallery/g/memes";
 var ENDPOINT_GET_GALLERY_IMAGE = BASEURL + "/" + "gallery/image"
 var ENDPOINT_GET_GALLERY_ALBUM = BASEURL + "/" + "gallery/album";
 var ENDPOINT_GET_GALLERY = BASEURL + "/" + "gallery";
-// https://api.imgur.com/3/gallery/random/random/{page}
-var ENDPOINT_GET_GALLERY_RANDOM = BASEURL + "/" + "gallery/random/random";
 // https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
 var ENDPOINT_GET_GALLERY_SEARCH = BASEURL + "/gallery/search";
 var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 
 var reloadGalleryPage = false;
-
 
 /*
 Gallery
@@ -45,6 +46,47 @@ function getGallery() {
     var url = ENDPOINT_GET_GALLERY_MAIN;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
     //console.log("getGallery: " + url);
+    sendJSONRequest(url, 1);
+}
+
+/*
+Random Gallery Images
+Returns a random set of gallery images.
+
+https://api.imgur.com/3/gallery/random/random/{page}
+
+page 	optional 	A page of random gallery images, from 0-50. Pages are regenerated every hour.
+*/
+function getRandomGalleryImages() {
+    galleryModel.clear();
+
+    var xhr = new XMLHttpRequest();
+    var url = ENDPOINT_GET_GALLERY_RANDOM;
+    url += "/" + page;
+    //console.log("getRandomGalleryImages: " + url);
+
+    sendJSONRequest(url, 1);
+}
+
+/**
+Memes Subgallery
+View images for memes subgallery
+
+Route	https://api.imgur.com/3/gallery/g/memes/{sort}/{page}
+https://api.imgur.com/3/gallery/g/memes/{sort}/{window}/{page}
+
+sort	optional	viral | time | top - defaults to viral
+page	optional	integer - the data paging number
+window	optional	Change the date range of the request if the sort is "top", day | week | month | year | all, defaults to week
+*/
+function getMemesSubGallery() {
+    galleryModel.clear();
+
+    var xhr = new XMLHttpRequest();
+    var url = ENDPOINT_GET_GALLERY_MEMES;
+    url += "/" + settings.sort + "/" + settings.window + "/" + page;
+    url += "/" + page;
+
     sendJSONRequest(url, 1);
 }
 
@@ -104,25 +146,6 @@ function getGallerySearch(query) {
     var url = ENDPOINT_GET_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
-
-    sendJSONRequest(url, 1);
-}
-
-/*
-Random Gallery Images
-Returns a random set of gallery images.
-
-https://api.imgur.com/3/gallery/random/random/{page}
-
-page 	optional 	A page of random gallery images, from 0-50. Pages are regenerated every hour.
-*/
-function getRandomGalleryImages() {
-    galleryModel.clear();
-
-    var xhr = new XMLHttpRequest();
-    var url = ENDPOINT_GET_GALLERY_RANDOM;
-    url += "/" + page;
-    //console.log("getRandomGalleryImages: " + url);
 
     sendJSONRequest(url, 1);
 }
@@ -412,12 +435,14 @@ function processGalleryMode(refreshGallery, query) {
         getGallerySearch(query);
     }
     else if (settings.mode === "main") {
-        //console.log("main");
-        settings.galleryModeText = settings.galleryModeTextDefault;
         getGallery();
     } else if (settings.mode === "random") {
-        //console.log("random");
-        settings.galleryModeText = settings.galleryModeTextRandom;
         getRandomGalleryImages();
+    } else if (settings.mode === "user") {
+        getGallery();
+    } else if (settings.mode === "score") {
+        getGallery();
+    } else if (settings.mode === "memes") {
+        getMemesSubGallery();
     }
 }
