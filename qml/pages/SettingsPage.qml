@@ -23,20 +23,25 @@ Page {
             anchors.leftMargin: Theme.paddingMedium;
             anchors.rightMargin: Theme.paddingMedium;
 
-            ListItem {
-                id: apiField;
-                anchors { left: parent.left; right: parent.right }
-
-                Label {
-                    id: apiLabel;
-                    text: qsTr("API key");
-                    anchors { left: parent.left;}
-                }
-                TextField {
-                    anchors { left: apiLabel.right; right: parent.right; }
+            Slider {
+                value: settings.albumImagesLimit;
+                minimumValue: 1;
+                maximumValue: 30;
+                stepSize: 1;
+                width: parent.width;
+                valueText: value;
+                label: qsTr("Images shown in album");
+                onValueChanged: {
+                    settings.albumImagesLimit = value;
                 }
             }
 
+            TextSwitch {
+                text: qsTr("Show comments");
+                onCheckedChanged: {
+                    checked ? settings.showComments = checked : settings.showComments = false;
+                }
+            }
         }
 
         ScrollDecorator {}

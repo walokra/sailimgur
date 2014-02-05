@@ -17,10 +17,6 @@ QtObject {
     property string window : "day"; // day | week | month | year | all
     property bool showViral : true; // true | false
 
-    property string galleryModeText : "The most viral images, sorted by popularity";
-    property string galleryModeTextDefault : "The most viral images, sorted by popularity";
-    property string galleryModeTextRandom: "Randomly selected images";
-
     property bool autoplayAnim: true; // play anim gifs automatically?
     property bool showComments: false;
 

@@ -28,11 +28,9 @@ Page {
                 id: settingsMenu
                 text: qsTr("Settings")
                 onClicked: {
-                    console.log("Settings clicked");
                     pageStack.push(settingsPage)
                 }
             }
-            */
 
             MenuItem {
                 id: signInMenu;
@@ -41,6 +39,7 @@ Page {
                     pageStack.push(signInPage);
                 }
             }
+            */
 
             MenuItem {
                 id: refreshMenu;

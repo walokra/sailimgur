@@ -354,7 +354,7 @@ function handleAlbumJSON(response) {
         //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
         //console.log("output=" + JSON.stringify(output));
 
-        if (i > settings.albumImagesLimit) {
+        if (i >= settings.albumImagesLimit) {
             fillAlbumImagesModel(jsonObject.data.images[i], true);
         }
         else {
