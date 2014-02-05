@@ -22,8 +22,9 @@ QtObject {
     property string galleryModeTextRandom: "Randomly selected images";
 
     property bool autoplayAnim: true; // play anim gifs automatically?
-    property bool showComments: true;
+    property bool showComments: false;
 
     property int commentPointsLimit: 1;
+    property int albumImagesLimit: 10;
 
 }

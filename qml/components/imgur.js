@@ -153,6 +153,8 @@ function getGallerySearch(query) {
 // get gallery album
 function getAlbum(id) {
     albumImagesModel.clear();
+    albumImagesMoreModel.clear();
+    commentsModel.clear();
 
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_ALBUM;
@@ -165,6 +167,8 @@ function getAlbum(id) {
 // get gallery image
 function getGalleryImage(id) {
     albumImagesModel.clear();
+    albumImagesMoreModel.clear();
+    commentsModel.clear();
 
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_IMAGE;
@@ -187,8 +191,6 @@ Route	https://api.imgur.com/3/gallery/{id}/comments/{sort}
 sort	optional	best | top | new - defaults to best
 */
 function getAlbumComments(id) {
-    commentsModel.clear();
-
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY;
     url += "/" + id + "/comments";
@@ -256,7 +258,7 @@ function onLoading() {
     }
 }
 
-function fillAlbumImagesModel(output) {
+function fillAlbumImagesModel(output, toMoreModel) {
     var title = "";
     if (output.title) {
         title = output.title;
@@ -281,8 +283,9 @@ function fillAlbumImagesModel(output) {
         }
     }
 
-    // https://api.imgur.com/models/image/
-    albumImagesModel.append({
+    if (toMoreModel) {
+        // https://api.imgur.com/models/image/
+        albumImagesMoreModel.append({
                             id: output.id,
                             title: title,
                             description: replaceURLWithHTMLLinks(description),
@@ -295,6 +298,21 @@ function fillAlbumImagesModel(output) {
                             bandwidth: output.bandwidth,
                             link: link
                         });
+    } else {
+        albumImagesModel.append({
+                                id: output.id,
+                                title: title,
+                                description: replaceURLWithHTMLLinks(description),
+                                datetime: output.datetime,
+                                animated: output.animated,
+                                width: output.width,
+                                height: output.height,
+                                size: output.size,
+                                views: output.views,
+                                bandwidth: output.bandwidth,
+                                link: link
+                            });
+    }
 }
 
 function fillGalleryVariables(output) {
@@ -331,10 +349,17 @@ function handleAlbumJSON(response) {
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     var data = jsonObject.data;
+    //console.log("data.is_album=" + data.is_album + "; data.images_count=" + data.images_count + "; albumImagesLimit=" + settings.albumImagesLimit);
     for (var i in jsonObject.data.images) {
         //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
         //console.log("output=" + JSON.stringify(output));
-        fillAlbumImagesModel(jsonObject.data.images[i]);
+
+        if (i > settings.albumImagesLimit) {
+            fillAlbumImagesModel(jsonObject.data.images[i], true);
+        }
+        else {
+            fillAlbumImagesModel(jsonObject.data.images[i], false);
+        }
     }
     //console.log("count=" + albumImagesModel.count);
 
@@ -349,7 +374,7 @@ function handleImageJSON(response) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
-    fillAlbumImagesModel(jsonObject.data);
+    fillAlbumImagesModel(jsonObject.data, false, 1);
     fillGalleryVariables(jsonObject.data);
 }
 

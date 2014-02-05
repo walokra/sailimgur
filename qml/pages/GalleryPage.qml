@@ -23,6 +23,9 @@ Page {
     ListModel {
         id: albumImagesModel;
     }
+    ListModel {
+        id: albumImagesMoreModel;
+    }
 
     ListModel {
         id: commentsModel;
@@ -44,6 +47,7 @@ Page {
             Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
         }
         setPrevButton();
+        galleryFlickable.scrollToTop();
     }
 
     function setPrevButton() {
@@ -102,7 +106,7 @@ Page {
             Column {
                 id: galleryColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: albumListView.height;
+                height: albumListView.height + showMoreButton.height;
                 width: parent.width;
 
                 Flow {
@@ -116,6 +120,26 @@ Page {
 
                         delegate: GalleryDelegate {
                             id: galleryDelegate;
+                        }
+                    }
+                }
+                Item {
+                    id: showMoreItem;
+                    width: parent.width;
+                    height: visible ? showMoreButton.height + 2 * Theme.paddingSmall : 0;
+                    visible: albumImagesMoreModel.count > 0;
+
+                    Button {
+                        id: showMoreButton;
+                        anchors.centerIn: parent;
+                        enabled: albumImagesMoreModel.count > 0;
+                        text: qsTr("show more");
+                        onClicked: {
+                            // @Hack, better way to combine models?
+                            for(var i=0; i < albumImagesMoreModel.count; i++) {
+                                albumImagesModel.append(albumImagesMoreModel.get(i));
+                            }
+                            albumImagesMoreModel.clear();
                         }
                     }
                 }
@@ -226,8 +250,29 @@ Page {
             Column {
                 id: commentsColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: childrenRect.height + 200;
+                height: childrenRect.height + showCommentsItem.height + 200;
                 width: parent.width;
+
+                Item {
+                    id: showCommentsItem;
+                    width: parent.width
+                    height: visible ? showCommentsButton.height + 2 * Theme.paddingSmall : 0;
+                    visible: commentsModel.count == 0;
+
+                    Button {
+                        id: showCommentsButton;
+                        anchors.centerIn: parent;
+                        text: qsTr("show comments");
+                        onClicked: {
+                            if(commentsModel.count > 0) {
+                                commentsColumn.visible = true;
+                            } else {
+                                Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
+                                commentsColumn.visible = true;
+                            }
+                        }
+                    }
+                }
 
                 SilicaListView {
                     id: commentListView;
@@ -236,6 +281,7 @@ Page {
                     width: parent.width;
                     spacing: Theme.paddingSmall;
                     clip: true;
+                    visible: commentsModel.count > 0;
 
                     delegate: Loader {
                         id: commentsLoader;
