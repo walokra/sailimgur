@@ -23,15 +23,15 @@ Page {
                 }
             }
 
-            /*
             MenuItem {
-                id: settingsMenu
-                text: qsTr("Settings")
+                id: settingsMenu;
+                text: qsTr("Settings");
                 onClicked: {
-                    pageStack.push(settingsPage)
+                    pageStack.push(settingsPage);
                 }
             }
 
+            /*
             MenuItem {
                 id: signInMenu;
                 text: qsTr("Sign In");

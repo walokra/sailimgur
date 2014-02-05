@@ -28,6 +28,7 @@ OTHER_FILES = \
     qml/pages/ImageButtons.qml \
     qml/pages/ImageContextMenu.qml \
     qml/pages/GalleryNavigation.qml \
-    qml/pages/SignInPage.qml
+    qml/pages/SignInPage.qml \
+    qml/components/storage.js
 
 INCLUDEPATH += $$PWD
