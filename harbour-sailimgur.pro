@@ -18,6 +18,7 @@ OTHER_FILES = \
     qml/main.qml \
     qml/cover/CoverPage.qml \
     qml/pages/Settings.qml \
+    qml/pages/Constant.qml \
     qml/components/imgur.js \
     qml/pages/SettingsPage.qml \
     qml/pages/GalleryPage.qml \

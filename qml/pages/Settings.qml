@@ -1,14 +1,17 @@
 import QtQuick 2.0
+import "../components/storage.js" as Storage
 
 QtObject {
     id: settings;
 
-    property string appName : "Sailimgur";
+    signal settingsLoaded;
 
-    property string client_id : "";
-    property string client_secret : "";
+    property string access_token : "";
+    property string refresh_token : "";
 
-    property string user_agent : appName + " " + APP_VERSION + "-" + APP_RELEASE + "(Jolla; Qt; SailfishOS)";
+    // Settings page
+    property int albumImagesLimit: 10;
+    property bool showComments: false;
 
     // default options for gallery
     property string mode : "main";
@@ -16,11 +19,19 @@ QtObject {
     property string sort : "viral"; // viral | time
     property string window : "day"; // day | week | month | year | all
     property bool showViral : true; // true | false
-
     property bool autoplayAnim: true; // play anim gifs automatically?
-    property bool showComments: false;
 
-    property int commentPointsLimit: 1;
-    property int albumImagesLimit: 10;
+    function loadSettings() {
+        //console.log("Load settings...");
+        Storage.db = Storage.connect();
+
+        var results = Storage.getAllSettings();
+        for (var s in results) {
+            if (settings.hasOwnProperty(s)) {
+                settings[s] = results[s]
+            }
+        }
+        settingsLoaded();
+    }
 
 }

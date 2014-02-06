@@ -5,9 +5,6 @@ import "../components/imgur.js" as Imgur
 Page {
     id: signInPage;
 
-    property string tokenTempo: "";
-    property string tokenSecretTempo: "";
-
     SilicaFlickable {
         id: signInFlickable;
 
@@ -44,7 +41,10 @@ Click the button below will launch an external web browser for you to sign in.")
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Sign In");
                     onClicked: {
-                        console.log("signInButton clicked!");
+                        var signInUrl = Imgur.AUTHORIZE_URL+"?client_id="+constant.clientId+"&response_type=pin";
+                        console.log("Launching web browser with url:", signInUrl);
+                        Qt.openUrlExternally(signInUrl);
+                        infoBanner.showText("Launching external web browser...");
                     }
                 }
             }
@@ -69,7 +69,6 @@ Click the button below will launch an external web browser for you to sign in.")
                     spacing: Theme.paddingLarge;
 
                     Label {
-                        anchors.verticalCenter: parent.verticalCenter;
                         font.pixelSize: Theme.fontSizeMedium;
                         text: "PIN:";
                     }
@@ -82,7 +81,7 @@ Click the button below will launch an external web browser for you to sign in.")
                         EnterKey.enabled: text.length > 0;
                         EnterKey.iconSource: "image://theme/icon-m-enter-accept";
                         EnterKey.onClicked: {
-                            console.log("doneButton clicked!");
+                            internal.doneButtonClicked();
                         }
                     }
                 }
@@ -94,7 +93,7 @@ Click the button below will launch an external web browser for you to sign in.")
                 enabled: pinCodeTextField.text != "";
                 text: qsTr("Done");
                 onClicked: {
-                    console.log("doneButton clicked!");
+                    internal.doneButtonClicked();
                 }
             }
         }
@@ -102,4 +101,11 @@ Click the button below will launch an external web browser for you to sign in.")
         ScrollDecorator {}
     }
 
+    QtObject {
+        id: internal;
+
+        function doneButtonClicked() {
+
+        }
+    }
 }

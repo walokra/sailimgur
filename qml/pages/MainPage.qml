@@ -7,10 +7,20 @@ Page {
 
     property bool prevEnabled: page > 0;
 
+    Connections {
+        target: settings;
+        onSettingsLoaded: {
+            Imgur.init(settings.access_token, settings.refresh_token)
+            if (settings.access_token === "" || settings.refresh_token === "") {
+                console.log("Token are unset. Sign in.");
+            }
+        }
+    }
+
     SilicaFlickable {
         id: flickable;
 
-        PageHeader { id: header; title: settings.appName; }
+        PageHeader { id: header; title: constant.appName; }
 
         PullDownMenu {
             id: pullDownMenu;
@@ -31,7 +41,6 @@ Page {
                 }
             }
 
-            /*
             MenuItem {
                 id: signInMenu;
                 text: qsTr("Sign In");
@@ -39,7 +48,6 @@ Page {
                     pageStack.push(signInPage);
                 }
             }
-            */
 
             MenuItem {
                 id: refreshMenu;
@@ -72,7 +80,7 @@ Page {
                 function searchEntered() {
                     query = text;
                     //console.log("Searched: " + query);
-                    settings.galleryModeText = "Gallery results for \"" + query + "\"";
+                    // FIXME: galleryModeText = "Gallery results for \"" + query + "\"";
                     Imgur.getGallerySearch(query);
                     pullDownMenu.close();
                     searchTextField.focus = false;
@@ -292,7 +300,7 @@ Page {
     }
 
     Component.onCompleted: {
-        //console.log("onCompleted");
+        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken);
         galleryModel.clear();
         Imgur.processGalleryMode(false, query);
     }

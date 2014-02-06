@@ -28,6 +28,8 @@ ApplicationWindow
 
     Settings { id: settings; }
 
+    Constant { id: constant; }
+
     SignInPage { id: signInPage; }
 
     Rectangle {
@@ -134,6 +136,10 @@ ApplicationWindow
             size: BusyIndicatorSize.Large;
             Behavior on opacity { FadeAnimation {} }
         }
+    }
+
+    Component.onCompleted: {
+        settings.loadSettings();
     }
 
 }

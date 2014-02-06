@@ -22,9 +22,30 @@ function connect() {
 }
 
 /**
+  Get all settings.
+*/
+function getAllSettings() {
+    var res = {};
+    db.readTransaction(function(tx) {
+        var rs = tx.executeSql('SELECT * FROM Settings;')
+        for (var i=0; i<rs.rows.length; i++) {
+            if (rs.rows.item(i).value === 'true') {
+                res[rs.rows.item(i).key] = true;
+            }
+            else if (rs.rows.item(i).value === 'false') {
+                res[rs.rows.item(i).key] = false;
+            } else {
+                res[rs.rows.item(i).key] = rs.rows.item(i).value
+            }
+        }
+    });
+    return res;
+}
+
+/**
   Save setting to database.
 */
-function setSetting(db, key, value) {
+function setSetting(key, value) {
     if (value === true) {
         value = 'true';
     }
@@ -41,7 +62,7 @@ function setSetting(db, key, value) {
 /**
  Get given setting from database.
 */
-function getSetting(db, key, defaultValue) {
+function getSetting(key, defaultValue) {
     var setting = null;
 
     db.readTransaction(function(tx) {

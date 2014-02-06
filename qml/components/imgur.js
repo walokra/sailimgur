@@ -1,14 +1,15 @@
-var OAUTH_CONSUMER_KEY
-var OAUTH_CONSUMER_SECRET
-var OAUTH_TOKEN
-var OAUTH_TOKEN_SECRET
-var USER_AGENT
+Qt.include("../lib/oauth.js");
+
 
 // OAUTH
-var ADD_CLIENT_URL = "https://api.imgur.com/oauth2/addclient"
-var REQUEST_TOKEN_URL = "https://api.imgur.com/oauth2/authorize"
+var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
 var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
+var OAUTH_CONSUMER_KEY;
+var OAUTH_CONSUMER_SECRET;
+var OAUTH_ACCESS_TOKEN;
+var OAUTH_REFRESH_TOKEN;
 
+// ENDPOINTS
 var BASEURL = "https://api.imgur.com/3";
 
 // GET
@@ -26,7 +27,16 @@ var ENDPOINT_GET_GALLERY = BASEURL + "/" + "gallery";
 var ENDPOINT_GET_GALLERY_SEARCH = BASEURL + "/gallery/search";
 var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 
+var ENDPOINT_GET_USER_IMAGES = BASEURL + "/account/me/images"
+
 var reloadGalleryPage = false;
+
+function init(access_token, refresh_token) {
+    OAUTH_CONSUMER_KEY = constant.clientId;
+    OAUTH_CONSUMER_SECRET = constant.clientSecret;
+    OAUTH_ACCESS_TOKEN = access_token;
+    OAUTH_REFRESH_TOKEN = refresh_token;
+}
 
 /*
 Gallery
@@ -60,10 +70,8 @@ page 	optional 	A page of random gallery images, from 0-50. Pages are regenerate
 function getRandomGalleryImages() {
     galleryModel.clear();
 
-    var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_RANDOM;
     url += "/" + page;
-    //console.log("getRandomGalleryImages: " + url);
 
     sendJSONRequest(url, 1);
 }
@@ -82,7 +90,6 @@ window	optional	Change the date range of the request if the sort is "top", day |
 function getMemesSubGallery() {
     galleryModel.clear();
 
-    var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_MEMES;
     url += "/" + settings.sort + "/" + settings.window + "/" + page;
     url += "/" + page;
@@ -124,7 +131,7 @@ function sendJSONRequest(url, actiontype) {
         }
     }
     // Send the proper header information along with the request
-    xhr.setRequestHeader("Authorization", "Client-ID " + settings.client_id);
+    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
 
     xhr.send();
 }

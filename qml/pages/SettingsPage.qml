@@ -52,18 +52,11 @@ Dialog {
     }
 
     onAccepted: {
-        Storage.setSetting(Storage.db, "limit_album_images", settings.albumImagesLimit)
-        Storage.setSetting(Storage.db, "show_comments", settings.showComments);
-    }
-
-    // Load values when app is started
-    Component.onCompleted: {
-        getSettings();
-    }
-
-    function getSettings() {
         Storage.db = Storage.connect();
-        settings.albumImagesLimit = Storage.getSetting(Storage.db, "limit_album_images", settings.albumImagesLimit);
-        settings.showComments = Storage.getSetting(Storage.db, "show_comments", settings.showComments);
+        Storage.setSetting("albumImagesLimit", settings.albumImagesLimit)
+        Storage.setSetting("showComments", settings.showComments);
+    }
+
+    Component.onCompleted: {
     }
 }
