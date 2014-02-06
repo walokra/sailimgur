@@ -52,7 +52,6 @@ Dialog {
     }
 
     onAccepted: {
-        Storage.db = Storage.connect();
         Storage.setSetting("albumImagesLimit", settings.albumImagesLimit)
         Storage.setSetting("showComments", settings.showComments);
     }

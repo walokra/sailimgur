@@ -105,7 +105,9 @@ Click the button below will launch an external web browser for you to sign in.")
         id: internal;
 
         function doneButtonClicked() {
-
+            Imgur.exchangePinForAccessToken(pinCodeTextField.text);
+            infoBanner.showText(qsTr("Signed in successfully"));
+            settings.settingsLoaded();
         }
     }
 }

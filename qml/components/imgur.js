@@ -27,16 +27,42 @@ var ENDPOINT_GET_GALLERY = BASEURL + "/" + "gallery";
 var ENDPOINT_GET_GALLERY_SEARCH = BASEURL + "/gallery/search";
 var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 
+// needs sign in
 var ENDPOINT_GET_USER_IMAGES = BASEURL + "/account/me/images"
 
 var reloadGalleryPage = false;
 
 function init(access_token, refresh_token) {
-    OAUTH_CONSUMER_KEY = constant.clientId;
-    OAUTH_CONSUMER_SECRET = constant.clientSecret;
     OAUTH_ACCESS_TOKEN = access_token;
     OAUTH_REFRESH_TOKEN = refresh_token;
 }
+
+function exchangePinForAccessToken(pin) {
+    var message = "client_id=" + constant.clientId + "&client_secret=" + constant.clientSecret + "&grant_type=pin&pin=" + pin;
+    //console.log("message=" + message);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', ACCESS_TOKEN_URL);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            //console.log("headers: " + xhr.getAllResponseHeaders());
+            if (xhr.status == 200) {
+                var jsonObject = JSON.parse(xhr.responseText);
+                console.log("response: " + JSON.stringify(jsonObject));
+                //access_token = jsonObject.access_token;
+                //refresh_token = jsonObject.refresh_token;
+            } else {
+                console.log(xhr.status, xhr.statusText, xhr.responseText);
+            }
+        }
+    }
+    // Send the proper header information along with the request
+    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    xhr.setRequestHeader("Content-length", message.length);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(message);
+}
+
 
 /*
 Gallery
@@ -106,7 +132,7 @@ function sendJSONRequest(url, actiontype) {
 
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 //console.log("ok");
                 if (actiontype === 1) {

@@ -10,8 +10,8 @@ Page {
     Connections {
         target: settings;
         onSettingsLoaded: {
-            Imgur.init(settings.access_token, settings.refresh_token)
-            if (settings.access_token === "" || settings.refresh_token === "") {
+            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken);
+            if (settings.accessToken === "" || settings.refreshToken === "") {
                 console.log("Token are unset. Sign in.");
             }
         }
@@ -300,7 +300,6 @@ Page {
     }
 
     Component.onCompleted: {
-        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken);
         galleryModel.clear();
         Imgur.processGalleryMode(false, query);
     }
