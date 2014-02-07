@@ -35,6 +35,10 @@ Page {
 
     onLoad: {
         //console.log("galleryPage.onLoad: total=" + galleryModel.count + ", currentIndex=" + currentIndex);
+        albumImagesModel.clear();
+        albumImagesMoreModel.clear();
+        commentsModel.clear();
+
         albumTitle = galleryModel.get(currentIndex).title;
         if (galleryModel.get(currentIndex).is_album) {
             galleryPageTitle = qsTr("Gallery album");
@@ -92,14 +96,14 @@ Page {
             anchors { top: header.bottom; left: parent.left; right: parent.right;}
             height: childrenRect.height;
 
-            anchors.leftMargin: Theme.paddingSmall;
-            anchors.rightMargin: Theme.paddingSmall;
+            anchors.leftMargin: constant.paddingSmall;
+            anchors.rightMargin: constant.paddingSmall;
 
             Label {
                 id: titleText;
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: constant.fontSizeXSmall;
                 text: albumTitle;
             }
 
@@ -126,7 +130,7 @@ Page {
                 Item {
                     id: showMoreItem;
                     width: parent.width;
-                    height: visible ? showMoreButton.height + 2 * Theme.paddingSmall : 0;
+                    height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
                     visible: albumImagesMoreModel.count > 0;
 
                     Button {
@@ -148,8 +152,8 @@ Page {
             Column {
                 id: albumInfoColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: albumInfo.height + infoColumn.height + Theme.paddingSmall;
-                spacing: Theme.paddingSmall;
+                height: albumInfo.height + infoColumn.height + constant.paddingSmall;
+                spacing: constant.paddingSmall;
 
                 ListItem {
                     id: albumInfo;
@@ -164,7 +168,7 @@ Page {
                             id: actionButtons;
                             anchors { left: parent.left;}
                             anchors.verticalCenter: parent.verticalCenter;
-                            width: 3 * 62 + 3 * Theme.paddingLarge;
+                            width: 3 * 62 + 3 * constant.paddingLarge;
                             height: 62;
 
                             IconButton {
@@ -184,7 +188,7 @@ Page {
                                 width: 62;
                                 height: 62;
                                 anchors { left: likeButton.right;
-                                    leftMargin: Theme.paddingLarge; }
+                                    leftMargin: constant.paddingLarge; }
                             }
                             IconButton {
                                 id: favoriteButton;
@@ -194,7 +198,7 @@ Page {
                                 width: 62;
                                 height: 62;
                                 anchors { left: dislikeButton.right;
-                                    leftMargin: Theme.paddingLarge; rightMargin: Theme.paddingLarge; }
+                                    leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
                             }
                         }
 
@@ -207,13 +211,13 @@ Page {
                                 id: scoreText;
                                 anchors { left: parent.left; }
                                 anchors.verticalCenter: parent.verticalCenter;
-                                font.pixelSize: Theme.fontSizeExtraSmall;
+                                font.pixelSize: constant.fontSizeXSmall;
                                 text: score + " points";
                             }
 
                             Rectangle {
                                 id: scoreUps;
-                                anchors { left: scoreText.right; leftMargin: Theme.paddingLarge; }
+                                anchors { left: scoreText.right; leftMargin: constant.paddingLarge; }
                                 anchors.verticalCenter: parent.verticalCenter;
                                 width: 100 * (upsPercent/100);
                                 height: 10;
@@ -240,7 +244,7 @@ Page {
                             id: infoText;
                             anchors { left: parent.left; right: parent.right; }
                             wrapMode: Text.Wrap;
-                            font.pixelSize: Theme.fontSizeExtraSmall;
+                            font.pixelSize: constant.fontSizeXSmall;
                             text: "by " + account_url + ", " + views + " views";
                         }
                    }
@@ -256,7 +260,7 @@ Page {
                 Item {
                     id: showCommentsItem;
                     width: parent.width
-                    height: visible ? showCommentsButton.height + 2 * Theme.paddingSmall : 0;
+                    height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
                     visible: commentsModel.count == 0;
 
                     Button {
@@ -279,7 +283,7 @@ Page {
                     model: commentsModel;
                     height: childrenRect.height;
                     width: parent.width;
-                    spacing: Theme.paddingSmall;
+                    spacing: constant.paddingSmall;
                     clip: true;
                     visible: commentsModel.count > 0;
 

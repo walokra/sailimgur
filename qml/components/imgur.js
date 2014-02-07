@@ -96,8 +96,6 @@ https://api.imgur.com/3/gallery/random/random/{page}
 page 	optional 	A page of random gallery images, from 0-50. Pages are regenerated every hour.
 */
 function getRandomGalleryImages() {
-    galleryModel.clear();
-
     var url = ENDPOINT_GET_GALLERY_RANDOM;
     url += "/" + page;
 
@@ -116,8 +114,6 @@ page	optional	integer - the data paging number
 window	optional	Change the date range of the request if the sort is "top", day | week | month | year | all, defaults to week
 */
 function getMemesSubGallery() {
-    galleryModel.clear();
-
     var url = ENDPOINT_GET_GALLERY_MEMES;
     url += "/" + settings.sort + "/" + settings.window + "/" + page;
     url += "/" + page;
@@ -175,8 +171,6 @@ sort 	optional 	time | viral - defaults to time
 page 	optional 	integer - the data paging number
 */
 function getGallerySearch(query) {
-    galleryModel.clear();
-
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
@@ -187,10 +181,6 @@ function getGallerySearch(query) {
 
 // get gallery album
 function getAlbum(id) {
-    albumImagesModel.clear();
-    albumImagesMoreModel.clear();
-    commentsModel.clear();
-
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_ALBUM;
     url += "/" + id;
@@ -201,10 +191,6 @@ function getAlbum(id) {
 
 // get gallery image
 function getGalleryImage(id) {
-    albumImagesModel.clear();
-    albumImagesMoreModel.clear();
-    commentsModel.clear();
-
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GET_GALLERY_IMAGE;
     url += "/" + id;
@@ -484,6 +470,8 @@ function replaceURLWithHTMLLinks(text) {
 }
 
 function processGalleryMode(refreshGallery, query) {
+    galleryModel.clear();
+
     if (refreshGallery) {
         reloadGalleryPage = true;
     }else {

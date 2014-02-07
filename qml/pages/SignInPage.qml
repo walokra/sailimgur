@@ -21,12 +21,12 @@ Page {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right; }
             height: childrenRect.height;
-            spacing: Theme.paddingMedium;
+            spacing: constant.paddingMedium;
 
             Label {
                 id: helpLabel;
                 anchors { left: parent.left; right: parent.right }
-                font.pixelSize: Theme.fontSizeMedium;
+                font.pixelSize: constant.fontSizeMedium;
                 wrapMode: Text.Wrap;
                 text: qsTr("To use Sailimgur, you must sign in to your imgur account first. \
 Click the button below will launch an external web browser for you to sign in.");
@@ -35,7 +35,7 @@ Click the button below will launch an external web browser for you to sign in.")
             Item {
                 anchors.horizontalCenter: parent.horizontalCenter;
                 width: signInButton.width;
-                height: signInButton.height + 2 * Theme.paddingLarge;
+                height: signInButton.height + 2 * constant.paddingLarge;
 
                 Button {
                     id: signInButton;
@@ -54,7 +54,7 @@ Click the button below will launch an external web browser for you to sign in.")
             Label {
                 id: afterLabel;
                 anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: Theme.fontSizeMedium;
+                font.pixelSize: constant.fontSizeMedium;
                 wrapMode: Text.Wrap;
                 text: qsTr("After sign in, a PIN code will display. Enter the PIN code in the text field below and click done.");
             }
@@ -62,7 +62,7 @@ Click the button below will launch an external web browser for you to sign in.")
             Item {
                 id: pinCodeTextFieldWrapper;
                 anchors { left: parent.left; right: parent.right; }
-                height: pinCodeTextField.height + 2 * Theme.paddingMedium;
+                height: pinCodeTextField.height + 2 * constant.paddingMedium;
 
                 TextField {
                     id: pinCodeTextField;

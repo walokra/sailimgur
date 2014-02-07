@@ -20,8 +20,8 @@ Page {
             anchors { top: header.bottom; left: parent.left; right: parent.right }
             height: childrenRect.height;
 
-            anchors.leftMargin: Theme.paddingMedium;
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.leftMargin: constant.paddingMedium;
+            anchors.rightMargin: constant.paddingMedium;
 
             //SectionHeader { text: qsTr("About Sailimgur") }
 
@@ -33,7 +33,7 @@ Page {
                     id: aboutText;
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeMedium;
+                    font.pixelSize: constant.fontSizeMedium;
                     text: qsTr("Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt, QML and JavaScript. \
 It has a simple, native and easy-to-use UI. Sailimgur is Open Source and licensed under GPL v3.")
                 }
@@ -46,12 +46,12 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 height: versionText.height;
 
                 Label {
-                        id: versionText;
-                        width: parent.width;
-                        font.pixelSize: Theme.fontSizeMedium;
-                        wrapMode: Text.Wrap;
-                        text: APP_VERSION + "-" + APP_RELEASE;
-                    }
+                    id: versionText;
+                    width: parent.width;
+                    font.pixelSize: constant.fontSizeMedium;
+                    wrapMode: Text.Wrap;
+                    text: APP_VERSION + "-" + APP_RELEASE;
+                }
             }
 
             SectionHeader { text: qsTr("Developed By"); }
@@ -66,9 +66,9 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                     height: 86;
                 }
                 Label {
-                    anchors { left: rotImage.right; leftMargin: Theme.paddingLarge;}
+                    anchors { left: rotImage.right; leftMargin: constant.paddingLarge;}
                     text: "Marko Wallin, @walokra"
-                    font.pixelSize: Theme.fontSizeLarge
+                    font.pixelSize: constant.fontSizeLarge
                 }
             }
 
@@ -82,9 +82,9 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                     height: 54;
                 }
                 Label {
-                    anchors { left: imgurImage.right; leftMargin: Theme.paddingLarge; }
+                    anchors { left: imgurImage.right; leftMargin: constant.paddingLarge; }
                     text: "Imgur";
-                    font.pixelSize: Theme.fontSizeLarge;
+                    font.pixelSize: constant.fontSizeLarge;
                 }
             }
 
@@ -96,9 +96,9 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                     height: 80;
                 }
                 Label {
-                    anchors { left: qtImage.right; leftMargin: Theme.paddingLarge; }
+                    anchors { left: qtImage.right; leftMargin: constant.paddingLarge; }
                     text: "Qt + QML";
-                    font.pixelSize: Theme.fontSizeLarge;
+                    font.pixelSize: constant.fontSizeLarge;
                 }
             }
 
@@ -108,7 +108,7 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 id: creditsText;
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: constant.fontSizeXSmall;
                 text: "Remaining: user = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;
             }
         }

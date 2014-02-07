@@ -14,7 +14,7 @@ Item {
     ListItem {
         id: galleryContent;
         width: parent.width;
-        contentHeight: galleryContainer.height + 2 * Theme.paddingMedium;
+        contentHeight: galleryContainer.height + 2 * constant.paddingMedium;
         clip: true;
 
         MouseArea {
@@ -51,7 +51,7 @@ Item {
                     id: imageColumn;
                     anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
                     height: menuOpen ? contextMenu.height + childrenRect.height: childrenRect.height;
-                    spacing: Theme.paddingSmall;
+                    spacing: constant.paddingSmall;
 
                     enabled: !drawer.opened;
 
@@ -59,7 +59,7 @@ Item {
                         id: imageTitleText;
                         wrapMode: Text.Wrap;
                         text: title;
-                        font.pixelSize: Theme.fontSizeExtraSmall;
+                        font.pixelSize: constant.fontSizeXSmall;
                         anchors { left: parent.left; right: parent.right; }
                         visible: (title && is_album) ? true : false;
                     }
@@ -153,7 +153,7 @@ Item {
                 wrapMode: Text.Wrap;
                 textFormat: Text.RichText;
                 text: description;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: constant.fontSizeXSmall;
                 anchors { left: parent.left; right: parent.right; }
                 visible: (description) ? true : false;
                 elide: Text.ElideRight;

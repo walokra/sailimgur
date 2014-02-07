@@ -5,7 +5,8 @@ import "../components/imgur.js" as Imgur
 Page {
     id: mainPage;
 
-    property bool prevEnabled: page > 0;
+    property bool prevEnabled : page > 0;
+    property string searchModeText : "";
 
     Connections {
         target: settings;
@@ -49,32 +50,21 @@ Page {
                 }
             }
 
-            MenuItem {
-                id: refreshMenu;
-                text: qsTr("Refresh");
-                onClicked: {
-                    Imgur.processGalleryMode(false, query);
-                }
-            }
-
             SearchField {
                 id: searchTextField;
 
                 width: parent.width;
-                font.pixelSize: Theme.fontSizeSmall;
+                font.pixelSize: constant.fontSizeSmall;
                 font.bold: false;
-                color: Theme.highlightColor;
-
                 placeholderText: qsTr("Search...");
-                placeholderColor: Theme.secondaryHighlightColor;
 
                 EnterKey.enabled: text.trim().length > 0;
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept";
                 EnterKey.onClicked: {
-                    query = text;
                     //console.log("Searched: " + query);
-                    // FIXME: galleryModeText = "Gallery results for \"" + query + "\"";
-                    Imgur.getGallerySearch(query);
+                    searchModeText = "Results for \"" + text + "\"";
+                    galleryModel.clear();
+                    Imgur.getGallerySearch(searchTextField.text);
                     pullDownMenu.close();
                     searchTextField.focus = false;
                 }
@@ -92,10 +82,10 @@ Page {
                     Label {
                         id: prev;
                         text: qsTr("« Previous");
-                        font.pixelSize: Theme.fontSizeSmall;
+                        font.pixelSize: constant.fontSizeSmall;
 
                         anchors.left: parent.left;
-                        anchors.leftMargin: Theme.paddingMedium;
+                        anchors.leftMargin: constant.paddingMedium;
 
                         MouseArea {
                             anchors.fill: parent;
@@ -104,7 +94,7 @@ Page {
                                     page -= 1;
                                 }
                                 //console.log("Previous clicked!: " + page);
-                                Imgur.processGalleryMode(false, query);
+                                Imgur.processGalleryMode(false, searchTextField.text);
                                 if (page == 0) {
                                     prevEnabled = false;
                                 }
@@ -119,17 +109,17 @@ Page {
                     Label {
                         id: next;
                         text: qsTr("Next »");
-                        font.pixelSize: Theme.fontSizeSmall;
+                        font.pixelSize: constant.fontSizeSmall;
 
                         anchors.right: parent.right;
-                        anchors.rightMargin: Theme.paddingMedium;
+                        anchors.rightMargin: constant.paddingMedium;
 
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
                                 page += 1;
                                 //console.log("Next clicked!: " + page);
-                                Imgur.processGalleryMode(false, query);
+                                Imgur.processGalleryMode(false, searchTextField.text);
                                 prevEnabled = true;
                                 pushUpMenu.close();
                                 galgrid.scrollToTop();
@@ -142,9 +132,22 @@ Page {
 
         anchors.fill: parent;
 
-        Row {
+        Label {
+            id: searchModeLabel;
+            width: mainPage.width / 2;
+            anchors { top: header.bottom; left: parent.left; bottomMargin: constant.paddingMedium; }
+            anchors.rightMargin: constant.paddingSmall;
+            anchors.topMargin: constant.paddingMedium;
+
+            text: searchModeText;
+            font.pixelSize: constant.fontSizeMedium;
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
+            visible: searchTextField.text.trim().length > 1;
+        }
+
+        Item {
             id: galleryMode;
-            anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: Theme.paddingMedium; }
+            anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: constant.paddingMedium; }
             width: mainPage.width;
             height: childrenRect.height;
             z: 1;
@@ -152,7 +155,9 @@ Page {
             ComboBox {
                 id: modeBox;
                 currentIndex: 0;
-                width: 250;
+                anchors.left: parent.left;
+                width: mainPage.width / 2;
+                visible: searchModeLabel.visible == false;
 
                 menu: ContextMenu {
 
@@ -161,12 +166,11 @@ Page {
                         text: qsTr("most viral");
                         onClicked: {
                             sortBox.visible = true;
-                            query = "";
                             searchTextField.text = "";
                             settings.mode = "main";
                             settings.section = "hot";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, "");
                         }
                     }
 
@@ -175,12 +179,11 @@ Page {
                         text: qsTr("user submitted");
                         onClicked: {
                             sortBox.visible = true;
-                            query = "";
                             searchTextField.text = "";
                             settings.mode = "user";
                             settings.section = "user";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, "");
                         }
                     }
 
@@ -189,11 +192,10 @@ Page {
                         text: qsTr("random");
                         onClicked: {
                             sortBox.visible = false;
-                            query = "";
                             searchTextField.text = "";
                             settings.mode = "random";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, "");
                         }
                     }
 
@@ -202,12 +204,11 @@ Page {
                         text: qsTr("highest scoring");
                         onClicked: {
                             sortBox.visible = false;
-                            query = "";
                             searchTextField.text = "";
                             settings.mode = "score";
                             settings.section = "top";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, "");
                         }
                     }
 
@@ -216,11 +217,10 @@ Page {
                         text: qsTr("memes");
                         onClicked: {
                             sortBox.visible = true;
-                            query = "";
                             searchTextField.text = "";
                             settings.mode = "memes";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, "");
                         }
                     }
                 }
@@ -228,6 +228,8 @@ Page {
 
             ComboBox {
                 id: sortBox;
+                width: mainPage.width / 2;
+                anchors.right: parent.right;
                 currentIndex: 0;
                 label: qsTr("sort:");
 
@@ -238,7 +240,7 @@ Page {
                         onClicked: {
                             settings.sort = "viral";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, searchTextField.text);
                         }
                     }
 
@@ -248,7 +250,7 @@ Page {
                         onClicked: {
                             settings.sort = "time";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, query);
+                            Imgur.processGalleryMode(false, searchTextField.text);
                         }
                     }
                 }
@@ -265,8 +267,8 @@ Page {
             model: galleryModel;
 
             anchors { top: galleryMode.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
-            anchors.leftMargin: Theme.paddingSmall;
-            anchors.rightMargin: Theme.paddingSmall;
+            anchors.leftMargin: constant.paddingSmall;
+            anchors.rightMargin: constant.paddingSmall;
 
             delegate: Image {
                 id: animatedImage;
@@ -294,7 +296,7 @@ Page {
 
     Component.onCompleted: {
         galleryModel.clear();
-        Imgur.processGalleryMode(false, query);
+        Imgur.processGalleryMode(false, searchTextField.text);
     }
 
 }

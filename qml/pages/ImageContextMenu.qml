@@ -7,22 +7,21 @@ ContextMenu {
 
     Label {
         id: linkLabel;
-        anchors { left: parent.left; right: parent.right;
-            leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-        font.pixelSize: Theme.fontSizeExtraSmall;
-        color: Theme.highlightColor;
+        anchors { left: parent.left; right: parent.right; leftMargin: constant.paddingSmall; rightMargin: constant.paddingSmall; }
+        font.pixelSize: constant.fontSizeXSmall;
+        color: constant.colorHighlight;
         wrapMode: Text.Wrap;
         elide: Text.ElideRight;
         text: url;
     }
     Separator {
         anchors { left: parent.left; right: parent.right; }
-        color: Theme.secondaryColor;
+        color: constant.colorSecondary;
     }
 
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: Theme.fontSizeExtraSmall;
+        font.pixelSize: constant.fontSizeXSmall;
         text: qsTr("Open link in browser");
         onClicked: {
             Qt.openUrlExternally(url);
@@ -31,7 +30,7 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: Theme.fontSizeExtraSmall;
+        font.pixelSize: constant.fontSizeXSmall;
         text: qsTr("Copy link to clipboard");
         onClicked: {
             textArea.text = url; textArea.selectAll(); textArea.copy();

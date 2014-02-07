@@ -23,8 +23,8 @@ Dialog {
             width: settingsPage.width;
             height: childrenRect.height;
 
-            anchors.leftMargin: Theme.paddingMedium;
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.leftMargin: constant.paddingMedium;
+            anchors.rightMargin: constant.paddingMedium;
 
             Slider {
                 value: settings.albumImagesLimit;

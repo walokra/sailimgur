@@ -31,14 +31,14 @@ Item {
 
     ListItem {
         id: commentItem;
-        anchors { left: depthRow.right; right: parent.right; leftMargin: Theme.paddingSmall; }
-        contentHeight: commentColumn.height + 2 * Theme.paddingMedium;
+        anchors { left: depthRow.right; right: parent.right; leftMargin: constant.paddingSmall; }
+        contentHeight: commentColumn.height + 2 * constant.paddingMedium;
 
         Column {
             id: commentColumn;
             anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
             height: commentText.paintedHeight + commentMeta.height;
-            spacing: Theme.paddingSmall;
+            spacing: constant.paddingSmall;
 
             Label {
                 id: commentText;
@@ -46,7 +46,7 @@ Item {
                 wrapMode: Text.Wrap;
                 text: comment;
                 textFormat: Text.RichText;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: constant.fontSizeXSmall;
                 height: commentText.paintedHeight;
                 onLinkActivated: {
                     //console.log("Link clicked! " + link);
@@ -59,7 +59,7 @@ Item {
             /*
             IconButton {
                 id: more;
-                anchors { left: commentText.right; right: parent.right; leftMargin: Theme.paddingMedium; rightMargin: Theme.paddingMedium; }
+                anchors { left: commentText.right; right: parent.right; leftMargin: constant.paddingMedium; rightMargin: constant.paddingMedium; }
                 icon.source: "../images/icons/more-comments.svg";
                 width: 31;
                 height: 31;
@@ -81,21 +81,21 @@ Item {
                     anchors { left: parent.left; }
                     wrapMode: Text.Wrap;
                     text: "by " + author;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: constant.fontSizeXSmall;
                 }
 
                 Label {
                     id: commentPoints;
                     anchors { left: commentAuthor.right; }
                     text: ", " + points + " points";
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: constant.fontSizeXSmall;
                 }
 
                 Label {
                     id: commentDatetime;
-                    anchors { left: commentPoints.right; leftMargin: Theme.paddingSmall; right: parent.right; }
+                    anchors { left: commentPoints.right; leftMargin: constant.paddingSmall; right: parent.right; }
                     text: ": " + datetime;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: constant.fontSizeXSmall;
                     elide: Text.ElideRight;
                 }
             }
@@ -103,7 +103,7 @@ Item {
 
         Separator {
             anchors { left: parent.left; right: parent.right; }
-            color: Theme.secondaryColor;
+            color: constant.colorSecondary;
         }
     }
 

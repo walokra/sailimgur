@@ -4,15 +4,15 @@ import Sailfish.Silica 1.0
 Column {
     id: container;
 
-    spacing: Theme.paddingSmall;
+    spacing: constant.paddingSmall;
     anchors.left: parent.left; anchors.right: parent.right;
     height: childrenRect.height;
 
     Label {
         id: drawerLink;
-        anchors { left: parent.left; right: parent.right; leftMargin: Theme.paddingSmall; rightMargin: Theme.paddingSmall; }
-        font.pixelSize: Theme.fontSizeExtraSmall;
-        color: Theme.highlightColor;
+        anchors { left: parent.left; right: parent.right; leftMargin: constant.paddingSmall; rightMargin: constant.paddingSmall; }
+        font.pixelSize: constant.fontSizeXSmall;
+        color: constant.colorHighlight;
         wrapMode: Text.Wrap;
         elide: Text.ElideRight;
         text: link;
@@ -20,7 +20,7 @@ Column {
     Separator {
         id: drawerSep;
         anchors { left: parent.left; right: parent.right; }
-        color: Theme.secondaryColor;
+        color: constant.colorSecondary;
     }
 
     BackgroundItem {
@@ -31,9 +31,9 @@ Column {
             id: drawerBrowser;
             anchors { left: parent.left; right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
-            font.pixelSize: Theme.fontSizeExtraSmall;
+            font.pixelSize: constant.fontSizeXSmall;
             text: qsTr("Open link in browser");
-            color: browserItem.highlighted ? Theme.highlightColor : Theme.primaryColor;
+            color: browserItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
         }
 
         onClicked: {
@@ -50,9 +50,9 @@ Column {
             id: drawerClipboard;
             anchors { left: parent.left; right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
-            font.pixelSize: Theme.fontSizeExtraSmall;
+            font.pixelSize: constant.fontSizeXSmall;
             text: qsTr("Copy link to clipboard");
-            color: clipboardItem.highlighted ? Theme.highlightColor : Theme.primaryColor;
+            color: clipboardItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
         }
 
         onClicked: {
@@ -69,9 +69,9 @@ Column {
             id: drawerImageInfo;
             anchors { left: parent.left; right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
-            font.pixelSize: Theme.fontSizeExtraSmall;
+            font.pixelSize: constant.fontSizeXSmall;
             text: qsTr("Show image info");
-            color: imageInfoItem.highlighted ? Theme.highlightColor : Theme.primaryColor;
+            color: imageInfoItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
         }
 
         onClicked: {
