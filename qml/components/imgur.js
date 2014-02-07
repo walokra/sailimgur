@@ -1,5 +1,4 @@
-Qt.include("../lib/oauth.js");
-
+//TODO: .pragma library
 
 // OAUTH
 var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
@@ -37,7 +36,7 @@ function init(access_token, refresh_token) {
     OAUTH_REFRESH_TOKEN = refresh_token;
 }
 
-function exchangePinForAccessToken(pin) {
+function exchangePinForAccessToken(pin, onSuccess, onFailure) {
     var message = "client_id=" + constant.clientId + "&client_secret=" + constant.clientSecret + "&grant_type=pin&pin=" + pin;
     //console.log("message=" + message);
 
@@ -49,10 +48,12 @@ function exchangePinForAccessToken(pin) {
             if (xhr.status == 200) {
                 var jsonObject = JSON.parse(xhr.responseText);
                 console.log("response: " + JSON.stringify(jsonObject));
-                //access_token = jsonObject.access_token;
-                //refresh_token = jsonObject.refresh_token;
+                var access_token = jsonObject.access_token;
+                var refresh_token = jsonObject.refresh_token;
+                onSuccess(access_token, refresh_token);
             } else {
                 console.log(xhr.status, xhr.statusText, xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " +xhr.responseText);
             }
         }
     }
@@ -60,6 +61,7 @@ function exchangePinForAccessToken(pin) {
     xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
     xhr.setRequestHeader("Content-length", message.length);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
     xhr.send(message);
 }
 

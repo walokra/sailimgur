@@ -6,8 +6,8 @@ QtObject {
 
     signal settingsLoaded;
 
-    property string access_token : "";
-    property string refresh_token : "";
+    property string accessToken : "";
+    property string refreshToken : "";
 
     // Settings page
     property int albumImagesLimit: 10;
@@ -23,15 +23,23 @@ QtObject {
 
     function loadSettings() {
         //console.log("Load settings...");
-        Storage.db = Storage.connect();
-
-        var results = Storage.getAllSettings();
+        var results = Storage.readAllSettings();
         for (var s in results) {
             if (settings.hasOwnProperty(s)) {
                 settings[s] = results[s]
             }
         }
         settingsLoaded();
+    }
+
+    function resetTokens() {
+        Storage.writeSetting({"accessToken": ""});
+        Storage.writeSetting({"refreshToken": ""});
+    }
+
+    function saveTokens() {
+        Storage.writeSetting({"accessToken": accessToken});
+        Storage.writeSetting({"refreshToken": refreshToken});
     }
 
 }

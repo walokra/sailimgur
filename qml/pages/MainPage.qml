@@ -69,15 +69,8 @@ Page {
                 placeholderColor: Theme.secondaryHighlightColor;
 
                 EnterKey.enabled: text.trim().length > 0;
-                //EnterKey.text: "Search!";
-
-                Component.onCompleted: {
-                    query = "";
-                    _editor.accepted.connect(searchEntered);
-                }
-
-                // is called when user presses the Return key
-                function searchEntered() {
+                EnterKey.iconSource: "image://theme/icon-m-enter-accept";
+                EnterKey.onClicked: {
                     query = text;
                     //console.log("Searched: " + query);
                     // FIXME: galleryModeText = "Gallery results for \"" + query + "\"";

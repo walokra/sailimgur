@@ -14,6 +14,7 @@ Page {
         PageHeader {
             id: header
             title: qsTr("Sign In to imgur");
+            property bool busy: false;
         }
 
         Column {
@@ -45,6 +46,7 @@ Click the button below will launch an external web browser for you to sign in.")
                         console.log("Launching web browser with url:", signInUrl);
                         Qt.openUrlExternally(signInUrl);
                         infoBanner.showText("Launching external web browser...");
+                        header.busy = false;
                     }
                 }
             }
@@ -60,29 +62,20 @@ Click the button below will launch an external web browser for you to sign in.")
             Item {
                 id: pinCodeTextFieldWrapper;
                 anchors { left: parent.left; right: parent.right; }
-                height: pinCodeTextFieldRow.height + 2 * Theme.paddingMedium;
+                height: pinCodeTextField.height + 2 * Theme.paddingMedium;
 
-                Row {
-                    id: pinCodeTextFieldRow;
+                TextField {
+                    id: pinCodeTextField;
                     anchors.centerIn: parent;
-                    width: childrenRect.width; height: pinCodeTextField.height;
-                    spacing: Theme.paddingLarge;
+                    width: parent.width;
+                    inputMethodHints: Qt.ImhDigitsOnly;
+                    placeholderText: qsTr("PIN");
+                    label: qsTr("PIN");
 
-                    Label {
-                        font.pixelSize: Theme.fontSizeMedium;
-                        text: "PIN:";
-                    }
-
-                    TextField {
-                        id: pinCodeTextField;
-                        width: pinCodeTextFieldWrapper.width * 0.7;
-                        inputMethodHints: Qt.ImhDigitsOnly;
-
-                        EnterKey.enabled: text.length > 0;
-                        EnterKey.iconSource: "image://theme/icon-m-enter-accept";
-                        EnterKey.onClicked: {
-                            internal.doneButtonClicked();
-                        }
+                    EnterKey.enabled: text.length > 0;
+                    EnterKey.iconSource: "image://theme/icon-m-enter-accept";
+                    EnterKey.onClicked: {
+                        internal.doneButtonClicked();
                     }
                 }
             }
@@ -98,16 +91,34 @@ Click the button below will launch an external web browser for you to sign in.")
             }
         }
 
-        ScrollDecorator {}
+        VerticalScrollDecorator {}
     }
 
     QtObject {
         id: internal;
 
         function doneButtonClicked() {
-            Imgur.exchangePinForAccessToken(pinCodeTextField.text);
-            infoBanner.showText(qsTr("Signed in successfully"));
-            settings.settingsLoaded();
+            settings.resetTokens();
+
+            Imgur.exchangePinForAccessToken(pinCodeTextField.text,
+                function (access_token, refresh_token) {
+                    settings.accessToken = access_token;
+                    settings.refreshToken = refresh_token;
+                    infoBanner.showText(qsTr("Signed in successfully"));
+                    settings.saveTokens();
+                    settings.settingsLoaded();
+                    // back to main page
+                    pageStack.pop(null);
+                },
+                function(status, statusText) {
+                    if (status === 401) {
+                        pinCodeTextField.text = "";
+                        infoBanner.showText(qsTr("Error: Unable to authorize with imgur. Please sign in again and enter the correct PIN code."))
+                    }
+                    else infoBanner.showHttpError(status, statusText);
+                    header.busy = false;
+                });
+                header.busy = true;
         }
     }
 }

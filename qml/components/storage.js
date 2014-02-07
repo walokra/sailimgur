@@ -1,33 +1,26 @@
 // http://qt-project.org/doc/qt-5.0/qtquick/qmlmodule-qtquick-localstorage2-qtquick-localstorage-2.html
 
+.pragma library
 .import QtQuick.LocalStorage 2.0 as LS
 
-var db = null;
 var identifier = "Sailimgur";
 var version = "1.0";
-var description = "LSDB";
+var description = "Sailimgur database";
 
-/**
-  Connect to database and create table if not exists.
-*/
-function connect() {
-    db = LS.LocalStorage.openDatabaseSync(identifier, version, description, 10240);
-
+var db = LS.LocalStorage.openDatabaseSync(identifier, version, description, 10240, function(db) {
     // Create settings table (key, value)
     db.transaction(function(tx) {
-        tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);");
+        tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT UNIQUE, value TEXT);");
     });
-
-    return db;
-}
+});
 
 /**
-  Get all settings.
+  Read all settings.
 */
-function getAllSettings() {
+function readAllSettings() {
     var res = {};
     db.readTransaction(function(tx) {
-        var rs = tx.executeSql('SELECT * FROM Settings;')
+        var rs = tx.executeSql('SELECT * FROM settings;')
         for (var i=0; i<rs.rows.length; i++) {
             if (rs.rows.item(i).value === 'true') {
                 res[rs.rows.item(i).key] = true;
@@ -43,47 +36,24 @@ function getAllSettings() {
 }
 
 /**
-  Save setting to database.
+  Write setting to database.
 */
-function setSetting(key, value) {
-    if (value === true) {
-        value = 'true';
-    }
-    else if (value === false) {
-        value = 'false';
-    }
-
+function writeSetting(settings) {
     db.transaction(function(tx) {
-        tx.executeSql("INSERT OR REPLACE INTO settings VALUES (?, ?);", [key, value]);
-        tx.executeSql("COMMIT;");
+        for (var s in settings) {
+            tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?,?);', [s, settings[s]])
+        }
     });
 }
 
 /**
- Get given setting from database.
+ Read given setting from database.
 */
-function getSetting(key, defaultValue) {
-    var setting = null;
-
+function readSetting(setting) {
+    var res = "";
     db.readTransaction(function(tx) {
-        var rows = tx.executeSql("SELECT value AS val FROM settings WHERE key=?;", [key]);
-
-        if (rows.rows.length !== 1) {
-            setting = null;
-        } else {
-            setting = rows.rows.item(0).val;
-        }
+        var rs = tx.executeSql('SELECT value FROM settings WHERE key=?;', [setting])
+        if (rs.rows.length > 0) res = rs.rows.item(0).value
     });
-
-    if (setting === 'true') {
-        return true;
-    }
-    else if (setting === 'false') {
-        return false;
-    }
-    else if (setting === null) {
-        return defaultValue;
-    }
-
-    return setting;
+    return res;
 }

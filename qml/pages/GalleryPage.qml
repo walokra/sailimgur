@@ -310,6 +310,7 @@ Page {
                 }
             }
         }
+        VerticalScrollDecorator {}
     }
 
     GalleryNavigation {

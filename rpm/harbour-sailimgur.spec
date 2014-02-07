@@ -20,15 +20,15 @@ License:    GPLv3
 URL:        http://ruleoftech.com/lab/sailimgur
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailimgur.yaml
-Requires:   sailfishsilica-qt5
-Requires:   qt5-qtsvg-plugin-imageformat-svg
-Requires:   qt5-plugin-imageformat-gif
 Requires:   qt5-qtsvg
-BuildRequires:  pkgconfig(Qt5Svg)
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Qml)
-BuildRequires:  pkgconfig(Qt5Quick)
+Requires:   qt5-plugin-imageformat-gif
+Requires:   qt5-qtsvg-plugin-imageformat-svg
+Requires:   sailfishsilica-qt5
 BuildRequires:  pkgconfig(sailfishapp)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Svg)
 BuildRequires:  desktop-file-utils
 
 %description
@@ -71,13 +71,13 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-/usr/share/icons/hicolor/86x86/apps
-/usr/share/applications
-/usr/share/harbour-sailimgur
-/usr/bin
-%{_bindir}/%{name}
-%{_datadir}/%{name}/qml
-%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/%{name}/qml
+%{_bindir}/%{name}
+/usr/bin
+/usr/share/harbour-sailimgur
+/usr/share/applications
+/usr/share/icons/hicolor/86x86/apps
 # >> files
 # << files
