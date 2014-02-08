@@ -119,8 +119,9 @@ Click the button below will launch an external web browser for you to sign in.")
                         infoBanner.showHttpError(status, statusText);
                         header.busy = false;
                     }
-                });
-                header.busy = true;
+                }
+            );
+            header.busy = true;
         }
     }
 }

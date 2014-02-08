@@ -29,7 +29,9 @@ var ENDPOINT_ALBUM = BASEURL + "/album/";
 var ENDPOINT_IMAGE = BASEURL + "/image/";
 
 // needs sign in
-var ENDPOINT_GET_USER_IMAGES = BASEURL + "/account/me/images";
+var ENDPOINT_ACCOUNT = BASEURL + "/account";
+var ENDPOINT_ACCOUNT_CURRENT = ENDPOINT_ACCOUNT + "/me";
+var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
 
 var reloadGalleryPage = false;
 
@@ -47,15 +49,15 @@ function exchangePinForAccessToken(pin, onSuccess, onFailure) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             //console.log("headers: " + xhr.getAllResponseHeaders());
+            var jsonObject = JSON.parse(xhr.responseText);
             if (xhr.status == 200) {
-                var jsonObject = JSON.parse(xhr.responseText);
                 console.log("response: " + JSON.stringify(jsonObject));
                 var access_token = jsonObject.access_token;
                 var refresh_token = jsonObject.refresh_token;
                 onSuccess(access_token, refresh_token);
             } else {
-                console.log(xhr.status, xhr.statusText, xhr.responseText);
-                onFailure(xhr.status, xhr.statusText + ": " +xhr.responseText);
+                console.log("exchangePinForAccessToken", xhr.status, xhr.statusText, xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " +jsonObject.data.error);
             }
         }
     }
@@ -67,6 +69,70 @@ function exchangePinForAccessToken(pin, onSuccess, onFailure) {
     xhr.send(message);
 }
 
+function refreshAccessToken(refresh_token, onSuccess, onFailure) {
+    var message = "client_id=" + constant.clientId + "&client_secret=" + constant.clientSecret + "&grant_type=refresh_token&refresh_token=" + refresh_token;
+    //console.log("message=" + message);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', ACCESS_TOKEN_URL);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            //console.log("headers: " + xhr.getAllResponseHeaders());
+            var jsonObject = JSON.parse(xhr.responseText);
+            if (xhr.status == 200) {
+                console.log("response: " + JSON.stringify(jsonObject));
+                var tokenType = jsonObject.token_type;
+                if (tokenType === "Bearer") {
+                    var access_token = jsonObject.access_token;
+                    var refresh_token = jsonObject.refresh_token;
+                    var accountUsername = jsonObject.account_username;
+                    onSuccess(access_token, refresh_token);
+                } else {
+                    onFailure(xhr.status, "Wrong token type.");
+                }
+            } else {
+                console.log(xhr.status, xhr.statusText, xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+    // Send the proper header information along with the request
+    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    xhr.setRequestHeader("Content-length", message.length);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
+    xhr.send(message);
+}
+
+/**
+  Get current user info.
+*/
+function getAccountCurrent(onSuccess) {
+    var url = ENDPOINT_ACCOUNT_CURRENT;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            //console.log("headers: " + xhr.getAllResponseHeaders());
+            if (xhr.status == 200) {
+                var jsonObject = JSON.parse(xhr.responseText);
+                //console.log("response: " + JSON.stringify(jsonObject));
+                onSuccess(jsonObject.data.url);
+            } else {
+                console.log(xhr.status, xhr.statusText, xhr.responseText);
+            }
+        }
+    }
+
+    if (settings.accessToken == "") {
+        xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    } else {
+        xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
+    }
+    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
+    xhr.send();
+}
 
 /*
 Gallery
@@ -150,18 +216,23 @@ function sendJSONRequest(url, actiontype) {
                 creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
             } else {
-                //console.log("error: " + xhr.status+"; "+xhr.responseText);
-                infoBanner.showHttpError(xhr.status, xhr.responseText);
+                if (xhr.status == 403) {
+                    loggedIn = false;
+                }
+                console.log("error: " + xhr.status+"; "+ xhr.responseText);
+                var jsonObject = JSON.parse(xhr.responseText);
+                infoBanner.showHttpError(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
                 loadingRect.visible = false;
             }
         }
     }
-    // Send the proper header information along with the request
-    //if (settings.accessToken == "") {
-    //    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
-    //} else {
+
+    if (settings.accessToken == "") {
+        xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    } else {
         xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
-    //}
+    }
+    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
 
     xhr.send();
 }

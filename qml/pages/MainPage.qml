@@ -16,8 +16,12 @@ Page {
                 loggedIn = false;
                 console.log("Not signed in. Using anonymous mode.");
                 infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
+                settings.user = "anonymous";
             } else {
                 loggedIn = true;
+                Imgur.getAccountCurrent(function(url) {
+                    settings.user = url;
+                });
             }
             Imgur.processGalleryMode(false, searchTextField.text);
         }
@@ -54,9 +58,7 @@ Page {
                     if (loggedIn === false) {
                         pageStack.push(signInPage);
                     } else {
-                        settings.accessToken = "";
-                        settings.refreshToken = "";
-                        settings.saveTokens();
+                        settings.resetTokens();
                         settings.settingsLoaded();
                     }
                 }
@@ -283,7 +285,15 @@ Page {
             anchors.rightMargin: constant.paddingSmall;
 
             delegate: Rectangle {
-                border.color: (vote === "up") ? "green" : (vote === "down") ? "red" : "transparent";
+                border.color: {
+                    if (vote === "up") {
+                        "green";
+                    } else if (vote === "down") {
+                        "red";
+                    } else {
+                        "grey";
+                    }
+                }
                 border.width: 3;
                 width: 166;
                 height: 166;

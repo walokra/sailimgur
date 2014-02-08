@@ -13,6 +13,9 @@ QtObject {
     property int albumImagesLimit: 10;
     property bool showComments: false;
 
+    // user
+    property string user: "anonymous";
+
     // default options for gallery
     property string mode : "main";
     property string section : "hot"; // hot | top | user
@@ -26,20 +29,28 @@ QtObject {
         var results = Storage.readAllSettings();
         for (var s in results) {
             if (settings.hasOwnProperty(s)) {
-                settings[s] = results[s]
+                settings[s] = results[s];
             }
         }
+        readTokens();
         settingsLoaded();
     }
 
     function resetTokens() {
-        Storage.writeSetting({"accessToken": ""});
-        Storage.writeSetting({"refreshToken": ""});
+        accessToken = "";
+        refreshToken = "";
+        Storage.writeSetting("accessToken", accessToken);
+        Storage.writeSetting("refreshToken", refreshToken);
     }
 
     function saveTokens() {
-        Storage.writeSetting({"accessToken": accessToken});
-        Storage.writeSetting({"refreshToken": refreshToken});
+        Storage.writeToken("accessToken", accessToken, constant.clientSecret);
+        Storage.writeToken("refreshToken", refreshToken, constant.clientSecret);
+    }
+
+    function readTokens() {
+        accessToken = Storage.readToken("accessToken", constant.clientSecret);
+        refreshToken = Storage.readToken("refreshToken", constant.clientSecret);
     }
 
 }

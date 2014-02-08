@@ -75,9 +75,11 @@ ApplicationWindow
         }
 
         function showHttpError(errorCode, errorMessage) {
+            showError(errorMessage);
+            /*
             switch (errorCode) {
                 case 0:
-                    showError(qsTr("Server or connection error"));
+                    showError(qsTr("Server or connection error."));
                     break;
                 case 400:
                     showError(qsTr("Required parameter is missing or a parameter has a value that is out of bounds or otherwise incorrect."));
@@ -106,6 +108,7 @@ ApplicationWindow
                 default:
                     showError("Error: " + errorMessage + " (" + errorCode + ")");
             }
+            */
         }
 
         Behavior on opacity { FadeAnimation {} }

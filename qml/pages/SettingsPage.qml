@@ -52,8 +52,8 @@ Dialog {
     }
 
     onAccepted: {
-        Storage.writeSetting({"albumImagesLimit": settings.albumImagesLimit});
-        Storage.writeSetting({"showComments": settings.showComments});
+        Storage.writeSetting("albumImagesLimit", settings.albumImagesLimit);
+        Storage.writeSetting("showComments", settings.showComments);
     }
 
     Component.onCompleted: {

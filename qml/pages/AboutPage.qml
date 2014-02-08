@@ -110,7 +110,7 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 height: 100;
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeXSmall;
-                text: "Remaining: user = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;
+                text: "Remaining: " + settings.user + " = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;
             }
         }
         ScrollDecorator {}
