@@ -8,11 +8,11 @@ ApplicationWindow
     id: main;
 
     property int page : 0;
-    property int currentIndex: 0;
-    property string query : "";
+    property int currentIndex : 0;
+    property bool loggedIn : false;
 
-    property string creditsUserRemaining: "";
-    property string creditsClientRemaining: "";
+    property string creditsUserRemaining : "";
+    property string creditsClientRemaining : "";
 
     initialPage: Component { MainPage { id: mainPage; } }
 

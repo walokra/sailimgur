@@ -8,7 +8,7 @@ Page {
         id: aboutFlickable;
 
         anchors.fill: parent;
-        contentHeight: contentArea.height;
+        contentHeight: contentArea.height + 2 * constant.paddingLarge;
 
         PageHeader {
             id: header;
@@ -107,6 +107,7 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
             Label {
                 id: creditsText;
                 width: parent.width;
+                height: 100;
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeXSmall;
                 text: "Remaining: user = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;

@@ -13,8 +13,13 @@ Page {
         onSettingsLoaded: {
             Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken);
             if (settings.accessToken === "" || settings.refreshToken === "") {
-                console.log("Token are unset. Sign in.");
+                loggedIn = false;
+                console.log("Not signed in. Using anonymous mode.");
+                infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
+            } else {
+                loggedIn = true;
             }
+            Imgur.processGalleryMode(false, searchTextField.text);
         }
     }
 
@@ -44,9 +49,16 @@ Page {
 
             MenuItem {
                 id: signInMenu;
-                text: qsTr("Sign In");
+                text: loggedIn ? qsTr("Logout") : qsTr("Sign In");
                 onClicked: {
-                    pageStack.push(signInPage);
+                    if (loggedIn === false) {
+                        pageStack.push(signInPage);
+                    } else {
+                        settings.accessToken = "";
+                        settings.refreshToken = "";
+                        settings.saveTokens();
+                        settings.settingsLoaded();
+                    }
                 }
             }
 
@@ -270,25 +282,33 @@ Page {
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
 
-            delegate: Image {
-                id: animatedImage;
-                asynchronous: true;
+            delegate: Rectangle {
+                border.color: (vote === "up") ? "green" : (vote === "down") ? "red" : "transparent";
+                border.width: 3;
+                width: 166;
+                height: 166;
 
-                width: 160;
-                height: 160;
+                Image {
+                    id: image;
+                    asynchronous: true;
+                    anchors.centerIn: parent;
 
-                smooth: false;
-                source: link;
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
-                        currentIndex = index;
-                        pageStack.push(galleryPage);
-                        galleryPage.load();
+                    width: 160;
+                    height: 160;
+
+                    smooth: false;
+                    source: link;
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                            //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
+                            currentIndex = index;
+                            pageStack.push(galleryPage);
+                            galleryPage.load();
+                        }
                     }
                 }
-            }
+                }
 
             VerticalScrollDecorator {}
         } // SilicaGridView
@@ -296,7 +316,6 @@ Page {
 
     Component.onCompleted: {
         galleryModel.clear();
-        Imgur.processGalleryMode(false, searchTextField.text);
     }
 
 }

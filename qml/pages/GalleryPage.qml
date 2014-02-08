@@ -7,16 +7,22 @@ Page {
 
     property string albumTitle : "";
 
-    property string account_url;
-    property string views;
-    property string ups;
-    property string downs;
-    property string score;
-    property string images_count;
-    property int upsPercent;
-    property int downsPercent;
+    // Gallery props
+    property string account_url : "";
+    property string views : "0";
+    property string ups : "0";
+    property string downs : "0";
+    property string score : "0";
+    property string vote : "none";
+    property bool favorite : false;
+    property string images_count : "0";
+    property int upsPercent : 0;
+    property int downsPercent : 0;
+
     property bool is_album: false;
-    property string galleryPageTitle : "Sailimgur";
+    property string imgur_id : "";
+
+    property string galleryPageTitle : constant.appName;
 
     property bool prevEnabled: currentIndex > 0 || page > 0;
 
@@ -40,15 +46,19 @@ Page {
         commentsModel.clear();
 
         albumTitle = galleryModel.get(currentIndex).title;
-        if (galleryModel.get(currentIndex).is_album) {
+        imgur_id = galleryModel.get(currentIndex).id;
+        is_album = galleryModel.get(currentIndex).is_album;
+
+        if (is_album === true) {
             galleryPageTitle = qsTr("Gallery album");
-            Imgur.getAlbum(galleryModel.get(currentIndex).id);
+            Imgur.getAlbum(imgur_id);
         } else {
             galleryPageTitle = qsTr("Gallery image");
-            Imgur.getGalleryImage(galleryModel.get(currentIndex).id);
+            Imgur.getGalleryImage(imgur_id);
         }
+
         if (settings.showComments) {
-            Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
+            Imgur.getAlbumComments(imgur_id);
         }
         setPrevButton();
         galleryFlickable.scrollToTop();
@@ -66,27 +76,6 @@ Page {
         id: galleryFlickable;
 
         PageHeader { id: header; title: galleryPageTitle; }
-
-        /*
-        PullDownMenu {
-            id: pullDownMenu
-
-            MenuItem {
-
-            }
-        }
-        */
-
-        /*
-        PushUpMenu {
-            id: pushUpMenu;
-
-            MenuItem {
-                text: qsTr("To top");
-                onClicked: albumListView.scrollToTop();
-            }
-        }
-        */
 
         anchors.fill: parent;
         contentHeight: contentArea.height;
@@ -173,32 +162,96 @@ Page {
 
                             IconButton {
                                 id: likeButton;
-                                icon.source: "../images/icons/like.svg";
-                                onClicked: console.log("Like!");
-                                enabled: false;
+                                anchors { left: parent.left; }
+                                icon.source: (vote === "up") ? constant.iconLiked : constant.iconLike;
+                                enabled: loggedIn;
                                 width: 62;
                                 height: 62;
-                                anchors { left: parent.left; }
+                                onClicked: {
+                                    //console.log("Like!");
+                                    Imgur.galleryVote(imgur_id, "up",
+                                        function (data) {
+                                            //infoBanner.showText(data);
+                                            //console.log("Like success: " + vote);
+                                            if (vote === "up") {
+                                                vote = "";
+                                            } else {
+                                                vote = "up";
+                                            }
+                                        },
+                                        function(status, statusText) {
+                                            infoBanner.showHttpError(status, statusText);
+                                        }
+                                    );
+                                }
                             }
                             IconButton {
                                 id: dislikeButton;
-                                icon.source: "../images/icons/dislike.svg";
-                                onClicked: console.log("Dislike!");
-                                enabled: false;
+                                anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
+                                icon.source: (vote === "down") ? constant.iconDisliked : constant.iconDislike;
+                                enabled: loggedIn;
                                 width: 62;
                                 height: 62;
-                                anchors { left: likeButton.right;
-                                    leftMargin: constant.paddingLarge; }
+                                onClicked: {
+                                    //console.log("Dislike!");
+                                    Imgur.galleryVote(imgur_id, "down",
+                                        function (data) {
+                                            //infoBanner.showText(data);
+                                            //console.log("Dislike success: " + vote);
+                                            if (vote === "down") {
+                                                vote = "";
+                                            } else {
+                                                vote = "down";
+                                            }
+                                        },
+                                        function(status, statusText) {
+                                            infoBanner.showHttpError(status, statusText);
+                                        }
+                                    );
+                                }
                             }
                             IconButton {
                                 id: favoriteButton;
-                                icon.source: "../images/icons/favorite.svg";
-                                onClicked: console.log("Hearth!");
-                                enabled: false;
+                                anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
+                                icon.source: (favorite) ? constant.iconFavorited : constant.iconFavorite;
+                                enabled: loggedIn;
                                 width: 62;
                                 height: 62;
-                                anchors { left: dislikeButton.right;
-                                    leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
+                                onClicked: {
+                                    //console.log("Hearth!");
+                                    if (is_album) {
+                                        Imgur.albumFavorite(imgur_id,
+                                            function (data) {
+                                                //console.log("data: " + data);
+                                                //infoBanner.showText(data);
+                                                if (data === "favorited") {
+                                                   favorite = true;
+                                                } else if (data === "unfavorited") {
+                                                    favorite = false;
+                                                }
+                                            },
+                                            function(status, statusText) {
+                                                infoBanner.showHttpError(status, statusText);
+                                            }
+                                        );
+                                    }
+                                    else {
+                                        Imgur.imageFavorite(imgur_id,
+                                            function (data) {
+                                                //console.log("data: " + data);
+                                                //infoBanner.showText(data);
+                                                if (data === "favorited") {
+                                                   favorite = true;
+                                                } else if (data === "unfavorited") {
+                                                    favorite = false;
+                                                }
+                                            },
+                                            function(status, statusText) {
+                                                infoBanner.showHttpError(status, statusText);
+                                            }
+                                        );
+                                    }
+                                }
                             }
                         }
 

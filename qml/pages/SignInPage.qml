@@ -115,8 +115,10 @@ Click the button below will launch an external web browser for you to sign in.")
                         pinCodeTextField.text = "";
                         infoBanner.showText(qsTr("Error: Unable to authorize with imgur. Please sign in again and enter the correct PIN code."))
                     }
-                    else infoBanner.showHttpError(status, statusText);
-                    header.busy = false;
+                    else {
+                        infoBanner.showHttpError(status, statusText);
+                        header.busy = false;
+                    }
                 });
                 header.busy = true;
         }

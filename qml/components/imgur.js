@@ -1,5 +1,7 @@
 //TODO: .pragma library
 
+Qt.include("utils.js");
+
 // OAUTH
 var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
 var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
@@ -11,23 +13,23 @@ var OAUTH_REFRESH_TOKEN;
 // ENDPOINTS
 var BASEURL = "https://api.imgur.com/3";
 
-// GET
-// http://api.imgur.com/endpoints/gallery
 // https://api.imgur.com/3/gallery/{section}/{sort}/{page}?showViral=bool
-var ENDPOINT_GET_GALLERY_MAIN = BASEURL + "/" + "gallery";
+var ENDPOINT_GALLERY = BASEURL + "/gallery";
 // https://api.imgur.com/3/gallery/random/random/{page}
-var ENDPOINT_GET_GALLERY_RANDOM = BASEURL + "/" + "gallery/random/random";
+var ENDPOINT_GET_GALLERY_RANDOM = ENDPOINT_GALLERY + "/random/random";
 // https://api.imgur.com/3/gallery/g/memes/{sort}/{window}/{page}
-var ENDPOINT_GET_GALLERY_MEMES = BASEURL + "/" + "gallery/g/memes";
-var ENDPOINT_GET_GALLERY_IMAGE = BASEURL + "/" + "gallery/image"
-var ENDPOINT_GET_GALLERY_ALBUM = BASEURL + "/" + "gallery/album";
-var ENDPOINT_GET_GALLERY = BASEURL + "/" + "gallery";
-// https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
-var ENDPOINT_GET_GALLERY_SEARCH = BASEURL + "/gallery/search";
+var ENDPOINT_GET_GALLERY_MEMES = ENDPOINT_GALLERY + "/g/memes";
 var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
+// https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
+var ENDPOINT_GALLERY_SEARCH = ENDPOINT_GALLERY + "/search";
+
+var ENDPOINT_GALLERY_ALBUM = ENDPOINT_GALLERY + "/album";
+var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
+var ENDPOINT_ALBUM = BASEURL + "/album/";
+var ENDPOINT_IMAGE = BASEURL + "/image/";
 
 // needs sign in
-var ENDPOINT_GET_USER_IMAGES = BASEURL + "/account/me/images"
+var ENDPOINT_GET_USER_IMAGES = BASEURL + "/account/me/images";
 
 var reloadGalleryPage = false;
 
@@ -81,7 +83,7 @@ showViral 	optional 	true | false - Show or hide viral images from the 'user' se
 function getGallery() {
     galleryModel.clear();
 
-    var url = ENDPOINT_GET_GALLERY_MAIN;
+    var url = ENDPOINT_GALLERY;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
     //console.log("getGallery: " + url);
     sendJSONRequest(url, 1);
@@ -155,7 +157,11 @@ function sendJSONRequest(url, actiontype) {
         }
     }
     // Send the proper header information along with the request
-    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    //if (settings.accessToken == "") {
+    //    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
+    //} else {
+        xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
+    //}
 
     xhr.send();
 }
@@ -172,7 +178,7 @@ page 	optional 	integer - the data paging number
 */
 function getGallerySearch(query) {
     var xhr = new XMLHttpRequest();
-    var url = ENDPOINT_GET_GALLERY_SEARCH;
+    var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
 
@@ -182,7 +188,7 @@ function getGallerySearch(query) {
 // get gallery album
 function getAlbum(id) {
     var xhr = new XMLHttpRequest();
-    var url = ENDPOINT_GET_GALLERY_ALBUM;
+    var url = ENDPOINT_GALLERY_ALBUM;
     url += "/" + id;
     //console.log("getAlbum: " + url);
 
@@ -192,7 +198,7 @@ function getAlbum(id) {
 // get gallery image
 function getGalleryImage(id) {
     var xhr = new XMLHttpRequest();
-    var url = ENDPOINT_GET_GALLERY_IMAGE;
+    var url = ENDPOINT_GALLERY_IMAGE;
     url += "/" + id;
     //console.log("getGalleryImage: " + url);
 
@@ -213,7 +219,7 @@ sort	optional	best | top | new - defaults to best
 */
 function getAlbumComments(id) {
     var xhr = new XMLHttpRequest();
-    var url = ENDPOINT_GET_GALLERY;
+    var url = ENDPOINT_GALLERY;
     url += "/" + id + "/comments";
     //console.log("getGalleryImage: " + url);
 
@@ -257,12 +263,17 @@ function handleGalleryJSON(response) {
         if (output.title) {
             title = output.title;
         }
+        var vote = "";
+        if (output.vote) {
+            vote = output.vote;
+        }
 
         galleryModel.append({
                             id: output.id,
                             title: title,
                             link: link,
-                            is_album: output.is_album
+                            is_album: output.is_album,
+                            vote: vote
                          });
     }
 
@@ -304,49 +315,51 @@ function fillAlbumImagesModel(output, toMoreModel) {
         }
     }
 
+    var imageData = {
+        id: output.id,
+        title: title,
+        description: replaceURLWithHTMLLinks(description),
+        datetime: output.datetime,
+        animated: output.animated,
+        width: output.width,
+        height: output.height,
+        size: output.size,
+        views: output.views,
+        bandwidth: output.bandwidth,
+        link: link
+    };
+
     if (toMoreModel) {
-        // https://api.imgur.com/models/image/
-        albumImagesMoreModel.append({
-                            id: output.id,
-                            title: title,
-                            description: replaceURLWithHTMLLinks(description),
-                            datetime: output.datetime,
-                            animated: output.animated,
-                            width: output.width,
-                            height: output.height,
-                            size: output.size,
-                            views: output.views,
-                            bandwidth: output.bandwidth,
-                            link: link
-                        });
+        albumImagesMoreModel.append(imageData);
     } else {
-        albumImagesModel.append({
-                                id: output.id,
-                                title: title,
-                                description: replaceURLWithHTMLLinks(description),
-                                datetime: output.datetime,
-                                animated: output.animated,
-                                width: output.width,
-                                height: output.height,
-                                size: output.size,
-                                views: output.views,
-                                bandwidth: output.bandwidth,
-                                link: link
-                            });
+        albumImagesModel.append(imageData);
     }
 }
 
 function fillGalleryVariables(output) {
     if (output.account_url) {
         account_url = output.account_url;
+    } else {
+        account_url = "";
     }
     views = output.views;
     ups = output.ups;
     downs = output.downs;
     score = output.score;
-    images_count = 0;
+    if (output.vote) {
+        vote = output.vote;
+    } else {
+        vote = "";
+    }
+    if (output.favorite) {
+        favorite = output.favorite;
+    } else {
+        favorite = false;
+    }
     if (output.images_count) {
         images_count = output.images_count;
+    } else {
+        images_count = 0;
     }
     if(output.is_album) {
         is_album = output.is_album;
@@ -456,18 +469,72 @@ function parseComments(output, depth) {
     }
 }
 
-function getExt(link) {
-    var ext = link.substr(link.lastIndexOf('.') + 1);
-    return ext;
+/**
+    Favorite an album with a given ID. The user is required to be logged in to favorite the album.
+    Method	POST
+    Route	https://api.imgur.com/3/album/{id}/favorite
+    Response Model	Basic
+*/
+function albumFavorite(id, onSuccess, onFailure) {
+    var url = ENDPOINT_ALBUM + "/" + id + "/favorite";
+    sendJSONPOSTRequest(url, onSuccess, onFailure);
 }
 
-function replaceURLWithHTMLLinks(text) {
-    if (text) {
-        var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-        return text.replace(exp,"<a href='$1'>$1</a>");
-    }
-    return text;
+/**
+    Favorite an image with the given ID. The user is required to be logged in to favorite the image.
+    Method	POST
+    Route	https://api.imgur.com/3/image/{id}/favorite
+    Response Model	Basic
+*/
+function imageFavorite(id, onSuccess, onFailure) {
+    var url = ENDPOINT_IMAGE+ "/" + id + "/favorite";
+    sendJSONPOSTRequest(url, onSuccess, onFailure);
 }
+
+/**
+    Album/Image Voting
+    Vote for an image, 'up' or 'down' vote. Send the same value again to undo a vote.
+    Method	POST
+    Route	https://api.imgur.com/3/gallery/album/{id}/vote/{vote}
+    Route	https://api.imgur.com/3/gallery/image/{id}/vote/{vote}
+    Route	https://api.imgur.com/3/gallery/{id}/vote/{vote}
+    Response Model	Basic
+*/
+function galleryVote(id, vote, onSuccess, onFailure) {
+    var url = ENDPOINT_GALLERY + "/" + id + "/vote/" + vote;
+    sendJSONPOSTRequest(url, onSuccess, onFailure);
+}
+
+function sendJSONPOSTRequest(url, onSuccess, onFailure) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
+                creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
+
+                var jsonObject = JSON.parse(xhr.responseText);
+                //console.log("output=" + JSON.stringify(jsonObject));
+                onSuccess(jsonObject.data);
+            } else {
+                //console.log("error: " + xhr.status+"; "+xhr.responseText);
+                onFailure(xhr.status, xhr.responseText);
+            }
+        }
+    }
+
+    // Send the proper header information along with the request
+   if (settings.accessToken == "") {
+        onFailure(xhr.status, xhr.responseText);
+    } else {
+       xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
+    }
+
+    xhr.send();
+}
+
 
 function processGalleryMode(refreshGallery, query) {
     galleryModel.clear();
