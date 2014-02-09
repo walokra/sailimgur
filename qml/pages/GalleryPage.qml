@@ -4,6 +4,14 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: galleryPage;
+    allowedOrientations: Orientation.All;
+
+    Connections {
+        target: settings;
+        onSettingsLoaded: {
+            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+        }
+    }
 
     property string albumTitle : "";
 
@@ -51,14 +59,34 @@ Page {
 
         if (is_album === true) {
             galleryPageTitle = qsTr("Gallery album");
-            Imgur.getAlbum(imgur_id);
+            Imgur.getAlbum(imgur_id,
+                function(status){
+
+                }, function(status, statusText){
+                    infoBanner.showHttpError(status, statusText);
+                }
+            );
         } else {
             galleryPageTitle = qsTr("Gallery image");
-            Imgur.getGalleryImage(imgur_id);
+            Imgur.getGalleryImage(imgur_id,
+                function(status){
+
+                }, function(status, statusText){
+                    infoBanner.showHttpError(status, statusText);
+                }
+            );
         }
 
         if (settings.showComments) {
-            Imgur.getAlbumComments(imgur_id);
+            loadingRectComments.visible = true;
+
+            Imgur.getAlbumComments(imgur_id,
+                function(){
+                    loadingRectComments.visible = false;
+                }, function() {
+                    loadingRectComments.visible = false;
+                }
+            );
         }
         setPrevButton();
         galleryFlickable.scrollToTop();

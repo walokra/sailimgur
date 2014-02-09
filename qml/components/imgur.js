@@ -9,6 +9,7 @@ var OAUTH_CONSUMER_KEY;
 var OAUTH_CONSUMER_SECRET;
 var OAUTH_ACCESS_TOKEN;
 var OAUTH_REFRESH_TOKEN;
+var USER_AGENT;
 
 // ENDPOINTS
 var BASEURL = "https://api.imgur.com/3";
@@ -33,15 +34,16 @@ var ENDPOINT_ACCOUNT = BASEURL + "/account";
 var ENDPOINT_ACCOUNT_CURRENT = ENDPOINT_ACCOUNT + "/me";
 var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
 
-var reloadGalleryPage = false;
-
-function init(access_token, refresh_token) {
+function init(client_id, client_secret, access_token, refresh_token, user_agent) {
+    OAUTH_CONSUMER_KEY = client_id;
+    OAUTH_CONSUMER_SECRET = client_secret;
     OAUTH_ACCESS_TOKEN = access_token;
     OAUTH_REFRESH_TOKEN = refresh_token;
+    USER_AGENT = user_agent;
 }
 
 function exchangePinForAccessToken(pin, onSuccess, onFailure) {
-    var message = "client_id=" + constant.clientId + "&client_secret=" + constant.clientSecret + "&grant_type=pin&pin=" + pin;
+    var message = "client_id=" + OAUTH_CONSUMER_KEY + "&client_secret=" + OAUTH_CONSUMER_SECRET + "&grant_type=pin&pin=" + pin;
     //console.log("message=" + message);
 
     var xhr = new XMLHttpRequest();
@@ -52,25 +54,22 @@ function exchangePinForAccessToken(pin, onSuccess, onFailure) {
             var jsonObject = JSON.parse(xhr.responseText);
             if (xhr.status == 200) {
                 console.log("response: " + JSON.stringify(jsonObject));
-                var access_token = jsonObject.access_token;
-                var refresh_token = jsonObject.refresh_token;
-                onSuccess(access_token, refresh_token);
+                OAUTH_ACCESS_TOKEN = jsonObject.access_token;
+                OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
+                onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
             } else {
                 console.log("exchangePinForAccessToken", xhr.status, xhr.statusText, xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " +jsonObject.data.error);
             }
         }
     }
-    // Send the proper header information along with the request
-    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
-    xhr.setRequestHeader("Content-length", message.length);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
+
+    xhr = createPOSTHeader(xhr, message);
     xhr.send(message);
 }
 
 function refreshAccessToken(refresh_token, onSuccess, onFailure) {
-    var message = "client_id=" + constant.clientId + "&client_secret=" + constant.clientSecret + "&grant_type=refresh_token&refresh_token=" + refresh_token;
+    var message = "client_id=" + OAUTH_CONSUMER_KEY + "&client_secret=" + OAUTH_CONSUMER_SECRET + "&grant_type=refresh_token&refresh_token=" + refresh_token;
     //console.log("message=" + message);
 
     var xhr = new XMLHttpRequest();
@@ -82,11 +81,11 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
             if (xhr.status == 200) {
                 console.log("response: " + JSON.stringify(jsonObject));
                 var tokenType = jsonObject.token_type;
-                if (tokenType === "Bearer") {
-                    var access_token = jsonObject.access_token;
-                    var refresh_token = jsonObject.refresh_token;
+                if (tokenType === "bearer") {
+                    OAUTH_ACCESS_TOKEN = jsonObject.access_token;
+                    OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
                     var accountUsername = jsonObject.account_username;
-                    onSuccess(access_token, refresh_token);
+                    onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
                 } else {
                     onFailure(xhr.status, "Wrong token type.");
                 }
@@ -96,18 +95,15 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
             }
         }
     }
-    // Send the proper header information along with the request
-    xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
-    xhr.setRequestHeader("Content-length", message.length);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
+
+    xhr = createPOSTHeader(xhr, message);
     xhr.send(message);
 }
 
 /**
   Get current user info.
 */
-function getAccountCurrent(onSuccess) {
+function getAccountCurrent(onSuccess, onFailure) {
     var url = ENDPOINT_ACCOUNT_CURRENT;
 
     var xhr = new XMLHttpRequest();
@@ -115,22 +111,21 @@ function getAccountCurrent(onSuccess) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             //console.log("headers: " + xhr.getAllResponseHeaders());
-            if (xhr.status == 200) {
+            // permission denied, check if token expired and try to refresh it
+            if (xhr.status == 403) {
+                onFailure(xhr.status, xhr.statusText);
+            } else if (xhr.status == 200) {
                 var jsonObject = JSON.parse(xhr.responseText);
                 //console.log("response: " + JSON.stringify(jsonObject));
                 onSuccess(jsonObject.data.url);
             } else {
                 console.log(xhr.status, xhr.statusText, xhr.responseText);
+                onFailure(xhr.status, xhr.statusText);
             }
         }
     }
 
-    if (settings.accessToken == "") {
-        xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
-    } else {
-        xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
-    }
-    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
+    xhr = createGETHeader(xhr);
     xhr.send();
 }
 
@@ -146,13 +141,11 @@ page 	optional 	integer - the data paging number
 window 	optional 	Change the date range of the request if the section is "top", day | week | month | year | all, defaults to day
 showViral 	optional 	true | false - Show or hide viral images from the 'user' section. Defaults to true
 */
-function getGallery() {
-    galleryModel.clear();
-
+function getGallery(onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
     //console.log("getGallery: " + url);
-    sendJSONRequest(url, 1);
+    sendJSONRequest(url, 1, onSuccess, onFailure);
 }
 
 /*
@@ -163,11 +156,11 @@ https://api.imgur.com/3/gallery/random/random/{page}
 
 page 	optional 	A page of random gallery images, from 0-50. Pages are regenerated every hour.
 */
-function getRandomGalleryImages() {
+function getRandomGalleryImages(onSuccess, onFailure) {
     var url = ENDPOINT_GET_GALLERY_RANDOM;
     url += "/" + page;
 
-    sendJSONRequest(url, 1);
+    sendJSONRequest(url, 1, onSuccess, onFailure);
 }
 
 /**
@@ -181,24 +174,20 @@ sort	optional	viral | time | top - defaults to viral
 page	optional	integer - the data paging number
 window	optional	Change the date range of the request if the sort is "top", day | week | month | year | all, defaults to week
 */
-function getMemesSubGallery() {
+function getMemesSubGallery(onSuccess, onFailure) {
     var url = ENDPOINT_GET_GALLERY_MEMES;
     url += "/" + settings.sort + "/" + settings.window + "/" + page;
     url += "/" + page;
 
-    sendJSONRequest(url, 1);
+    sendJSONRequest(url, 1, onSuccess, onFailure);
 }
 
-function sendJSONRequest(url, actiontype) {
+function sendJSONRequest(url, actiontype, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
-
-    if (actiontype === 4) {
-        loadingRectComments.visible = true;
-    }
 
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 //console.log("ok");
                 if (actiontype === 1) {
@@ -209,31 +198,20 @@ function sendJSONRequest(url, actiontype) {
                     handleImageJSON(xhr.responseText);
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText);
-                } else if (actiontype === 5) {
-                    handleCreditsJSON(xhr.responseText);
                 }
-                creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
-                creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
+                //creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
+                //creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
+                onSuccess(xhr.status);
             } else {
-                if (xhr.status == 403) {
-                    loggedIn = false;
-                }
                 console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
-                infoBanner.showHttpError(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
-                loadingRect.visible = false;
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
         }
     }
 
-    if (settings.accessToken == "") {
-        xhr.setRequestHeader("Authorization", "Client-ID " + constant.clientId);
-    } else {
-        xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
-    }
-    xhr.setRequestHeader("User-Agent", constant.USER_AGENT);
-
+    xhr = createGETHeader(xhr);
     xhr.send();
 }
 
@@ -247,33 +225,33 @@ q       required 	Query string
 sort 	optional 	time | viral - defaults to time
 page 	optional 	integer - the data paging number
 */
-function getGallerySearch(query) {
+function getGallerySearch(query, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
 
-    sendJSONRequest(url, 1);
+    sendJSONRequest(url, 1, onSuccess, onFailure);
 }
 
 // get gallery album
-function getAlbum(id) {
+function getAlbum(id, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_ALBUM;
     url += "/" + id;
     //console.log("getAlbum: " + url);
 
-    sendJSONRequest(url, 2);
+    sendJSONRequest(url, 2, onSuccess, onFailure);
 }
 
 // get gallery image
-function getGalleryImage(id) {
+function getGalleryImage(id, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_IMAGE;
     url += "/" + id;
     //console.log("getGalleryImage: " + url);
 
-    sendJSONRequest(url, 3);
+    sendJSONRequest(url, 3, onSuccess, onFailure);
 }
 
 /*
@@ -288,21 +266,38 @@ Route	https://api.imgur.com/3/gallery/{id}/comments/{sort}
 
 sort	optional	best | top | new - defaults to best
 */
-function getAlbumComments(id) {
+function getAlbumComments(id, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY;
     url += "/" + id + "/comments";
     //console.log("getGalleryImage: " + url);
 
-    sendJSONRequest(url, 4);
+    sendJSONRequest(url, 4, onSuccess, onFailure);
 }
 
 /**
   Check the current rate limit status
 */
-function getCredits() {
+function getCredits(onSuccess, onFailure) {
     var url = ENDPOINT_GET_CREDITS;
-    sendJSONRequest(url, 5);
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            var jsonObject = JSON.parse(xhr.responseText);
+            if (xhr.status == 200) {
+                var data = jsonObject.data;
+                onSuccess(data.UserRemaining, data.ClientRemaining);
+            } else {
+                console.log("error: " + xhr.status+"; "+ xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+
+    xhr = createGETHeader(xhr);
+    xhr.send();
 }
 
 /*
@@ -346,18 +341,6 @@ function handleGalleryJSON(response) {
                             is_album: output.is_album,
                             vote: vote
                          });
-    }
-
-    onLoading();
-}
-
-function onLoading() {
-    loadingRect.visible = false;
-    if(currentIndex == -1) {
-        currentIndex = galleryModel.count - 1;
-    }
-    if (reloadGalleryPage) {
-        galleryPage.load();
     }
 }
 
@@ -493,18 +476,6 @@ function handleCommentsJSON(response) {
     }
 
     //console.log("comments=" + commentsModel.count);
-    loadingRectComments.visible = false;
-}
-
-function handleCreditsJSON(response) {
-    var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
-    //console.log("output=" + JSON.stringify(jsonObject));
-
-    var data = jsonObject.data;
-    //console.log("output=" + JSON.stringify(data));
-    creditsUserRemaining = data.UserRemaining;
-    creditsClientRemaining = data.ClientRemaining;
 }
 
 function parseComments(output, depth) {
@@ -581,11 +552,8 @@ function sendJSONPOSTRequest(url, onSuccess, onFailure) {
 
     xhr.open("POST", url, true);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-                creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
-                creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
-
                 var jsonObject = JSON.parse(xhr.responseText);
                 //console.log("output=" + JSON.stringify(jsonObject));
                 onSuccess(jsonObject.data);
@@ -597,38 +565,48 @@ function sendJSONPOSTRequest(url, onSuccess, onFailure) {
     }
 
     // Send the proper header information along with the request
-   if (settings.accessToken == "") {
-        onFailure(xhr.status, xhr.responseText);
+   if (OAUTH_ACCESS_TOKEN === "") {
+       onFailure(xhr.status, "You need to be signed in for this action.");
     } else {
-       xhr.setRequestHeader("Authorization", "Bearer " + settings.accessToken);
+       xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
 
     xhr.send();
 }
 
+function createPOSTHeader(xhr, message) {
+    // Send the proper header information along with the request
+    xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
+    xhr.setRequestHeader("Content-length", message.length);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("User-Agent", USER_AGENT);
+    return xhr;
+}
 
-function processGalleryMode(refreshGallery, query) {
-    galleryModel.clear();
-
-    if (refreshGallery) {
-        reloadGalleryPage = true;
-    }else {
-        reloadGalleryPage = false;
+function createGETHeader(xhr) {
+    //console.log("OAUTH_CONSUMER_KEY=" + OAUTH_CONSUMER_KEY + "; OAUTH_ACCESS_TOKEN=" + OAUTH_ACCESS_TOKEN);
+    if (OAUTH_ACCESS_TOKEN === "") {
+        xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
+    } else {
+        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
+    xhr.setRequestHeader("User-Agent", USER_AGENT);
+    return xhr;
+}
 
-    loadingRect.visible = true;
+function processGalleryMode(mode, query, onSuccess, onFailure) {
     if (query) {
-        getGallerySearch(query);
+        getGallerySearch(query, onSuccess, onFailure);
     }
-    else if (settings.mode === "main") {
-        getGallery();
-    } else if (settings.mode === "random") {
-        getRandomGalleryImages();
-    } else if (settings.mode === "user") {
-        getGallery();
-    } else if (settings.mode === "score") {
-        getGallery();
-    } else if (settings.mode === "memes") {
-        getMemesSubGallery();
+    else if (mode === "main") {
+        getGallery(onSuccess, onFailure);
+    } else if (mode === "random") {
+        getRandomGalleryImages(onSuccess, onFailure);
+    } else if (mode === "user") {
+        getGallery(onSuccess, onFailure);
+    } else if (mode === "score") {
+        getGallery(onSuccess, onFailure);
+    } else if (mode === "memes") {
+        getMemesSubGallery(onSuccess, onFailure);
     }
 }

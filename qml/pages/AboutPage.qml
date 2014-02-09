@@ -1,8 +1,19 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components/imgur.js" as Imgur
 
 Page {
     id: aboutPage;
+    allowedOrientations: Orientation.All;
+
+    signal load;
+
+    Connections {
+        target: settings;
+        onSettingsLoaded: {
+            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+        }
+    }
 
     SilicaFlickable {
         id: aboutFlickable;
@@ -114,6 +125,17 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
             }
         }
         ScrollDecorator {}
+    }
+
+    onLoad: {
+        Imgur.getCredits(
+            function(userRemaining, clientRemaining){
+                creditsUserRemaining = userRemaining;
+                creditsClientRemaining = clientRemaining;
+            },
+            function(status, statusText){
+            }
+        );
     }
 
 }

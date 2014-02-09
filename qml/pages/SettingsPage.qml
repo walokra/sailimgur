@@ -4,6 +4,7 @@ import "../components/storage.js" as Storage
 
 Dialog {
     id: settingsPage;
+    allowedOrientations: Orientation.All;
 
     SilicaFlickable {
         id: settingsFlickable;

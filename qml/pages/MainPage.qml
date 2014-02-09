@@ -4,6 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: mainPage;
+    allowedOrientations: Orientation.All;
 
     property bool prevEnabled : page > 0;
     property string searchModeText : "";
@@ -11,19 +12,46 @@ Page {
     Connections {
         target: settings;
         onSettingsLoaded: {
-            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken);
+            galleryModel.clear();
+            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
             if (settings.accessToken === "" || settings.refreshToken === "") {
                 loggedIn = false;
                 console.log("Not signed in. Using anonymous mode.");
                 infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
                 settings.user = "anonymous";
+                internal.processGalleryMode();
             } else {
                 loggedIn = true;
                 Imgur.getAccountCurrent(function(url) {
                     settings.user = url;
+                    internal.processGalleryMode();
+                }, function(status, statusText){
+                    if (status === 403) {
+                        console.log("Permission denied. Trying to refresh tokens.");
+                        Imgur.refreshAccessToken(settings.refreshToken, function(access_token, refresh_token){
+                            settings.accessToken = access_token;
+                            settings.refreshToken = refresh_token;
+                            settings.saveTokens();
+
+                            // retry the api call
+                            Imgur.getAccountCurrent(function(url) {
+                                settings.user = url;
+                                internal.processGalleryMode();
+                            }, function(status, statusText) {
+                                infoBanner.showHttpError(status, statusText);
+                                loadingRect.visible = false;
+                            });
+                        }, function(status, statusText) {
+                            loggedIn = false;
+                            infoBanner.showHttpError(status, statusText + ". Can't refresh tokens. Please sign in.");
+                            loadingRect.visible = false;
+                        });
+                    } else {
+                        infoBanner.showHttpError(status, statusText);
+                        loadingRect.visible = false;
+                    };
                 });
             }
-            Imgur.processGalleryMode(false, searchTextField.text);
         }
     }
 
@@ -39,6 +67,7 @@ Page {
                 id: aboutMenu;
                 text: qsTr("About");
                 onClicked: {
+                    aboutPage.load();
                     pageStack.push(aboutPage);
                 }
             }
@@ -78,7 +107,7 @@ Page {
                     //console.log("Searched: " + query);
                     searchModeText = "Results for \"" + text + "\"";
                     galleryModel.clear();
-                    Imgur.getGallerySearch(searchTextField.text);
+                    internal.processGalleryMode();
                     pullDownMenu.close();
                     searchTextField.focus = false;
                 }
@@ -108,7 +137,7 @@ Page {
                                     page -= 1;
                                 }
                                 //console.log("Previous clicked!: " + page);
-                                Imgur.processGalleryMode(false, searchTextField.text);
+                                internal.processGalleryMode();
                                 if (page == 0) {
                                     prevEnabled = false;
                                 }
@@ -133,7 +162,7 @@ Page {
                             onClicked: {
                                 page += 1;
                                 //console.log("Next clicked!: " + page);
-                                Imgur.processGalleryMode(false, searchTextField.text);
+                                internal.processGalleryMode();
                                 prevEnabled = true;
                                 pushUpMenu.close();
                                 galgrid.scrollToTop();
@@ -184,7 +213,7 @@ Page {
                             settings.mode = "main";
                             settings.section = "hot";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, "");
+                            internal.processGalleryMode();
                         }
                     }
 
@@ -197,7 +226,7 @@ Page {
                             settings.mode = "user";
                             settings.section = "user";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, "");
+                            internal.processGalleryMode();
                         }
                     }
 
@@ -209,7 +238,7 @@ Page {
                             searchTextField.text = "";
                             settings.mode = "random";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, "");
+                            internal.processGalleryMode();
                         }
                     }
 
@@ -222,7 +251,7 @@ Page {
                             settings.mode = "score";
                             settings.section = "top";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, "");
+                            internal.processGalleryMode();
                         }
                     }
 
@@ -234,7 +263,7 @@ Page {
                             searchTextField.text = "";
                             settings.mode = "memes";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, "");
+                            internal.processGalleryMode();
                         }
                     }
                 }
@@ -254,7 +283,8 @@ Page {
                         onClicked: {
                             settings.sort = "viral";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, searchTextField.text);
+                            galleryModel.clear();
+
                         }
                     }
 
@@ -264,7 +294,7 @@ Page {
                         onClicked: {
                             settings.sort = "time";
                             galgrid.scrollToTop();
-                            Imgur.processGalleryMode(false, searchTextField.text);
+                            internal.processGalleryMode();
                         }
                     }
                 }
@@ -328,4 +358,24 @@ Page {
         galleryModel.clear();
     }
 
+    QtObject {
+        id: internal;
+
+        function processGalleryMode() {
+            loadingRect.visible = true;
+            galleryModel.clear();
+
+            Imgur.processGalleryMode(settings.mode, searchTextField.text,
+                function(status){
+                    loadingRect.visible = false;
+                    if(currentIndex == -1) {
+                        currentIndex = galleryModel.count - 1;
+                    }
+                }, function(status, statusText){
+                    infoBanner.showHttpError(status, statusText);
+                    loadingRect.visible = false;
+                }
+            );
+        }
+    }
 }

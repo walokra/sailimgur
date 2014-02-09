@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components/imgur.js" as Imgur
 
 Rectangle {
     id: navBg;
@@ -27,8 +28,19 @@ Rectangle {
                 } else if (currentIndex === 0 && page >= 1) {
                     //console.log("Getting previous list of images");
                     page -= 1;
-                    currentIndex = -1;
-                    Imgur.processGalleryMode(true, query);
+
+                    loadingRect.visible = true;
+                    galleryModel.clear();
+                    Imgur.processGalleryMode(settings.mode, "",
+                        function(status){
+                            galleryPage.load();
+                            loadingRect.visible = false;
+                            currentIndex = galleryModel.count - 1;
+                        }, function(status, statusText){
+                            infoBanner.showHttpError(status, statusText);
+                            loadingRect.visible = false;
+                        }
+                    );
                 }
                 setPrevButton();
             }
@@ -55,7 +67,18 @@ Rectangle {
                     //console.log("Getting new list of images");
                     page += 1;
                     currentIndex = 0;
-                    Imgur.processGalleryMode(true, query);
+
+                    loadingRect.visible = true;
+                    galleryModel.clear();
+                    Imgur.processGalleryMode(settings.mode, "",
+                        function(status){
+                            galleryPage.load();
+                            loadingRect.visible = false;
+                        }, function(status, statusText){
+                            infoBanner.showHttpError(status, statusText);
+                            loadingRect.visible = false;
+                        }
+                    );
                 }
             }
         }

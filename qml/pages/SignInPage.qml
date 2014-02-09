@@ -4,6 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: signInPage;
+    allowedOrientations: Orientation.All;
 
     SilicaFlickable {
         id: signInFlickable;
