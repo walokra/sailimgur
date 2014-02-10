@@ -14,7 +14,7 @@ Name:       harbour-sailimgur
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt and QML
 Version:    0.2.0
-Release:    3
+Release:    1
 Group:      Applications/Internet
 License:    GPLv3
 URL:        http://ruleoftech.com/lab/sailimgur
@@ -75,9 +75,5 @@ desktop-file-install --delete-original       \
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/%{name}/qml
 %{_bindir}/%{name}
-/usr/bin
-/usr/share/harbour-sailimgur
-/usr/share/applications
-/usr/share/icons/hicolor/86x86/apps
 # >> files
 # << files
