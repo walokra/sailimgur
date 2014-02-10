@@ -352,7 +352,14 @@ Page {
                             if(commentsModel.count > 0) {
                                 commentsColumn.visible = true;
                             } else {
-                                Imgur.getAlbumComments(galleryModel.get(currentIndex).id);
+                                loadingRectComments.visible = true;
+                                Imgur.getAlbumComments(imgur_id,
+                                    function(){
+                                        loadingRectComments.visible = false;
+                                    }, function() {
+                                        loadingRectComments.visible = false;
+                                    }
+                                );
                                 commentsColumn.visible = true;
                             }
                         }
@@ -371,6 +378,7 @@ Page {
                     delegate: Loader {
                         id: commentsLoader;
                         width: ListView.view.width;
+                        asynchronous: true;
 
                         sourceComponent: CommentDelegate {
                             id: commentDelegate;

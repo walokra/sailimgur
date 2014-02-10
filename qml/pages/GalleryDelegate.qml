@@ -9,7 +9,7 @@ Item {
     property string contextLink;
 
     width: albumListView.width;
-    height: galleryContent.height;
+    height: menuOpen ? contextMenu.height + galleryContent.height : galleryContent.height;
 
     ListItem {
         id: galleryContent;
@@ -50,7 +50,7 @@ Item {
                 foreground: Column {
                     id: imageColumn;
                     anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
-                    height: menuOpen ? contextMenu.height + childrenRect.height: childrenRect.height;
+                    height: childrenRect.height;
                     spacing: constant.paddingSmall;
 
                     enabled: !drawer.opened;
