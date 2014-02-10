@@ -30,7 +30,7 @@ Dialog {
             Slider {
                 value: settings.albumImagesLimit;
                 minimumValue: 1;
-                maximumValue: 30;
+                maximumValue: 10;
                 stepSize: 1;
                 width: parent.width;
                 valueText: value;

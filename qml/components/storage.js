@@ -125,16 +125,3 @@ function readToken(key, passphrase) {
 
     return decrypted;
 }
-
-/*
-var cipherFormatter = {
-    stringify: function (cipherParams) {
-        // create json object with ciphertext
-        return cipherParams.ciphertext.toString(CryptoJS.enc.Base64)
-    },
-    parse: function (ciphertext) {
-        // extract ciphertext from json object, and create cipher params object
-        return CryptoJS.lib.CipherParams.create(CryptoJS.enc.Base64.parse(ciphertext));
-    }
-};
-*/

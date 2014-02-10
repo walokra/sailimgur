@@ -53,12 +53,12 @@ function exchangePinForAccessToken(pin, onSuccess, onFailure) {
             //console.log("headers: " + xhr.getAllResponseHeaders());
             var jsonObject = JSON.parse(xhr.responseText);
             if (xhr.status == 200) {
-                console.log("response: " + JSON.stringify(jsonObject));
+                //console.log("response: " + JSON.stringify(jsonObject));
                 OAUTH_ACCESS_TOKEN = jsonObject.access_token;
                 OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
                 onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
             } else {
-                console.log("exchangePinForAccessToken", xhr.status, xhr.statusText, xhr.responseText);
+                //console.log("exchangePinForAccessToken", xhr.status, xhr.statusText, xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " +jsonObject.data.error);
             }
         }
@@ -79,7 +79,7 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
             //console.log("headers: " + xhr.getAllResponseHeaders());
             var jsonObject = JSON.parse(xhr.responseText);
             if (xhr.status == 200) {
-                console.log("response: " + JSON.stringify(jsonObject));
+                //console.log("response: " + JSON.stringify(jsonObject));
                 var tokenType = jsonObject.token_type;
                 if (tokenType === "bearer") {
                     OAUTH_ACCESS_TOKEN = jsonObject.access_token;
@@ -90,7 +90,7 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
                     onFailure(xhr.status, "Wrong token type.");
                 }
             } else {
-                console.log(xhr.status, xhr.statusText, xhr.responseText);
+                //console.log(xhr.status, xhr.statusText, xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
         }
@@ -119,7 +119,7 @@ function getAccountCurrent(onSuccess, onFailure) {
                 //console.log("response: " + JSON.stringify(jsonObject));
                 onSuccess(jsonObject.data.url);
             } else {
-                console.log(xhr.status, xhr.statusText, xhr.responseText);
+                //console.log(xhr.status, xhr.statusText, xhr.responseText);
                 onFailure(xhr.status, xhr.statusText);
             }
         }
@@ -199,12 +199,10 @@ function sendJSONRequest(url, actiontype, onSuccess, onFailure) {
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText);
                 }
-                //creditsUserRemaining = xhr.getResponseHeader("X-RateLimit-UserRemaining");
-                //creditsClientRemaining = xhr.getResponseHeader("X-RateLimit-ClientRemaining");
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
             } else {
-                console.log("error: " + xhr.status+"; "+ xhr.responseText);
+                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
@@ -290,7 +288,7 @@ function getCredits(onSuccess, onFailure) {
                 var data = jsonObject.data;
                 onSuccess(data.UserRemaining, data.ClientRemaining);
             } else {
-                console.log("error: " + xhr.status+"; "+ xhr.responseText);
+                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
         }

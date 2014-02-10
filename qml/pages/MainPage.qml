@@ -284,7 +284,7 @@ Page {
                             settings.sort = "viral";
                             galgrid.scrollToTop();
                             galleryModel.clear();
-
+                            internal.processGalleryMode();
                         }
                     }
 
