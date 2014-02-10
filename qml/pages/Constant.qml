@@ -6,8 +6,10 @@ QtObject {
 
     property string appName : "Sailimgur";
 
-    // Imgur API Key/Secret
-    property string clientId : "956cdde55ca20c8";
+    // imgur API key/secret
+    // The OAuth2 key/secret pair below are only for testing
+    // Release version in Jolla Store / OpenRepos has a different key pair
+    property string clientId : "f6e8f7a754f7266";
     property string clientSecret : "";
 
     property string userAgent : appName + " " + APP_VERSION + "-" + APP_RELEASE + "(Jolla; Qt; SailfishOS)";
