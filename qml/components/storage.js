@@ -10,17 +10,26 @@ var description = "Sailimgur database";
 /**
   Open app's database, create it if not exists.
 */
-var db = LS.LocalStorage.openDatabaseSync(identifier, version, description, 10240, function(db) {
+var db = null;
+
+/**
+  Open app's database, create it if not exists.
+*/
+function connect() {
+    var db = LS.LocalStorage.openDatabaseSync(identifier, version, description, 10240);
+
     // Create settings table (key, value)
     db.transaction(function(tx) {
-        tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT UNIQUE, value TEXT);");
+        tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);");
     });
-});
+
+    return db;
+}
 
 /**
   Read all settings.
 */
-function readAllSettings() {
+function readAllSettings(db) {
     var res = {};
     db.readTransaction(function(tx) {
         var rs = tx.executeSql('SELECT * FROM settings;')
@@ -42,7 +51,7 @@ function readAllSettings() {
 /**
   Write setting to database.
 */
-function writeSetting(key, value) {
+function writeSetting(db, key, value) {
     //console.log("writeSetting(" + key + "=" + value + ")");
 
     if (value === true) {
@@ -62,7 +71,7 @@ function writeSetting(key, value) {
 /**
  Read given setting from database.
 */
-function readSetting(key) {
+function readSetting(db, key) {
     //console.log("readSetting(" + key + ")");
 
     var res = "";
@@ -89,7 +98,7 @@ function readSetting(key) {
 /**
   Write token to database.
 */
-function writeToken(key, value, passphrase) {
+function writeToken(db, key, value, passphrase) {
     //console.log("writeToken(" + key + "=" + value + "; " + passphrase + ")");
     db.transaction(function(tx) {
         var wa = CryptoJS.AES.encrypt(value, passphrase);
@@ -103,7 +112,7 @@ function writeToken(key, value, passphrase) {
 /**
  Read token from database.
 */
-function readToken(key, passphrase) {
+function readToken(db, key, passphrase) {
     //console.log("readToken(" + key + "=" + value + "; "+ passphrase + ")");
 
     var res = "";
