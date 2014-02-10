@@ -4,7 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: mainPage;
-    allowedOrientations: Orientation.All;
+    //allowedOrientations: Orientation.All;
 
     property bool prevEnabled : page > 0;
     property string searchModeText : "";
