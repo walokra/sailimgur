@@ -13,6 +13,14 @@ Page {
         target: settings;
         onSettingsLoaded: {
             galleryModel.clear();
+
+            // 0.2-1: oauth disabled
+            loggedIn = false;
+            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+            internal.processGalleryMode();
+            // 0.2-1: oauth disabled
+
+            /*
             Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
             if (settings.accessToken === "" || settings.refreshToken === "") {
                 loggedIn = false;
@@ -51,7 +59,7 @@ Page {
                         loadingRect.visible = false;
                     };
                 });
-            }
+            }*/
         }
     }
 
@@ -80,6 +88,8 @@ Page {
                 }
             }
 
+            // 0.2-1: oauth disabled
+            /*
             MenuItem {
                 id: signInMenu;
                 text: loggedIn ? qsTr("Logout") : qsTr("Sign In");
@@ -92,6 +102,8 @@ Page {
                     }
                 }
             }
+            */
+            // 0.2-1: oauth disabled
 
             SearchField {
                 id: searchTextField;

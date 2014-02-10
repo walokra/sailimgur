@@ -583,11 +583,17 @@ function createPOSTHeader(xhr, message) {
 
 function createGETHeader(xhr) {
     //console.log("OAUTH_CONSUMER_KEY=" + OAUTH_CONSUMER_KEY + "; OAUTH_ACCESS_TOKEN=" + OAUTH_ACCESS_TOKEN);
+    // 0.2-1: oauth disabled
+    /*
     if (OAUTH_ACCESS_TOKEN === "") {
         xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     } else {
         xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
+    */
+    // 0.2-1: oauth disabled
+
+    xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     xhr.setRequestHeader("User-Agent", USER_AGENT);
     return xhr;
 }
