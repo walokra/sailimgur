@@ -20,7 +20,7 @@ ApplicationWindow
 
     ListModel { id: galleryModel; }
 
-    GalleryPage { id: galleryPage; }
+    GalleryContentPage{ id: galleryContentPage; }
 
     AboutPage { id: aboutPage; }
 

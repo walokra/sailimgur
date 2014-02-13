@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
 Page {
-    id: galleryPage;
+    id: galleryContentPage;
     //allowedOrientations: Orientation.All;
 
     Connections {
@@ -30,7 +30,7 @@ Page {
     property bool is_album: false;
     property string imgur_id : "";
 
-    property string galleryPageTitle : constant.appName;
+    property string galleryContentPageTitle : constant.appName;
 
     property bool prevEnabled: currentIndex > 0 || page > 0;
 
@@ -48,7 +48,7 @@ Page {
     signal load();
 
     onLoad: {
-        //console.log("galleryPage.onLoad: total=" + galleryModel.count + ", currentIndex=" + currentIndex);
+        //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
         albumImagesModel.clear();
         albumImagesMoreModel.clear();
         commentsModel.clear();
@@ -58,7 +58,7 @@ Page {
         is_album = galleryModel.get(currentIndex).is_album;
 
         if (is_album === true) {
-            galleryPageTitle = qsTr("Gallery album");
+            galleryContentPageTitle = qsTr("Gallery album");
             Imgur.getAlbum(imgur_id,
                 function(status){
 
@@ -67,7 +67,7 @@ Page {
                 }
             );
         } else {
-            galleryPageTitle = qsTr("Gallery image");
+            galleryContentPageTitle = qsTr("Gallery image");
             Imgur.getGalleryImage(imgur_id,
                 function(status){
 
@@ -89,7 +89,7 @@ Page {
             );
         }
         setPrevButton();
-        galleryFlickable.scrollToTop();
+        galleryContentFlickable.scrollToTop();
     }
 
     function setPrevButton() {
@@ -101,9 +101,9 @@ Page {
     }
 
     SilicaFlickable {
-        id: galleryFlickable;
+        id: galleryContentFlickable;
 
-        PageHeader { id: header; title: galleryPageTitle; }
+        PageHeader { id: header; title: galleryContentPageTitle; }
 
         anchors.fill: parent;
         contentHeight: contentArea.height;
@@ -125,7 +125,7 @@ Page {
             }
 
             Column {
-                id: galleryColumn;
+                id: galleryContentColumn;
                 anchors { left: parent.left; right: parent.right; }
                 height: albumListView.height + showMoreButton.height;
                 width: parent.width;
@@ -139,8 +139,8 @@ Page {
                     Repeater {
                         model: albumImagesModel;
 
-                        delegate: GalleryDelegate {
-                            id: galleryDelegate;
+                        delegate: GalleryContentDelegate {
+                            id: galleryContentDelegate;
                         }
                     }
                 }
@@ -164,7 +164,7 @@ Page {
                         }
                     }
                 }
-            } // galleryColumn
+            } // galleryContentColumn
 
             Column {
                 id: albumInfoColumn;

@@ -33,7 +33,7 @@ Rectangle {
                     galleryModel.clear();
                     Imgur.processGalleryMode(settings.mode, "",
                         function(status){
-                            galleryPage.load();
+                            galleryContentPage.load();
                             loadingRect.visible = false;
                             currentIndex = galleryModel.count - 1;
                         }, function(status, statusText){
@@ -72,7 +72,7 @@ Rectangle {
                     galleryModel.clear();
                     Imgur.processGalleryMode(settings.mode, "",
                         function(status){
-                            galleryPage.load();
+                            galleryContentPage.load();
                             loadingRect.visible = false;
                         }, function(status, statusText){
                             infoBanner.showHttpError(status, statusText);

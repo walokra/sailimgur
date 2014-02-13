@@ -187,136 +187,12 @@ Page {
 
         anchors.fill: parent;
 
-        Label {
-            id: searchModeLabel;
-            width: mainPage.width / 2;
-            anchors { top: header.bottom; left: parent.left; bottomMargin: constant.paddingMedium; }
-            anchors.rightMargin: constant.paddingSmall;
-            anchors.topMargin: constant.paddingMedium;
-
-            text: searchModeText;
-            font.pixelSize: constant.fontSizeMedium;
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-            visible: searchTextField.text.trim().length > 1;
-        }
-
-        Item {
-            id: galleryMode;
-            anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: constant.paddingMedium; }
-            width: mainPage.width;
-            height: childrenRect.height;
-            z: 1;
-
-            ComboBox {
-                id: modeBox;
-                currentIndex: 0;
-                anchors.left: parent.left;
-                width: mainPage.width / 2;
-                visible: searchModeLabel.visible == false;
-
-                menu: ContextMenu {
-
-                    MenuItem {
-                        id: mainMode;
-                        text: qsTr("most viral");
-                        onClicked: {
-                            sortBox.visible = true;
-                            searchTextField.text = "";
-                            settings.mode = "main";
-                            settings.section = "hot";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-
-                    MenuItem {
-                        id: userMode;
-                        text: qsTr("user submitted");
-                        onClicked: {
-                            sortBox.visible = true;
-                            searchTextField.text = "";
-                            settings.mode = "user";
-                            settings.section = "user";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-
-                    MenuItem {
-                        id: randomMode;
-                        text: qsTr("random");
-                        onClicked: {
-                            sortBox.visible = false;
-                            searchTextField.text = "";
-                            settings.mode = "random";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-
-                    MenuItem {
-                        id: scoreMode;
-                        text: qsTr("highest scoring");
-                        onClicked: {
-                            sortBox.visible = false;
-                            searchTextField.text = "";
-                            settings.mode = "score";
-                            settings.section = "top";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-
-                    MenuItem {
-                        id: memesMode;
-                        text: qsTr("memes");
-                        onClicked: {
-                            sortBox.visible = true;
-                            searchTextField.text = "";
-                            settings.mode = "memes";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-                }
-            }
-
-            ComboBox {
-                id: sortBox;
-                width: mainPage.width / 2;
-                anchors.right: parent.right;
-                currentIndex: 0;
-                label: qsTr("sort:");
-
-                menu: ContextMenu {
-                    MenuItem {
-                        id: viralSort;
-                        text: qsTr("popularity");
-                        onClicked: {
-                            settings.sort = "viral";
-                            galgrid.scrollToTop();
-                            galleryModel.clear();
-                            internal.processGalleryMode();
-                        }
-                    }
-
-                    MenuItem {
-                        id: newestSort;
-                        text: qsTr("newest first");
-                        onClicked: {
-                            settings.sort = "time";
-                            galgrid.scrollToTop();
-                            internal.processGalleryMode();
-                        }
-                    }
-                }
-            }
-        } // galleryMode
+        GalleryMode { id: galleryMode; }
 
         SilicaGridView {
             id: galgrid;
 
-            cellWidth: width / 3;
+            cellWidth: 175;
             cellHeight: 175;
             clip: true;
 
@@ -326,44 +202,14 @@ Page {
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
 
-            delegate: Rectangle {
-                border.color: {
-                    if (vote === "up") {
-                        "green";
-                    } else if (vote === "down") {
-                        "red";
-                    } else {
-                        "grey";
-                    }
-                }
-                border.width: 3;
-                width: 166;
-                height: 166;
+            delegate: GalleryDelegate { id: galleryDelegate; }
 
-                Image {
-                    id: image;
-                    asynchronous: true;
-                    anchors.centerIn: parent;
-
-                    width: 160;
-                    height: 160;
-
-                    smooth: false;
-                    source: link;
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: {
-                            //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
-                            currentIndex = index;
-                            pageStack.push(galleryPage);
-                            galleryPage.load();
-                        }
-                    }
-                }
-                }
-
-            VerticalScrollDecorator {}
+            VerticalScrollDecorator { flickable: galgrid; }
         } // SilicaGridView
+
+        FancyGridScroller {
+            flickable: galgrid;
+        }
     }
 
     Component.onCompleted: {

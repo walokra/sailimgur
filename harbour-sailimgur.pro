@@ -21,16 +21,19 @@ OTHER_FILES = \
     qml/pages/Constant.qml \
     qml/components/imgur.js \
     qml/pages/SettingsPage.qml \
-    qml/pages/GalleryPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/CommentDelegate.qml \
     qml/pages/GalleryDelegate.qml \
     qml/pages/ImageButtons.qml \
     qml/pages/ImageContextMenu.qml \
-    qml/pages/GalleryNavigation.qml \
     qml/pages/SignInPage.qml \
     qml/components/storage.js \
-    qml/components/utils.js
+    qml/components/utils.js \
+    qml/pages/GalleryNavigation.qml \
+    qml/pages/GalleryContentPage.qml \
+    qml/pages/GalleryContentDelegate.qml \
+    qml/pages/GalleryMode.qml \
+    qml/pages/FancyGridScroller.qml
 
 INCLUDEPATH += $$PWD

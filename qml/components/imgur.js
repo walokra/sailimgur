@@ -388,7 +388,7 @@ function fillAlbumImagesModel(output, toMoreModel) {
     }
 }
 
-function fillGalleryVariables(output) {
+function fillAlbumVariables(output) {
     if (output.account_url) {
         account_url = output.account_url;
     } else {
@@ -449,7 +449,7 @@ function handleAlbumJSON(response) {
     }
     //console.log("count=" + albumImagesModel.count);
 
-    fillGalleryVariables(data);
+    fillAlbumVariables(data);
 }
 
 /*
@@ -461,7 +461,7 @@ function handleImageJSON(response) {
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     fillAlbumImagesModel(jsonObject.data, false, 1);
-    fillGalleryVariables(jsonObject.data);
+    fillAlbumVariables(jsonObject.data);
 }
 
 function handleCommentsJSON(response) {
