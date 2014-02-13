@@ -29,7 +29,8 @@ function connect() {
 /**
   Read all settings.
 */
-function readAllSettings(db) {
+function readAllSettings() {
+    var db = connect();
     var res = {};
     db.readTransaction(function(tx) {
         var rs = tx.executeSql('SELECT * FROM settings;')
@@ -51,7 +52,8 @@ function readAllSettings(db) {
 /**
   Write setting to database.
 */
-function writeSetting(db, key, value) {
+function writeSetting(key, value) {
+    var db = connect();
     //console.log("writeSetting(" + key + "=" + value + ")");
 
     if (value === true) {
@@ -71,7 +73,8 @@ function writeSetting(db, key, value) {
 /**
  Read given setting from database.
 */
-function readSetting(db, key) {
+function readSetting(key) {
+    var db = connect();
     //console.log("readSetting(" + key + ")");
 
     var res = "";
@@ -98,7 +101,8 @@ function readSetting(db, key) {
 /**
   Write token to database.
 */
-function writeToken(db, key, value, passphrase) {
+function writeToken(key, value, passphrase) {
+    var db = connect();
     //console.log("writeToken(" + key + "=" + value + "; " + passphrase + ")");
     db.transaction(function(tx) {
         var wa = CryptoJS.AES.encrypt(value, passphrase);
@@ -112,7 +116,8 @@ function writeToken(db, key, value, passphrase) {
 /**
  Read token from database.
 */
-function readToken(db, key, passphrase) {
+function readToken(key, passphrase) {
+    var db = connect();
     //console.log("readToken(" + key + "=" + value + "; "+ passphrase + ")");
 
     var res = "";

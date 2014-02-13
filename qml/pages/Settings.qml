@@ -25,36 +25,37 @@ QtObject {
     property bool autoplayAnim: true; // play anim gifs automatically?
 
     function loadSettings() {
-        Storage.db = Storage.connect();
         //console.log("Load settings...");
-        var results = Storage.readAllSettings(Storage.db);
+        var results = Storage.readAllSettings();
         for (var s in results) {
             if (settings.hasOwnProperty(s)) {
                 settings[s] = results[s];
             }
         }
-        readTokens(Storage.db);
+        readTokens();
         settingsLoaded();
     }
 
+    function saveSettings() {
+        Storage.writeSetting("albumImagesLimit", settings.albumImagesLimit);
+        Storage.writeSetting("showComments", settings.showComments);
+    }
+
     function resetTokens() {
-        Storage.db = Storage.connect();
         accessToken = "";
         refreshToken = "";
-        Storage.writeSetting(Storage.db, "accessToken", accessToken);
-        Storage.writeSetting(Storage.db, "refreshToken", refreshToken);
+        Storage.writeSetting("accessToken", accessToken);
+        Storage.writeSetting("refreshToken", refreshToken);
     }
 
     function saveTokens() {
-        Storage.db = Storage.connect();
-        Storage.writeToken(Storage.db, "accessToken", accessToken, constant.clientSecret);
-        Storage.writeToken(Storage.db, "refreshToken", refreshToken, constant.clientSecret);
+        Storage.writeToken("accessToken", accessToken, constant.clientSecret);
+        Storage.writeToken("refreshToken", refreshToken, constant.clientSecret);
     }
 
     function readTokens() {
-        Storage.db = Storage.connect();
-        accessToken = Storage.readToken(Storage.db, "accessToken", constant.clientSecret);
-        refreshToken = Storage.readToken(Storage.db, "refreshToken", constant.clientSecret);
+        accessToken = Storage.readToken("accessToken", constant.clientSecret);
+        refreshToken = Storage.readToken("refreshToken", constant.clientSecret);
     }
 
 }

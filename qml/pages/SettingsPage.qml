@@ -49,13 +49,11 @@ Dialog {
             }
         }
 
-        ScrollDecorator {}
+        VerticalScrollDecorator { flickable: settingsFlickable; }
     }
 
     onAccepted: {
-        Storage.db = Storage.connect();
-        Storage.writeSetting(Storage.db, "albumImagesLimit", settings.albumImagesLimit);
-        Storage.writeSetting(Storage.db, "showComments", settings.showComments);
+        settings.saveSettings();
     }
 
     Component.onCompleted: {
