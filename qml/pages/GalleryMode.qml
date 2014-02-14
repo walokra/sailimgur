@@ -5,19 +5,21 @@ Row {
     id: galleryMode;
     anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: constant.paddingMedium; }
     width: parent.width;
-    height: sortBox.height;
+    height: childrenRect.height;
     z: 1;
+    anchors.leftMargin: constant.paddingMedium;
+    anchors.rightMargin: constant.paddingMedium;
+
+    spacing: Theme.paddingSmall;
 
     Label {
         id: searchModeLabel;
         width: parent.width / 2;
-        anchors.rightMargin: constant.paddingSmall;
-        anchors.verticalCenter: parent.verticalCenter;
-
         text: searchModeText;
         font.pixelSize: constant.fontSizeMedium;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: searchTextField.text.trim().length > 1;
+        //anchors.verticalCenter: parent.verticalCenter;
     }
 
     ComboBox {

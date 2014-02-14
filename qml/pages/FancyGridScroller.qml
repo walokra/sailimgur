@@ -30,7 +30,7 @@ Item {
 
     BackgroundItem {
         visible: opacity > 0
-        y: 0
+        y: constant.paddingMedium
         width: flickable.width
         height: Theme.itemSizeLarge
         highlighted: pressed
@@ -65,7 +65,7 @@ Item {
 
     BackgroundItem {
         visible: opacity > 0
-        y: flickable.height
+        y: galgrid.height - height
         width: flickable.width
         height: Theme.itemSizeLarge
         highlighted: pressed

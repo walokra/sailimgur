@@ -4,7 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: galleryContentPage;
-    //allowedOrientations: Orientation.All;
+    allowedOrientations: Orientation.All;
 
     Connections {
         target: settings;

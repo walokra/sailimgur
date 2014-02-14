@@ -4,7 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: mainPage;
-    //allowedOrientations: Orientation.All;
+    allowedOrientations: Orientation.All;
 
     property bool prevEnabled : page > 0;
     property string searchModeText : "";
@@ -65,6 +65,8 @@ Page {
 
     SilicaFlickable {
         id: flickable;
+        interactive: !galgrid.flicking;
+        pressDelay: 0;
 
         PageHeader { id: header; title: constant.appName; }
 
@@ -192,24 +194,24 @@ Page {
         SilicaGridView {
             id: galgrid;
 
-            cellWidth: 175;
+            cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
             cellHeight: 175;
             clip: true;
 
             model: galleryModel;
 
             anchors { top: galleryMode.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
-            anchors.leftMargin: constant.paddingSmall;
-            anchors.rightMargin: constant.paddingSmall;
+            anchors.leftMargin: constant.paddingMedium;
+            anchors.rightMargin: constant.paddingMedium;
 
             delegate: GalleryDelegate { id: galleryDelegate; }
 
             VerticalScrollDecorator { flickable: galgrid; }
-        } // SilicaGridView
 
-        FancyGridScroller {
-            flickable: galgrid;
-        }
+            FancyGridScroller {
+                flickable: galgrid;
+            }
+        } // SilicaGridView
     }
 
     Component.onCompleted: {
