@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../components/imgur.js" as Imgur
 
 Page {
     id: mainPage;
@@ -16,8 +15,7 @@ Page {
 
             // 0.2-1: oauth disabled
             loggedIn = false;
-            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
-            internal.processGalleryMode();
+            galleryModel.processGalleryMode(searchTextField.text);
             // 0.2-1: oauth disabled
 
             /*
@@ -27,12 +25,12 @@ Page {
                 console.log("Not signed in. Using anonymous mode.");
                 infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
                 settings.user = "anonymous";
-                internal.processGalleryMode();
+                galleryModel.processGalleryMode();
             } else {
                 loggedIn = true;
                 Imgur.getAccountCurrent(function(url) {
                     settings.user = url;
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }, function(status, statusText){
                     if (status === 403) {
                         console.log("Permission denied. Trying to refresh tokens.");
@@ -44,7 +42,7 @@ Page {
                             // retry the api call
                             Imgur.getAccountCurrent(function(url) {
                                 settings.user = url;
-                                internal.processGalleryMode();
+                                galleryModel.processGalleryMode();
                             }, function(status, statusText) {
                                 infoBanner.showHttpError(status, statusText);
                                 loadingRect.visible = false;
@@ -121,7 +119,7 @@ Page {
                     //console.log("Searched: " + query);
                     searchModeText = "Results for \"" + text + "\"";
                     galleryModel.clear();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode(searchTextField.text);
                     pullDownMenu.close();
                     searchTextField.focus = false;
                 }
@@ -151,7 +149,7 @@ Page {
                                     page -= 1;
                                 }
                                 //console.log("Previous clicked!: " + page);
-                                internal.processGalleryMode();
+                                galleryModel.processGalleryMode(searchTextField.text);
                                 if (page == 0) {
                                     prevEnabled = false;
                                 }
@@ -176,7 +174,7 @@ Page {
                             onClicked: {
                                 page += 1;
                                 //console.log("Next clicked!: " + page);
-                                internal.processGalleryMode();
+                                galleryModel.processGalleryMode(searchTextField.text);
                                 prevEnabled = true;
                                 pushUpMenu.close();
                                 galgrid.scrollToTop();
@@ -218,24 +216,4 @@ Page {
         galleryModel.clear();
     }
 
-    QtObject {
-        id: internal;
-
-        function processGalleryMode() {
-            loadingRect.visible = true;
-            galleryModel.clear();
-
-            Imgur.processGalleryMode(settings.mode, searchTextField.text,
-                function(status){
-                    loadingRect.visible = false;
-                    if(currentIndex == -1) {
-                        currentIndex = galleryModel.count - 1;
-                    }
-                }, function(status, statusText){
-                    infoBanner.showHttpError(status, statusText);
-                    loadingRect.visible = false;
-                }
-            );
-        }
-    }
 }

@@ -39,7 +39,7 @@ Row {
                     settings.mode = "main";
                     settings.section = "hot";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }
             }
 
@@ -52,7 +52,7 @@ Row {
                     settings.mode = "user";
                     settings.section = "user";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }
             }
 
@@ -64,7 +64,7 @@ Row {
                     searchTextField.text = "";
                     settings.mode = "random";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }
             }
 
@@ -77,7 +77,7 @@ Row {
                     settings.mode = "score";
                     settings.section = "top";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }
             }
 
@@ -89,7 +89,7 @@ Row {
                     searchTextField.text = "";
                     settings.mode = "memes";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode();
                 }
             }
         }
@@ -109,17 +109,17 @@ Row {
                     settings.sort = "viral";
                     galgrid.scrollToTop();
                     galleryModel.clear();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode(searchTextField.text);
                 }
             }
 
             MenuItem {
                 id: newestSort;
-                text: qsTr("newest first");
+                text: qsTr("newest");
                 onClicked: {
                     settings.sort = "time";
                     galgrid.scrollToTop();
-                    internal.processGalleryMode();
+                    galleryModel.processGalleryMode(searchTextField.text);
                 }
             }
         }

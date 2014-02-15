@@ -34,6 +34,9 @@ OTHER_FILES = \
     qml/pages/GalleryContentPage.qml \
     qml/pages/GalleryContentDelegate.qml \
     qml/pages/GalleryMode.qml \
-    qml/pages/FancyGridScroller.qml
+    qml/pages/FancyGridScroller.qml \
+    qml/pages/CommentsModel.qml \
+    qml/pages/GalleryModel.qml \
+    qml/pages/GalleryContentModel.qml
 
 INCLUDEPATH += $$PWD

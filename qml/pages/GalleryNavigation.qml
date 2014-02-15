@@ -25,22 +25,14 @@ Rectangle {
                 if (currentIndex > 0 && page >= 0) {
                     currentIndex -= 1;
                     load();
-                } else if (currentIndex === 0 && page >= 1) {
+                }
+                if (currentIndex === 0 && page >= 1) {
                     //console.log("Getting previous list of images");
                     page -= 1;
 
                     loadingRect.visible = true;
                     galleryModel.clear();
-                    Imgur.processGalleryMode(settings.mode, "",
-                        function(status){
-                            galleryContentPage.load();
-                            loadingRect.visible = false;
-                            currentIndex = galleryModel.count - 1;
-                        }, function(status, statusText){
-                            infoBanner.showHttpError(status, statusText);
-                            loadingRect.visible = false;
-                        }
-                    );
+                    galleryModel.processGalleryMode(galleryModel.query, -1);
                 }
                 setPrevButton();
             }
@@ -62,24 +54,16 @@ Rectangle {
                     currentIndex += 1;
                     load();
                 }
-                prevEnabled = true;
-                if (currentIndex === galleryModel.count-1) {
+                else if (currentIndex === galleryModel.count-1) {
                     //console.log("Getting new list of images");
                     page += 1;
                     currentIndex = 0;
 
                     loadingRect.visible = true;
                     galleryModel.clear();
-                    Imgur.processGalleryMode(settings.mode, "",
-                        function(status){
-                            galleryContentPage.load();
-                            loadingRect.visible = false;
-                        }, function(status, statusText){
-                            infoBanner.showHttpError(status, statusText);
-                            loadingRect.visible = false;
-                        }
-                    );
+                    galleryModel.processGalleryMode(galleryModel.query);
                 }
+                prevEnabled = true;
             }
         }
     } // navigationItem

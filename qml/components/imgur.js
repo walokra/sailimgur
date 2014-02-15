@@ -1,4 +1,4 @@
-//TODO: .pragma library
+.pragma library
 
 Qt.include("utils.js");
 
@@ -84,7 +84,6 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
                 if (tokenType === "bearer") {
                     OAUTH_ACCESS_TOKEN = jsonObject.access_token;
                     OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
-                    var accountUsername = jsonObject.account_username;
                     onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
                 } else {
                     onFailure(xhr.status, "Wrong token type.");
@@ -141,11 +140,11 @@ page 	optional 	integer - the data paging number
 window 	optional 	Change the date range of the request if the section is "top", day | week | month | year | all, defaults to day
 showViral 	optional 	true | false - Show or hide viral images from the 'user' section. Defaults to true
 */
-function getGallery(onSuccess, onFailure) {
+function getGallery(model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
     //console.log("getGallery: " + url);
-    sendJSONRequest(url, 1, onSuccess, onFailure);
+    sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
 /*
@@ -156,11 +155,11 @@ https://api.imgur.com/3/gallery/random/random/{page}
 
 page 	optional 	A page of random gallery images, from 0-50. Pages are regenerated every hour.
 */
-function getRandomGalleryImages(onSuccess, onFailure) {
+function getRandomGalleryImages(model, page, onSuccess, onFailure) {
     var url = ENDPOINT_GET_GALLERY_RANDOM;
     url += "/" + page;
 
-    sendJSONRequest(url, 1, onSuccess, onFailure);
+    sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
 /**
@@ -174,30 +173,29 @@ sort	optional	viral | time | top - defaults to viral
 page	optional	integer - the data paging number
 window	optional	Change the date range of the request if the sort is "top", day | week | month | year | all, defaults to week
 */
-function getMemesSubGallery(onSuccess, onFailure) {
+function getMemesSubGallery(model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GET_GALLERY_MEMES;
     url += "/" + settings.sort + "/" + settings.window + "/" + page;
     url += "/" + page;
 
-    sendJSONRequest(url, 1, onSuccess, onFailure);
+    sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
-function sendJSONRequest(url, actiontype, onSuccess, onFailure) {
+function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
+    //console.log("sendJSONRequest, url=" + url + ", actiontype=" + actiontype);
     var xhr = new XMLHttpRequest();
 
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-                //console.log("ok");
+                //console.log("ok, actiontype=" + actiontype);
                 if (actiontype === 1) {
-                    handleGalleryJSON(xhr.responseText);
-                } else if (actiontype === 2) {
-                    handleAlbumJSON(xhr.responseText);
+                    handleGalleryJSON(xhr.responseText, model);
                 } else if (actiontype === 3) {
-                    handleImageJSON(xhr.responseText);
+                    handleImageJSON(xhr.responseText, model);
                 } else if (actiontype === 4) {
-                    handleCommentsJSON(xhr.responseText);
+                    handleCommentsJSON(xhr.responseText, model);
                 }
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
@@ -223,33 +221,49 @@ q       required 	Query string
 sort 	optional 	time | viral - defaults to time
 page 	optional 	integer - the data paging number
 */
-function getGallerySearch(query, onSuccess, onFailure) {
+function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
 
-    sendJSONRequest(url, 1, onSuccess, onFailure);
+    sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
 // get gallery album
-function getAlbum(id, onSuccess, onFailure) {
+function getAlbum(id, model, moreModel, limit, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_ALBUM;
     url += "/" + id;
     //console.log("getAlbum: " + url);
 
-    sendJSONRequest(url, 2, onSuccess, onFailure);
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                handleAlbumJSON(xhr.responseText, model, moreModel, limit);
+                //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
+                onSuccess(xhr.status);
+            } else {
+                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
+                var jsonObject = JSON.parse(xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+
+    xhr = createGETHeader(xhr);
+    xhr.send();
 }
 
 // get gallery image
-function getGalleryImage(id, onSuccess, onFailure) {
+function getGalleryImage(id, model, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_IMAGE;
     url += "/" + id;
     //console.log("getGalleryImage: " + url);
 
-    sendJSONRequest(url, 3, onSuccess, onFailure);
+    sendJSONRequest(url, 3, model, onSuccess, onFailure);
 }
 
 /*
@@ -264,13 +278,12 @@ Route	https://api.imgur.com/3/gallery/{id}/comments/{sort}
 
 sort	optional	best | top | new - defaults to best
 */
-function getAlbumComments(id, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
+function getGalleryComments(id, model, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY;
     url += "/" + id + "/comments";
-    //console.log("getGalleryImage: " + url);
+    //console.log("getGalleryComments: " + url);
 
-    sendJSONRequest(url, 4, onSuccess, onFailure);
+    sendJSONRequest(url, 4, model, onSuccess, onFailure);
 }
 
 /**
@@ -301,7 +314,7 @@ function getCredits(onSuccess, onFailure) {
 /*
     Parse JSON for main Gallery (main, search, random) and fill galleryModel.
 */
-function handleGalleryJSON(response) {
+function handleGalleryJSON(response, model) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
@@ -332,7 +345,7 @@ function handleGalleryJSON(response) {
             vote = output.vote;
         }
 
-        galleryModel.append({
+        model.append({
                             id: output.id,
                             title: title,
                             link: link,
@@ -342,7 +355,7 @@ function handleGalleryJSON(response) {
     }
 }
 
-function fillAlbumImagesModel(output, toMoreModel) {
+function fillAlbumImagesModel(output, model) {
     var title = "";
     if (output.title) {
         title = output.title;
@@ -380,48 +393,43 @@ function fillAlbumImagesModel(output, toMoreModel) {
         bandwidth: output.bandwidth,
         link: link
     };
-
-    if (toMoreModel) {
-        albumImagesMoreModel.append(imageData);
-    } else {
-        albumImagesModel.append(imageData);
-    }
+    model.append(imageData);
 }
 
-function fillAlbumVariables(output) {
+function fillAlbumVariables(output, model) {
     if (output.account_url) {
-        account_url = output.account_url;
+        model.account_url = output.account_url;
     } else {
-        account_url = "";
+        model.account_url = "";
     }
-    views = output.views;
-    ups = output.ups;
-    downs = output.downs;
-    score = output.score;
+    model.views = output.views;
+    model.ups = output.ups;
+    model.downs = output.downs;
+    model.score = output.score;
     if (output.vote) {
-        vote = output.vote;
+        model.vote = output.vote;
     } else {
-        vote = "";
+        model.vote = "";
     }
     if (output.favorite) {
-        favorite = output.favorite;
+        model.favorite = output.favorite;
     } else {
-        favorite = false;
+        model.favorite = false;
     }
     if (output.images_count) {
-        images_count = output.images_count;
+        model.images_count = output.images_count;
     } else {
-        images_count = 0;
+        model.images_count = 0;
     }
     if(output.is_album) {
-        is_album = output.is_album;
+        model.is_album = output.is_album;
     } else {
-        is_album = false;
+        model.is_album = false;
     }
 
-    var total = parseInt(ups) + parseInt(downs);
-    upsPercent = Math.floor(100 * (ups/total));
-    downsPercent = Math.ceil(100 * (downs/total));
+    var total = parseInt(model.ups) + parseInt(model.downs);
+    model.upsPercent = Math.floor(100 * (model.ups/total));
+    model.downsPercent = Math.ceil(100 * (model.downs/total));
 
     //console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
 }
@@ -430,7 +438,7 @@ function fillAlbumVariables(output) {
   Parse JSON for Gallery Album and fill albumImagesModel.
   https://api.imgur.com/models/gallery_album
 */
-function handleAlbumJSON(response) {
+function handleAlbumJSON(response, model, moreModel, limit) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
@@ -440,43 +448,44 @@ function handleAlbumJSON(response) {
         //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
         //console.log("output=" + JSON.stringify(output));
 
-        if (i >= settings.albumImagesLimit) {
-            fillAlbumImagesModel(jsonObject.data.images[i], true);
+        if (i >= limit) {
+            fillAlbumImagesModel(jsonObject.data.images[i], moreModel);
         }
         else {
-            fillAlbumImagesModel(jsonObject.data.images[i], false);
+            fillAlbumImagesModel(jsonObject.data.images[i], model);
         }
     }
     //console.log("count=" + albumImagesModel.count);
 
-    fillAlbumVariables(data);
+    fillAlbumVariables(data, model);
 }
 
 /*
   Parse JSON for Image and fill albumImagesModel.
   https://api.imgur.com/models/gallery_image
 */
-function handleImageJSON(response) {
+function handleImageJSON(response, model) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
-    fillAlbumImagesModel(jsonObject.data, false, 1);
-    fillAlbumVariables(jsonObject.data);
+    fillAlbumImagesModel(jsonObject.data, model);
+    fillAlbumVariables(jsonObject.data, model);
 }
 
-function handleCommentsJSON(response) {
+function handleCommentsJSON(response, model) {
     var jsonObject = JSON.parse(response);
+    //console.log("handleCommentsJSON()");
     //console.log("comments: " + JSON.stringify(jsonObject));
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
-        parseComments(output, 0);
+        parseComments(output, 0, model);
     }
 
-    //console.log("comments=" + commentsModel.count);
+    //console.log("comments=" + model.count);
 }
 
-function parseComments(output, depth) {
+function parseComments(output, depth, model) {
     var date = new Date(output.datetime * 1000);
     var datetime = date.getHours() + ":" +
             date.getMinutes() + ":" +
@@ -484,7 +493,7 @@ function parseComments(output, depth) {
             date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
 
     var childrens = parseInt(output.children.length);
-    commentsModel.append({
+    model.append({
                         id: output.id,
                         comment: replaceURLWithHTMLLinks(output.comment),
                         author: output.author,
@@ -493,17 +502,17 @@ function parseComments(output, depth) {
                         points: output.points,
                         datetime: datetime,
                         children: output.children,
-                        childrens: childrens,
+                        //childrens: childrens,
                         depth: depth
                      });
 
-    // console.log("childrens: " + JSON.stringify(output.children));
+    //console.log("childrens: " + JSON.stringify(output.children));
 
     if (childrens > 0) {
         depth += 1;
         for (var j=0; j < childrens; j++) {
             if (output.children[j].points > 1) {
-                parseComments(output.children[j], depth);
+                parseComments(output.children[j], depth, model);
             }
         }
     }
@@ -598,19 +607,15 @@ function createGETHeader(xhr) {
     return xhr;
 }
 
-function processGalleryMode(mode, query, onSuccess, onFailure) {
+function processGalleryMode(query, model, page, settings, onSuccess, onFailure) {
     if (query) {
-        getGallerySearch(query, onSuccess, onFailure);
+        getGallerySearch(query, model, page, settings, onSuccess, onFailure);
     }
-    else if (mode === "main") {
-        getGallery(onSuccess, onFailure);
-    } else if (mode === "random") {
-        getRandomGalleryImages(onSuccess, onFailure);
-    } else if (mode === "user") {
-        getGallery(onSuccess, onFailure);
-    } else if (mode === "score") {
-        getGallery(onSuccess, onFailure);
-    } else if (mode === "memes") {
-        getMemesSubGallery(onSuccess, onFailure);
+    else if (settings.mode === "main" || settings.mode === "user" || settings.mode === "score") {
+        getGallery(model, page, settings, onSuccess, onFailure);
+    } else if (settings.mode === "random") {
+        getRandomGalleryImages(model, page, onSuccess, onFailure);
+    } else if (settings.mode === "memes") {
+        getMemesSubGallery(model, page, settings, onSuccess, onFailure);
     }
 }

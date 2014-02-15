@@ -18,7 +18,7 @@ ApplicationWindow
 
     cover: CoverPage { id: coverPage; }
 
-    ListModel { id: galleryModel; }
+    GalleryModel { id: galleryModel; }
 
     GalleryContentPage{ id: galleryContentPage; }
 
@@ -69,9 +69,11 @@ ApplicationWindow
         }
 
         function showError(text) {
-            infoLabel.text = text;
-            opacity = 0.9;
-            console.log("infoBanner: " + text);
+            if (text) {
+                infoLabel.text = text;
+                opacity = 0.9;
+                console.log("infoBanner: " + text);
+            }
         }
 
         function showHttpError(errorCode, errorMessage) {
@@ -144,7 +146,6 @@ ApplicationWindow
     Component.onCompleted: {
         settings.loadSettings();
     }
-
 }
 
 

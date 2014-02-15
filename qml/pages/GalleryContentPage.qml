@@ -6,26 +6,7 @@ Page {
     id: galleryContentPage;
     allowedOrientations: Orientation.All;
 
-    Connections {
-        target: settings;
-        onSettingsLoaded: {
-            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
-        }
-    }
-
     property string albumTitle : "";
-
-    // Gallery props
-    property string account_url : "";
-    property string views : "0";
-    property string ups : "0";
-    property string downs : "0";
-    property string score : "0";
-    property string vote : "none";
-    property bool favorite : false;
-    property string images_count : "0";
-    property int upsPercent : 0;
-    property int downsPercent : 0;
 
     property bool is_album: false;
     property string imgur_id : "";
@@ -34,22 +15,23 @@ Page {
 
     property bool prevEnabled: currentIndex > 0 || page > 0;
 
-    ListModel {
-        id: albumImagesModel;
+    GalleryContentModel {
+        id: galleryContentModel;
     }
-    ListModel {
-        id: albumImagesMoreModel;
+
+    CommentsModel {
+        id: commentsModel;
     }
 
     ListModel {
-        id: commentsModel;
+        id: albumImagesMoreModel;
     }
 
     signal load();
 
     onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
-        albumImagesModel.clear();
+        galleryContentModel.clear();
         albumImagesMoreModel.clear();
         commentsModel.clear();
 
@@ -59,34 +41,15 @@ Page {
 
         if (is_album === true) {
             galleryContentPageTitle = qsTr("Gallery album");
-            Imgur.getAlbum(imgur_id,
-                function(status){
-
-                }, function(status, statusText){
-                    infoBanner.showHttpError(status, statusText);
-                }
-            );
+            galleryContentModel.getAlbum(imgur_id);
         } else {
             galleryContentPageTitle = qsTr("Gallery image");
-            Imgur.getGalleryImage(imgur_id,
-                function(status){
-
-                }, function(status, statusText){
-                    infoBanner.showHttpError(status, statusText);
-                }
-            );
+            galleryContentModel.getGalleryImage(imgur_id);
         }
 
         if (settings.showComments) {
             loadingRectComments.visible = true;
-
-            Imgur.getAlbumComments(imgur_id,
-                function(){
-                    loadingRectComments.visible = false;
-                }, function() {
-                    loadingRectComments.visible = false;
-                }
-            );
+            commentsModel.getComments(imgur_id);
         }
         setPrevButton();
         galleryContentFlickable.scrollToTop();
@@ -107,6 +70,7 @@ Page {
 
         anchors.fill: parent;
         contentHeight: contentArea.height;
+        clip: true;
 
         Column {
             id: contentArea;
@@ -137,7 +101,7 @@ Page {
                     clip: true;
 
                     Repeater {
-                        model: albumImagesModel;
+                        model: galleryContentModel;
 
                         delegate: GalleryContentDelegate {
                             id: galleryContentDelegate;
@@ -158,7 +122,7 @@ Page {
                         onClicked: {
                             // @Hack, better way to combine models?
                             for(var i=0; i < albumImagesMoreModel.count; i++) {
-                                albumImagesModel.append(albumImagesMoreModel.get(i));
+                                galleryContentModel.append(albumImagesMoreModel.get(i));
                             }
                             albumImagesMoreModel.clear();
                         }
@@ -191,7 +155,7 @@ Page {
                             IconButton {
                                 id: likeButton;
                                 anchors { left: parent.left; }
-                                icon.source: (vote === "up") ? constant.iconLiked : constant.iconLike;
+                                icon.source: (galleryContentModel.vote === "up") ? constant.iconLiked : constant.iconLike;
                                 enabled: loggedIn;
                                 width: 62;
                                 height: 62;
@@ -201,10 +165,10 @@ Page {
                                         function (data) {
                                             //infoBanner.showText(data);
                                             //console.log("Like success: " + vote);
-                                            if (vote === "up") {
-                                                vote = "";
+                                            if (galleryContentModel.vote === "up") {
+                                                galleryContentModel.vote = "";
                                             } else {
-                                                vote = "up";
+                                                galleryContentModel.vote = "up";
                                             }
                                         },
                                         function(status, statusText) {
@@ -216,7 +180,7 @@ Page {
                             IconButton {
                                 id: dislikeButton;
                                 anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
-                                icon.source: (vote === "down") ? constant.iconDisliked : constant.iconDislike;
+                                icon.source: (galleryContentModel.vote === "down") ? constant.iconDisliked : constant.iconDislike;
                                 enabled: loggedIn;
                                 width: 62;
                                 height: 62;
@@ -226,10 +190,10 @@ Page {
                                         function (data) {
                                             //infoBanner.showText(data);
                                             //console.log("Dislike success: " + vote);
-                                            if (vote === "down") {
-                                                vote = "";
+                                            if (galleryContentModel.vote === "down") {
+                                                galleryContentModel.vote = "";
                                             } else {
-                                                vote = "down";
+                                                galleryContentModel.vote = "down";
                                             }
                                         },
                                         function(status, statusText) {
@@ -241,7 +205,7 @@ Page {
                             IconButton {
                                 id: favoriteButton;
                                 anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
-                                icon.source: (favorite) ? constant.iconFavorited : constant.iconFavorite;
+                                icon.source: (galleryContentModel.favorite) ? constant.iconFavorited : constant.iconFavorite;
                                 enabled: loggedIn;
                                 width: 62;
                                 height: 62;
@@ -253,9 +217,9 @@ Page {
                                                 //console.log("data: " + data);
                                                 //infoBanner.showText(data);
                                                 if (data === "favorited") {
-                                                   favorite = true;
+                                                   galleryContentModel.favorite = true;
                                                 } else if (data === "unfavorited") {
-                                                    favorite = false;
+                                                    galleryContentModel.favorite = false;
                                                 }
                                             },
                                             function(status, statusText) {
@@ -269,9 +233,9 @@ Page {
                                                 //console.log("data: " + data);
                                                 //infoBanner.showText(data);
                                                 if (data === "favorited") {
-                                                   favorite = true;
+                                                   galleryContentModel.favorite = true;
                                                 } else if (data === "unfavorited") {
-                                                    favorite = false;
+                                                    galleryContentModel.favorite = false;
                                                 }
                                             },
                                             function(status, statusText) {
@@ -293,14 +257,14 @@ Page {
                                 anchors { left: parent.left; }
                                 anchors.verticalCenter: parent.verticalCenter;
                                 font.pixelSize: constant.fontSizeXSmall;
-                                text: score + " points";
+                                text: galleryContentModel.score + " points";
                             }
 
                             Rectangle {
                                 id: scoreUps;
                                 anchors { left: scoreText.right; leftMargin: constant.paddingLarge; }
                                 anchors.verticalCenter: parent.verticalCenter;
-                                width: 100 * (upsPercent/100);
+                                width: 100 * (galleryContentModel.upsPercent/100);
                                 height: 10;
                                 color: "green";
                             }
@@ -309,7 +273,7 @@ Page {
                                 id: scoreDowns;
                                 anchors { left: scoreUps.right; }
                                 anchors.verticalCenter: parent.verticalCenter;
-                                width: 100 * (downsPercent/100);
+                                width: 100 * (galleryContentModel.downsPercent/100);
                                 height: 10;
                                 color: "red";
                             }
@@ -326,7 +290,7 @@ Page {
                             anchors { left: parent.left; right: parent.right; }
                             wrapMode: Text.Wrap;
                             font.pixelSize: constant.fontSizeXSmall;
-                            text: "by " + account_url + ", " + views + " views";
+                            text: "by " + galleryContentModel.account_url + ", " + galleryContentModel.views + " views";
                         }
                    }
                 }
@@ -349,17 +313,12 @@ Page {
                         anchors.centerIn: parent;
                         text: qsTr("show comments");
                         onClicked: {
+                            //console.log("commentsModel.count: " + commentsModel.count);
                             if(commentsModel.count > 0) {
                                 commentsColumn.visible = true;
                             } else {
                                 loadingRectComments.visible = true;
-                                Imgur.getAlbumComments(imgur_id,
-                                    function(){
-                                        loadingRectComments.visible = false;
-                                    }, function() {
-                                        loadingRectComments.visible = false;
-                                    }
-                                );
+                                commentsModel.getComments(imgur_id);
                                 commentsColumn.visible = true;
                             }
                         }
@@ -382,6 +341,12 @@ Page {
 
                         sourceComponent: CommentDelegate {
                             id: commentDelegate;
+                        }
+                    }
+
+                    onMovementEnded: {
+                        if(atYEnd) {
+                            //commentsModel.getNext();
                         }
                     }
                 }
@@ -411,7 +376,7 @@ Page {
     }
 
     Component.onCompleted: {
-        albumImagesModel.clear();
+        galleryContentModel.clear();
         commentsModel.clear();
     }
 }
