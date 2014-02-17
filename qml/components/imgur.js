@@ -493,7 +493,7 @@ function parseComments(output, depth, model) {
             date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
 
     var childrens = parseInt(output.children.length);
-    model.append({
+    model.push({
                         id: output.id,
                         comment: replaceURLWithHTMLLinks(output.comment),
                         author: output.author,

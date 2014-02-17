@@ -202,7 +202,9 @@ Page {
             anchors.leftMargin: constant.paddingMedium;
             anchors.rightMargin: constant.paddingMedium;
 
-            delegate: GalleryDelegate { id: galleryDelegate; }
+            delegate: Loader {
+                sourceComponent: GalleryDelegate { id: galleryDelegate; }
+            }
 
             VerticalScrollDecorator { flickable: galgrid; }
 

@@ -16,6 +16,9 @@ QtObject {
     // user
     property string user: "anonymous";
 
+    // comments
+    property int commentsSlice: 30;
+
     // default options for gallery
     property string mode : "main";
     property string section : "hot"; // hot | top | user

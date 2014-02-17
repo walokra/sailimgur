@@ -34,6 +34,8 @@ Page {
         galleryContentModel.clear();
         albumImagesMoreModel.clear();
         commentsModel.clear();
+        commentsModel.index = 0;
+        commentsModel.allComments = [];
 
         albumTitle = galleryModel.get(currentIndex).title;
         imgur_id = galleryModel.get(currentIndex).id;
@@ -103,8 +105,12 @@ Page {
                     Repeater {
                         model: galleryContentModel;
 
-                        delegate: GalleryContentDelegate {
-                            id: galleryContentDelegate;
+                        delegate: Loader {
+                            asynchronous: true;
+
+                            sourceComponent: GalleryContentDelegate {
+                                id: galleryContentDelegate;
+                            }
                         }
                     }
                 }
@@ -346,7 +352,7 @@ Page {
 
                     onMovementEnded: {
                         if(atYEnd) {
-                            //commentsModel.getNext();
+                            commentsModel.getNextComments();
                         }
                     }
                 }
@@ -378,5 +384,7 @@ Page {
     Component.onCompleted: {
         galleryContentModel.clear();
         commentsModel.clear();
+        commentsModel.allComments = [];
     }
+
 }
