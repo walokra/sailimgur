@@ -23,16 +23,13 @@ Page {
         id: commentsModel;
     }
 
-    ListModel {
-        id: albumImagesMoreModel;
-    }
-
     signal load();
 
     onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
         galleryContentModel.clear();
-        albumImagesMoreModel.clear();
+        galleryContentModel.index = 0;
+        galleryContentModel.allImages = [];
         commentsModel.clear();
         commentsModel.index = 0;
         commentsModel.allComments = [];
@@ -118,19 +115,15 @@ Page {
                     id: showMoreItem;
                     width: parent.width;
                     height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
-                    visible: albumImagesMoreModel.count > 0;
+                    visible: galleryContentModel.count < galleryContentModel.total;
 
                     Button {
                         id: showMoreButton;
                         anchors.centerIn: parent;
-                        enabled: albumImagesMoreModel.count > 0;
-                        text: qsTr("show more");
+                        enabled: galleryContentModel.count < galleryContentModel.total;
+                        text: qsTr("show more (" + galleryContentModel.total + " total, " + galleryContentModel.left + " remaining)");
                         onClicked: {
-                            // @Hack, better way to combine models?
-                            for(var i=0; i < albumImagesMoreModel.count; i++) {
-                                galleryContentModel.append(albumImagesMoreModel.get(i));
-                            }
-                            albumImagesMoreModel.clear();
+                            galleryContentModel.getNextImages();
                         }
                     }
                 }

@@ -17,30 +17,54 @@ ListModel {
     property int downsPercent : 0;
     property bool is_album: false;
     //
+    property int index : 0;
+    property var allImages : [];
+    property int total : 0;
+    property int left : 0;
 
     property bool loaded: false;
 
     function getAlbum(id) {
         Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
 
-        Imgur.getAlbum(id, listModel, albumImagesMoreModel, settings.albumImagesLimit,
+        Imgur.getAlbum(id, allImages, listModel,
             function(status){
-
+                loaded = true;
+                getNextImages();
             }, function(status, statusText){
+                loaded = true;
                 infoBanner.showHttpError(status, statusText);
             }
         );
+        total = allImages.length;
+        left = total;
     }
 
     function getGalleryImage(id) {
         Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
 
-        Imgur.getGalleryImage(id, listModel,
+        Imgur.getGalleryImage(id, allImages, listModel,
             function(status){
-
+                loaded = true;
+                getNextImages();
              }, function(status, statusText){
+                 loaded = true;
                  infoBanner.showHttpError(status, statusText);
              }
         );
     }
+
+    function getNextImages() {
+        var start = index * settings.albumImagesSlice;
+        index += 1;
+        var end = index * settings.albumImagesSlice;
+        //start = (start >= allComments.length) ? allComments.length : start;
+        //end = (end > allComments.length) ? allComments.length : end;
+        //console.log("start=" + start + "; end=" + end + "; total=" + allComments.length);
+        listModel.append(allImages.slice(start, end));
+
+        total = allImages.length;
+        left = total - listModel.count;
+    }
+
 }

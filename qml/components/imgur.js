@@ -184,7 +184,6 @@ function getMemesSubGallery(model, page, settings, onSuccess, onFailure) {
 function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
     //console.log("sendJSONRequest, url=" + url + ", actiontype=" + actiontype);
     var xhr = new XMLHttpRequest();
-
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -192,8 +191,6 @@ function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
                 //console.log("ok, actiontype=" + actiontype);
                 if (actiontype === 1) {
                     handleGalleryJSON(xhr.responseText, model);
-                } else if (actiontype === 3) {
-                    handleImageJSON(xhr.responseText, model);
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText, model);
                 }
@@ -222,7 +219,6 @@ sort 	optional 	time | viral - defaults to time
 page 	optional 	integer - the data paging number
 */
 function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
     var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
     //console.log("getGallerySearch: " + url);
@@ -231,17 +227,17 @@ function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
 }
 
 // get gallery album
-function getAlbum(id, model, moreModel, limit, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
+function getAlbum(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_ALBUM;
     url += "/" + id;
     //console.log("getAlbum: " + url);
 
+    var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-                handleAlbumJSON(xhr.responseText, model, moreModel, limit);
+                handleAlbumJSON(xhr.responseText, model, albumModel);
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
             } else {
@@ -257,13 +253,26 @@ function getAlbum(id, model, moreModel, limit, onSuccess, onFailure) {
 }
 
 // get gallery image
-function getGalleryImage(id, model, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
+function getGalleryImage(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_IMAGE;
     url += "/" + id;
     //console.log("getGalleryImage: " + url);
 
-    sendJSONRequest(url, 3, model, onSuccess, onFailure);
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                handleImageJSON(xhr.responseText, model, albumModel);
+                onSuccess(xhr.status);
+            } else {
+                var jsonObject = JSON.parse(xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+    xhr = createGETHeader(xhr);
+    xhr.send();
 }
 
 /*
@@ -291,8 +300,8 @@ function getGalleryComments(id, model, onSuccess, onFailure) {
 */
 function getCredits(onSuccess, onFailure) {
     var url = ENDPOINT_GET_CREDITS;
-    var xhr = new XMLHttpRequest();
 
+    var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -393,7 +402,7 @@ function fillAlbumImagesModel(output, model) {
         bandwidth: output.bandwidth,
         link: link
     };
-    model.append(imageData);
+    model.push(imageData);
 }
 
 function fillAlbumVariables(output, model) {
@@ -435,10 +444,10 @@ function fillAlbumVariables(output, model) {
 }
 
 /*
-  Parse JSON for Gallery Album and fill albumImagesModel.
+  Parse JSON for Gallery Album and fill models.
   https://api.imgur.com/models/gallery_album
 */
-function handleAlbumJSON(response, model, moreModel, limit) {
+function handleAlbumJSON(response, model, albumModel) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
@@ -447,29 +456,23 @@ function handleAlbumJSON(response, model, moreModel, limit) {
     for (var i in jsonObject.data.images) {
         //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
         //console.log("output=" + JSON.stringify(output));
-
-        if (i >= limit) {
-            fillAlbumImagesModel(jsonObject.data.images[i], moreModel);
-        }
-        else {
-            fillAlbumImagesModel(jsonObject.data.images[i], model);
-        }
+        fillAlbumImagesModel(jsonObject.data.images[i], model);
     }
     //console.log("count=" + albumImagesModel.count);
 
-    fillAlbumVariables(data, model);
+    fillAlbumVariables(data, albumModel);
 }
 
 /*
   Parse JSON for Image and fill albumImagesModel.
   https://api.imgur.com/models/gallery_image
 */
-function handleImageJSON(response, model) {
+function handleImageJSON(response, model, albumModel) {
     var jsonObject = JSON.parse(response);
     //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     fillAlbumImagesModel(jsonObject.data, model);
-    fillAlbumVariables(jsonObject.data, model);
+    fillAlbumVariables(jsonObject.data, model, albumModel);
 }
 
 function handleCommentsJSON(response, model) {

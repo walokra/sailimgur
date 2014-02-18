@@ -16,8 +16,9 @@ QtObject {
     // user
     property string user: "anonymous";
 
-    // comments
-    property int commentsSlice: 30;
+    // slicing arrays
+    property int commentsSlice : 25;
+    property int albumImagesSlice : 5;
 
     // default options for gallery
     property string mode : "main";

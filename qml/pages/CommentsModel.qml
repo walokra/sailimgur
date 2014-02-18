@@ -31,7 +31,7 @@ ListModel {
         //start = (start >= allComments.length) ? allComments.length : start;
         //end = (end > allComments.length) ? allComments.length : end;
         //console.log("start=" + start + "; end=" + end + "; total=" + allComments.length);
-        commentsModel.append(allComments.slice(start, end));
+        listModel.append(allComments.slice(start, end));
     }
 
 }
