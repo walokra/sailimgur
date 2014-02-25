@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
     app->setApplicationName("Sailimgur");
-    app->setOrganizationName("Sailimgur");
+    app->setOrganizationName("harbour-sailimgur");
     app->setApplicationVersion(APP_VERSION);
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
