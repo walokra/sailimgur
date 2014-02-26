@@ -30,7 +30,7 @@ ListModel {
         Imgur.getAlbum(id, allImages, listModel,
             function(status){
                 loaded = true;
-                getNextImages();
+                getNextImages(settings.albumImagesLimit);
             }, function(status, statusText){
                 loaded = true;
                 infoBanner.showHttpError(status, statusText);
@@ -54,17 +54,19 @@ ListModel {
         );
     }
 
-    function getNextImages() {
-        var start = index * settings.albumImagesSlice;
+    function getNextImages(initialLimit) {
+        var start = (initialLimit) ? 0 : listModel.count;
         index += 1;
-        var end = index * settings.albumImagesSlice;
+        var end = (initialLimit) ? initialLimit : listModel.count + settings.albumImagesSlice;
         //start = (start >= allComments.length) ? allComments.length : start;
         //end = (end > allComments.length) ? allComments.length : end;
-        //console.log("start=" + start + "; end=" + end + "; total=" + allComments.length);
+        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length);
         listModel.append(allImages.slice(start, end));
 
         total = allImages.length;
         left = total - listModel.count;
+
+        showMoreItem.visible = listModel.count < listModel.total;
     }
 
 }

@@ -43,6 +43,7 @@ Page {
             galleryContentModel.getAlbum(imgur_id);
         } else {
             galleryContentPageTitle = qsTr("Gallery image");
+            showMoreItem.visible = false;
             galleryContentModel.getGalleryImage(imgur_id);
         }
 
@@ -115,7 +116,7 @@ Page {
                     id: showMoreItem;
                     width: parent.width;
                     height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
-                    visible: galleryContentModel.count < galleryContentModel.total;
+                    //visible: galleryContentModel.count < galleryContentModel.total;
 
                     Button {
                         id: showMoreButton;
