@@ -9,6 +9,7 @@ ListModel {
     property string query : "";
 
     function processGalleryMode(searchText, index) {
+        loaded = false;
         if (searchText) {
             query = searchText;
         } else {
@@ -27,13 +28,13 @@ ListModel {
                 }
                 galleryContentPage.load();
                 loadingRect.visible = false;
+                loaded = true;
             }, function(status, statusText){
                 infoBanner.showHttpError(status, statusText);
                 loadingRect.visible = false;
+                loaded = true;
             }
         );
-
-        loaded = true;
     }
 
 }

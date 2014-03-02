@@ -6,7 +6,7 @@ Page {
     id: mainPage;
     allowedOrientations: Orientation.All;
 
-    property bool prevEnabled : page > 0;
+    //property bool prevEnabled : page > 0;
     property string searchModeText : "";
 
     property alias contentItem: flickable;
@@ -108,6 +108,7 @@ Page {
 
         } // Pulldown menu
 
+        /*
         PushUpMenu {
             id: pushUpMenu;
 
@@ -165,6 +166,7 @@ Page {
                 } // ListItem
             }
         } // Pushup menu
+        */
 
         anchors.fill: parent;
 
@@ -192,7 +194,8 @@ Page {
             Timer {
                 id: idle;
                 property bool moving: galgrid.moving || galgrid.dragging || galgrid.flicking;
-                property bool menuOpen: pullDownMenu.active || pushUpMenu.active;
+                //property bool menuOpen: pullDownMenu.active || pushUpMenu.active;
+                property bool menuOpen: pullDownMenu.active;
                 onMovingChanged: if (!moving && !menuOpen) restart();
                 interval: galgrid.atYBeginning || galgrid.atYEnd ? 300 : 2000;
             }
@@ -212,7 +215,8 @@ Page {
                     icon.source: "image://theme/icon-l-up";
                     onClicked: {
                         galgrid.cancelFlick();
-                        galgrid.positionViewAtBeginning();
+                        //galgrid.positionViewAtBeginning();
+                        galgrid.scrollToTop();
                     }
                 }
             }
@@ -232,10 +236,44 @@ Page {
                     icon.source: "image://theme/icon-l-down";
                     onClicked: {
                         galgrid.cancelFlick();
-                        galgrid.positionViewAtEnd();
+                        //galgrid.positionViewAtEnd();
+                        galgrid.scrollToBottom();
                     }
                 }
             }
+
+            Rectangle {
+                anchors { top: parent.top; left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
+                color: Theme.highlightBackgroundColor;
+                opacity: (galleryModel.loaded) ? 0 : 1;
+
+                Label {
+                    id: statusLabel;
+                    anchors { left: parent.left; right: parent.right; centerIn: parent; }
+                    text: "Loading...";
+                    color: constant.colorHighlight;
+                }
+            }
+
+            onMovementEnded: {
+                if(atYBeginning) {
+                    if (page > 0) {
+                        page -= 1;
+                        //console.log("atYBeginning: " + page);
+                        statusLabel.text = qsTr("Loading previous page");
+                        galleryModel.processGalleryMode(searchTextField.text);
+                        galgrid.scrollToBottom();
+                    }
+                }
+                if(atYEnd) {
+                    page += 1;
+                    //console.log("atYEnd: " + page);
+                    statusLabel.text = qsTr("Loading next page");
+                    galleryModel.processGalleryMode(searchTextField.text);
+                    galgrid.scrollToTop();
+                }
+            }
+
         } // SilicaGridView
     }
 
