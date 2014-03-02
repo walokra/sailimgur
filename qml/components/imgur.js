@@ -364,6 +364,40 @@ function handleGalleryJSON(response, model) {
     }
 }
 
+
+
+/*
+  Parse JSON for Gallery Album and fill models.
+  https://api.imgur.com/models/gallery_album
+*/
+function handleAlbumJSON(response, model, albumModel) {
+    var jsonObject = JSON.parse(response);
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+
+    var data = jsonObject.data;
+    //console.log("data.is_album=" + data.is_album + "; data.images_count=" + data.images_count);
+    for (var i in jsonObject.data.images) {
+	//console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
+	//console.log("output=" + JSON.stringify(output));
+	fillAlbumImagesModel(jsonObject.data.images[i], model);
+    }
+    //console.log("count=" + model.count);
+
+    fillAlbumVariables(data, albumModel);
+}
+
+/*
+  Parse JSON for Image and fill albumModel.
+  https://api.imgur.com/models/gallery_image
+*/
+function handleImageJSON(response, model, albumModel) {
+    var jsonObject = JSON.parse(response);
+    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
+
+    fillAlbumImagesModel(jsonObject.data, model);
+    fillAlbumVariables(jsonObject.data, albumModel);
+}
+
 function fillAlbumImagesModel(output, model) {
     var title = "";
     if (output.title) {
@@ -443,38 +477,6 @@ function fillAlbumVariables(output, model) {
     //console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
 }
 
-/*
-  Parse JSON for Gallery Album and fill models.
-  https://api.imgur.com/models/gallery_album
-*/
-function handleAlbumJSON(response, model, albumModel) {
-    var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
-
-    var data = jsonObject.data;
-    //console.log("data.is_album=" + data.is_album + "; data.images_count=" + data.images_count + "; albumImagesLimit=" + settings.albumImagesLimit);
-    for (var i in jsonObject.data.images) {
-        //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
-        //console.log("output=" + JSON.stringify(output));
-        fillAlbumImagesModel(jsonObject.data.images[i], model);
-    }
-    //console.log("count=" + albumImagesModel.count);
-
-    fillAlbumVariables(data, albumModel);
-}
-
-/*
-  Parse JSON for Image and fill albumImagesModel.
-  https://api.imgur.com/models/gallery_image
-*/
-function handleImageJSON(response, model, albumModel) {
-    var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
-
-    fillAlbumImagesModel(jsonObject.data, model);
-    fillAlbumVariables(jsonObject.data, model, albumModel);
-}
-
 function handleCommentsJSON(response, model) {
     var jsonObject = JSON.parse(response);
     //console.log("handleCommentsJSON()");
@@ -497,17 +499,17 @@ function parseComments(output, depth, model) {
 
     var childrens = parseInt(output.children.length);
     model.push({
-                        id: output.id,
-                        comment: replaceURLWithHTMLLinks(output.comment),
-                        author: output.author,
-                        ups: output.ups,
-                        downs: output.downs,
-                        points: output.points,
-                        datetime: datetime,
-                        children: output.children,
-                        //childrens: childrens,
-                        depth: depth
-                     });
+		   id: output.id,
+		   comment: replaceURLWithHTMLLinks(output.comment),
+		   author: output.author,
+		   ups: output.ups,
+		   downs: output.downs,
+		   points: output.points,
+		   datetime: datetime,
+		   children: output.children,
+		   //childrens: childrens,
+		   depth: depth
+	       });
 
     //console.log("childrens: " + JSON.stringify(output.children));
 
