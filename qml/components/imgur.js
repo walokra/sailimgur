@@ -619,3 +619,70 @@ function processGalleryMode(query, model, page, settings, onSuccess, onFailure) 
         getMemesSubGallery(model, page, settings, onSuccess, onFailure);
     }
 }
+
+/**
+Image Upload
+Upload a new image.
+Method	POST
+Route	https://api.imgur.com/3/image
+Alternative Route	https://api.imgur.com/3/upload
+Response Model	Basic
+
+Parameters
+Key	Required	Description
+image	required	A binary file, base64 data, or a URL for an image
+album	optional    The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.
+type	optional	The type of the file that's being sent; file, base64 or URL
+name	optional	The name of the file, this is automatically detected if uploading a file with a POST and multipart / form-data
+title	optional	The title of the image.
+description	optional	The description of the image.
+*/
+function uploadImage(imagePath, album, name, title, desc, onSuccess, onFailure) {
+
+    /*
+    var reader = new FileReader();
+    reader.onload = function(evt) {
+        var fileData = evt.target.result;
+        console.log("File contents: " + fileData);
+    };
+    reader.onerror = function(event) {
+        console.error("File could not be read! Code " + event.target.error.code);
+    };
+    var message = "image=" + reader.readAsDataURL(imagePath);
+    */
+
+    if (album) {
+        message += "&album=" + album;
+    }
+    if (name) {
+        message += "&name=" + name;
+    }
+    message += "&type=base64";
+    if (title) {
+        message += "&title=" + title;
+    }
+    if (desc) {
+        message += "&description=" + desc;
+    }
+
+    //console.log("message=" + message);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', ENDPOINT_IMAGE);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            //console.log("headers: " + xhr.getAllResponseHeaders());
+            var jsonObject = JSON.parse(xhr.responseText);
+            if (xhr.status == 200) {
+                console.log("response: " + JSON.stringify(jsonObject));
+                onSuccess();
+            } else {
+                //console.log(xhr.status, xhr.statusText, xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+
+    xhr = createPOSTHeader(xhr, message);
+    //xhr.send(message);
+}

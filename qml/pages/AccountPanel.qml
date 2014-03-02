@@ -34,7 +34,7 @@ Panel {
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: loggedIn ? qsTr("Logout") : qsTr("Sign In");
+                    text: loggedIn ? qsTr("logout") : qsTr("sign in");
                     font.pixelSize: constant.fontSizeMedium;
                     color: signInItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
@@ -62,7 +62,7 @@ Panel {
                 }
 
                 onClicked: {
-
+                    pageStack.push(uploadPage);
                 }
             }
 

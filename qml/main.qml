@@ -43,6 +43,7 @@ ApplicationWindow {
     Constant { id: constant; }
 
     SignInPage { id: signInPage; }
+    UploadPage { id: uploadPage; }
 
     Rectangle {
         id: infoBanner;
