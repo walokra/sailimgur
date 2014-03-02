@@ -189,8 +189,52 @@ Page {
 
             VerticalScrollDecorator { flickable: galgrid; }
 
-            FancyGridScroller {
-                flickable: galgrid;
+            Timer {
+                id: idle;
+                property bool moving: galgrid.moving || galgrid.dragging || galgrid.flicking;
+                property bool menuOpen: pullDownMenu.active || pushUpMenu.active;
+                onMovingChanged: if (!moving && !menuOpen) restart();
+                interval: galgrid.atYBeginning || galgrid.atYEnd ? 300 : 2000;
+            }
+
+            Rectangle {
+                visible: opacity > 0;
+                width: 64;
+                height: 64;
+                anchors { top: parent.top; right: parent.right; margins: Theme.paddingLarge; }
+                radius: 75;
+                color: Theme.highlightBackgroundColor;
+                opacity: (idle.moving || idle.running) && !idle.menuOpen ? 1 : 0;
+                Behavior on opacity { FadeAnimation { duration: 300; } }
+
+                IconButton {
+                    anchors.centerIn: parent;
+                    icon.source: "image://theme/icon-l-up";
+                    onClicked: {
+                        galgrid.cancelFlick();
+                        galgrid.positionViewAtBeginning();
+                    }
+                }
+            }
+
+            Rectangle {
+                visible: opacity > 0;
+                width: 64;
+                height: 64;
+                anchors { bottom: parent.bottom; right: parent.right; margins: Theme.paddingLarge; }
+                radius: 75;
+                color: Theme.highlightBackgroundColor;
+                opacity: (idle.moving || idle.running) && !idle.menuOpen ? 1 : 0;
+                Behavior on opacity { FadeAnimation { duration: 300; } }
+
+                IconButton {
+                    anchors.centerIn: parent;
+                    icon.source: "image://theme/icon-l-down";
+                    onClicked: {
+                        galgrid.cancelFlick();
+                        galgrid.positionViewAtEnd();
+                    }
+                }
             }
         } // SilicaGridView
     }
