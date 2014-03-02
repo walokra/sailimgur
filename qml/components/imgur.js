@@ -377,9 +377,9 @@ function handleAlbumJSON(response, model, albumModel) {
     var data = jsonObject.data;
     //console.log("data.is_album=" + data.is_album + "; data.images_count=" + data.images_count);
     for (var i in jsonObject.data.images) {
-	//console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
-	//console.log("output=" + JSON.stringify(output));
-	fillAlbumImagesModel(jsonObject.data.images[i], model);
+        //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
+        //console.log("output=" + JSON.stringify(output));
+        fillAlbumImagesModel(jsonObject.data.images[i], model);
     }
     //console.log("count=" + model.count);
 
@@ -499,17 +499,17 @@ function parseComments(output, depth, model) {
 
     var childrens = parseInt(output.children.length);
     model.push({
-		   id: output.id,
-		   comment: replaceURLWithHTMLLinks(output.comment),
-		   author: output.author,
-		   ups: output.ups,
-		   downs: output.downs,
-		   points: output.points,
-		   datetime: datetime,
-		   children: output.children,
-		   //childrens: childrens,
-		   depth: depth
-	       });
+                   id: output.id,
+                   comment: replaceURLWithHTMLLinks(output.comment),
+                   author: output.author,
+                   ups: output.ups,
+                   downs: output.downs,
+                   points: output.points,
+                   datetime: datetime,
+                   children: output.children,
+                   //childrens: childrens,
+                   depth: depth
+               });
 
     //console.log("childrens: " + JSON.stringify(output.children));
 
@@ -597,17 +597,12 @@ function createPOSTHeader(xhr, message) {
 
 function createGETHeader(xhr) {
     //console.log("OAUTH_CONSUMER_KEY=" + OAUTH_CONSUMER_KEY + "; OAUTH_ACCESS_TOKEN=" + OAUTH_ACCESS_TOKEN);
-    // 0.2-1: oauth disabled
-    /*
     if (OAUTH_ACCESS_TOKEN === "") {
         xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     } else {
         xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
-    */
-    // 0.2-1: oauth disabled
 
-    xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     xhr.setRequestHeader("User-Agent", USER_AGENT);
     return xhr;
 }

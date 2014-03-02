@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components/imgur.js" as Imgur
 
 Page {
     id: mainPage;
@@ -8,17 +9,13 @@ Page {
     property bool prevEnabled : page > 0;
     property string searchModeText : "";
 
+    property alias contentItem: flickable;
+
     Connections {
         target: settings;
         onSettingsLoaded: {
             galleryModel.clear();
 
-            // 0.2-1: oauth disabled
-            loggedIn = false;
-            galleryModel.processGalleryMode(searchTextField.text);
-            // 0.2-1: oauth disabled
-
-            /*
             Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
             if (settings.accessToken === "" || settings.refreshToken === "") {
                 loggedIn = false;
@@ -57,7 +54,7 @@ Page {
                         loadingRect.visible = false;
                     };
                 });
-            }*/
+            }
         }
     }
 
@@ -65,6 +62,7 @@ Page {
         id: flickable;
         interactive: !galgrid.flicking;
         pressDelay: 0;
+        z: -2;
 
         PageHeader { id: header; title: constant.appName; }
 
@@ -87,23 +85,6 @@ Page {
                     pageStack.push(settingsPage);
                 }
             }
-
-            // 0.2-1: oauth disabled
-            /*
-            MenuItem {
-                id: signInMenu;
-                text: loggedIn ? qsTr("Logout") : qsTr("Sign In");
-                onClicked: {
-                    if (loggedIn === false) {
-                        pageStack.push(signInPage);
-                    } else {
-                        settings.resetTokens();
-                        settings.settingsLoaded();
-                    }
-                }
-            }
-            */
-            // 0.2-1: oauth disabled
 
             SearchField {
                 id: searchTextField;

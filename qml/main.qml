@@ -3,9 +3,10 @@ import Sailfish.Silica 1.0
 import "pages"
 import "cover"
 
-ApplicationWindow
-{
+ApplicationWindow {
     id: main;
+
+    property Page currentPage: pageStack.currentPage
 
     property int page : 0;
     property int currentIndex : 0;
@@ -14,7 +15,18 @@ ApplicationWindow
     property string creditsUserRemaining : "";
     property string creditsClientRemaining : "";
 
-    initialPage: Component { MainPage { id: mainPage; } }
+    initialPage: Component {
+        id: mainPage;
+        MainPage {
+            id: mp;
+            property bool __isMainPage: true;
+            Binding {
+                target: mp.contentItem
+                property: "parent";
+                value: mp.status === PageStatus.Active ? viewer : mp;
+            }
+        }
+    }
 
     cover: CoverPage { id: coverPage; }
 
@@ -140,6 +152,39 @@ ApplicationWindow
             running: visible;
             size: BusyIndicatorSize.Large;
             Behavior on opacity { FadeAnimation {} }
+        }
+    }
+
+    PanelView {
+        id: viewer;
+
+        // a workaround to avoid TextAutoScroller picking up PanelView as an "outer"
+        // flickable and doing undesired contentX adjustments (the right side panel
+        // slides partially in) meanwhile typing/scrolling long TextEntry content
+        property bool maximumFlickVelocity: false;
+
+        width: pageStack.currentPage.width;
+        panelWidth: Screen.width / 3 * 2;
+        panelHeight: pageStack.currentPage.height;
+        height: currentPage && currentPage.contentHeight || pageStack.currentPage.height;
+        visible: (!!currentPage && !!currentPage.__isMainPage) || !viewer.closed;
+
+        rotation: pageStack.currentPage.rotation;
+
+        property int ori: pageStack.currentPage.orientation;
+
+        anchors.centerIn: parent;
+        anchors.verticalCenterOffset: ori === Orientation.Portrait ? -(panelHeight - height) / 2 :
+                                                                     ori === Orientation.PortraitInverted ? (panelHeight - height) / 2 : 0;
+        anchors.horizontalCenterOffset: ori === Orientation.Landscape ? (panelHeight - height) / 2 :
+                                                                        ori === Orientation.LandscapeInverted ? -(panelHeight - height) / 2 : 0;
+        Connections {
+            target: pageStack;
+            onCurrentPageChanged: viewer.hidePanel();
+        }
+
+        leftPanel: AccountPanel {
+            id: leftPanel;
         }
     }
 
