@@ -47,6 +47,27 @@ Panel {
             */
 
             BackgroundItem {
+                id: mainItem;
+                anchors.left: parent.left; anchors.right: parent.right;
+
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: qsTr("main gallery");
+                    font.pixelSize: constant.fontSizeMedium;
+                    color: mainItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                }
+
+                onClicked: {
+                    settings.mode = constant.mode_main;
+                    currentIndex = 0;
+                    page = 0;
+                    galleryModel.processGalleryMode();
+                    viewer.hidePanel();
+                }
+            }
+
+            BackgroundItem {
                 id: favoritesItem;
                 anchors.left: parent.left; anchors.right: parent.right;
                 visible: loggedIn;
@@ -60,9 +81,31 @@ Panel {
                 }
 
                 onClicked: {
-                    //pageStack.push(favoritiesPage);
-                    settings.mode = "favorites";
-                    settings.section = "";
+                    settings.mode = constant.mode_favorites;
+                    currentIndex = 0;
+                    page = 0;
+                    galleryModel.processGalleryMode();
+                    viewer.hidePanel();
+                }
+            }
+
+            BackgroundItem {
+                id: albumsItem;
+                anchors.left: parent.left; anchors.right: parent.right;
+                visible: loggedIn;
+
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: qsTr("albums");
+                    font.pixelSize: constant.fontSizeMedium;
+                    color: albumsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                }
+
+                onClicked: {
+                    settings.mode = constant.mode_albums;
+                    currentIndex = 0;
+                    page = 0;
                     galleryModel.processGalleryMode();
                     viewer.hidePanel();
                 }
@@ -82,25 +125,11 @@ Panel {
                 }
 
                 onClicked: {
-
-                }
-            }
-
-            BackgroundItem {
-                id: albumsItem;
-                anchors.left: parent.left; anchors.right: parent.right;
-                visible: loggedIn;
-
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("albums");
-                    font.pixelSize: constant.fontSizeMedium;
-                    color: albumsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                }
-
-                onClicked: {
-
+                    settings.mode = constant.mode_images;
+                    currentIndex = 0;
+                    page = 0;
+                    galleryModel.processGalleryMode();
+                    viewer.hidePanel();
                 }
             }
 
@@ -122,7 +151,6 @@ Panel {
 
                 }
             }
-            */
 
             BackgroundItem {
                 id: accountSettingsItem;
@@ -141,6 +169,7 @@ Panel {
 
                 }
             }
+            */
 
             BackgroundItem {
                 id: signInItem;

@@ -157,7 +157,6 @@ Page {
                     icon.source: "image://theme/icon-l-up";
                     onClicked: {
                         galgrid.cancelFlick();
-                        //galgrid.positionViewAtBeginning();
                         galgrid.scrollToTop();
                     }
                 }
@@ -179,7 +178,6 @@ Page {
                     icon.source: "image://theme/icon-l-down";
                     onClicked: {
                         galgrid.cancelFlick();
-                        //galgrid.positionViewAtEnd();
                         galgrid.scrollToBottom();
                     }
                 }

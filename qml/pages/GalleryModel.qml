@@ -8,7 +8,7 @@ ListModel {
 
     property string query : "";
 
-    function processGalleryMode(searchText, index) {
+    function processGalleryMode(searchText) {
         loaded = false;
         if (searchText) {
             query = searchText;
@@ -23,7 +23,7 @@ ListModel {
 
         Imgur.processGalleryMode(query, listModel, page, settings,
             function(status){
-                if(index === -1) {
+                if(currentIndex === -1) {
                     currentIndex = listModel.count - 1;
                 }
                 galleryContentPage.load();

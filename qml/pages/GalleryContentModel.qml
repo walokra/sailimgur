@@ -24,34 +24,59 @@ ListModel {
 
     property bool loaded: false;
 
-    function getAlbum(id) {
+    function getAlbum(id, is_gallery) {
         Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
 
-        Imgur.getAlbum(id, allImages, listModel,
-            function(status){
-                loaded = true;
-                getNextImages(settings.albumImagesLimit);
-            }, function(status, statusText){
-                loaded = true;
-                infoBanner.showHttpError(status, statusText);
-            }
-        );
+        if (is_gallery) {
+            Imgur.getGalleryAlbum(id, allImages, listModel,
+                                  function(status){
+                                      loaded = true;
+                                      getNextImages(settings.albumImagesLimit);
+                                  }, function(status, statusText){
+                                      loaded = true;
+                                      infoBanner.showHttpError(status, statusText);
+                                  }
+            );
+        } else {
+            Imgur.getAlbum(id, allImages, listModel,
+                           function(status){
+                               loaded = true;
+                               getNextImages(settings.albumImagesLimit);
+                           }, function(status, statusText){
+                               loaded = true;
+                               infoBanner.showHttpError(status, statusText);
+                           }
+            );
+        }
+
         total = allImages.length;
         left = total;
     }
 
-    function getGalleryImage(id) {
+    function getImage(id, is_gallery) {
         Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
 
-        Imgur.getGalleryImage(id, allImages, listModel,
-            function(status){
-                loaded = true;
-                getNextImages();
-             }, function(status, statusText){
-                 loaded = true;
-                 infoBanner.showHttpError(status, statusText);
-             }
-        );
+        if (is_gallery) {
+            Imgur.getGalleryImage(id, allImages, listModel,
+                                  function(status){
+                                      loaded = true;
+                                      getNextImages();
+                                  }, function(status, statusText){
+                                      loaded = true;
+                                      infoBanner.showHttpError(status, statusText);
+                                  }
+            );
+        } else {
+            Imgur.getImage(id, allImages, listModel,
+                                function(status){
+                                    loaded = true;
+                                    getNextImages();
+                                }, function(status, statusText){
+                                    loaded = true;
+                                    infoBanner.showHttpError(status, statusText);
+                                }
+                );
+       }
     }
 
     function getNextImages(initialLimit) {

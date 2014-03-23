@@ -22,19 +22,24 @@ Row {
     }
 
     Label {
-        id: favoritiesLabel;
-        width: parent.width / 2;
-        text: qsTr("Your favorite images");
+        id: accountModeLabel;
+        width: parent.width;
+        text:
+            settings.mode === constant.mode_favorites ?
+                qsTr("Your favorite images") : (
+                    settings.mode === constant.mode_albums ? qsTr("Your albums") : (
+                            settings.mode === constant.mode_images) ? qsTr("Your images") : ""
+                    );
         font.pixelSize: constant.fontSizeMedium;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-        visible: settings.mode === "favorites";
+        visible: settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images;
     }
 
     ComboBox {
         id: modeBox;
         currentIndex: 0;
         width: parent.width / 2;
-        visible: searchModeLabel.visible == false && favoritiesLabel.visible == false;
+        visible: searchModeLabel.visible == false && accountModeLabel.visible == false;
 
         menu: ContextMenu {
 
@@ -44,7 +49,7 @@ Row {
                 onClicked: {
                     sortBox.visible = true;
                     searchTextField.text = "";
-                    settings.mode = "main";
+                    settings.mode = constant.mode_main;
                     settings.section = "hot";
                     galgrid.scrollToTop();
                     galleryModel.processGalleryMode();
@@ -57,8 +62,8 @@ Row {
                 onClicked: {
                     sortBox.visible = true;
                     searchTextField.text = "";
-                    settings.mode = "user";
-                    settings.section = "user";
+                    settings.mode = constant.mode_user;
+                    settings.section = constant.mode_user;
                     galgrid.scrollToTop();
                     galleryModel.processGalleryMode();
                 }
@@ -70,7 +75,7 @@ Row {
                 onClicked: {
                     sortBox.visible = false;
                     searchTextField.text = "";
-                    settings.mode = "random";
+                    settings.mode = constant.mode_random;
                     galgrid.scrollToTop();
                     galleryModel.processGalleryMode();
                 }
@@ -82,7 +87,7 @@ Row {
                 onClicked: {
                     sortBox.visible = false;
                     searchTextField.text = "";
-                    settings.mode = "score";
+                    settings.mode = constant.mode_score;
                     settings.section = "top";
                     galgrid.scrollToTop();
                     galleryModel.processGalleryMode();
@@ -95,7 +100,7 @@ Row {
                 onClicked: {
                     sortBox.visible = true;
                     searchTextField.text = "";
-                    settings.mode = "memes";
+                    settings.mode = constant.mode_memes;
                     galgrid.scrollToTop();
                     galleryModel.processGalleryMode();
                 }
@@ -108,7 +113,7 @@ Row {
         width: parent.width / 2;
         currentIndex: 0;
         label: qsTr("sort:");
-        visible: favoritiesLabel.visible == false;
+        visible: accountModeLabel.visible == false;
 
         menu: ContextMenu {
             MenuItem {

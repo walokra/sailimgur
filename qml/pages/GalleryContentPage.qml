@@ -9,6 +9,7 @@ Page {
     property string albumTitle : "";
 
     property bool is_album: false;
+    property bool is_gallery: true;
     property string imgur_id : "";
 
     property string galleryContentPageTitle : constant.appName;
@@ -37,20 +38,30 @@ Page {
         albumTitle = galleryModel.get(currentIndex).title;
         imgur_id = galleryModel.get(currentIndex).id;
         is_album = galleryModel.get(currentIndex).is_album;
+        is_gallery = galleryModel.get(currentIndex).is_gallery;
 
         if (is_album === true) {
-            galleryContentPageTitle = qsTr("Gallery album");
-            galleryContentModel.getAlbum(imgur_id);
+            if (is_gallery == true) {
+                galleryContentPageTitle = qsTr("Gallery album");
+            } else {
+                galleryContentPageTitle = qsTr("Album");
+            }
+            galleryContentModel.getAlbum(imgur_id, is_gallery);
         } else {
-            galleryContentPageTitle = qsTr("Gallery image");
+            if (is_gallery == true) {
+                galleryContentPageTitle = qsTr("Gallery image");
+            } else {
+                galleryContentPageTitle = qsTr("Image");
+            }
             showMoreItem.visible = false;
-            galleryContentModel.getGalleryImage(imgur_id);
+            galleryContentModel.getImage(imgur_id, is_gallery);
         }
 
-        if (settings.showComments) {
+        if (settings.showComments && is_gallery == true) {
             loadingRectComments.visible = true;
             commentsModel.getComments(imgur_id);
         }
+
         setPrevButton();
         galleryContentFlickable.scrollToTop();
     }
@@ -301,6 +312,7 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 height: childrenRect.height + showCommentsItem.height + 200;
                 width: parent.width;
+                visible: is_gallery == true;
 
                 Item {
                     id: showCommentsItem;

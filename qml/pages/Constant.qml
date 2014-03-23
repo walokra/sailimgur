@@ -43,4 +43,14 @@ QtObject {
     property string iconLiked : "../images/icons/liked.svg";
     property string iconFavorite : "../images/icons/favorite.svg";
     property string iconFavorited : "../images/icons/favorited.svg";
+
+    // modes
+    property string mode_main : "main";
+    property string mode_user : "user";
+    property string mode_random : "random";
+    property string mode_score : "score";
+    property string mode_memes : "memes";
+    property string mode_favorites : "favorites";
+    property string mode_albums : "albums";
+    property string mode_images : "images";
 }

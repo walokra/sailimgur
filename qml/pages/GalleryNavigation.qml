@@ -9,6 +9,7 @@ Rectangle {
     z: 1;
     color: "black";
     opacity: 0.7;
+    visible: galleryModel.count > 1 || page > 0;
 
     ListItem {
         id: navigationItem;
@@ -32,7 +33,8 @@ Rectangle {
 
                     loadingRect.visible = true;
                     galleryModel.clear();
-                    galleryModel.processGalleryMode(galleryModel.query, -1);
+                    currentIndex = -1;
+                    galleryModel.processGalleryMode(galleryModel.query);
                 }
                 setPrevButton();
             }
@@ -46,15 +48,16 @@ Rectangle {
 
             height: Theme.itemSizeExtraSmall;
             anchors.right: parent.right;
+            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
 
             onClicked: {
                 //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
-                if (currentIndex < galleryModel.count-1) {
+                if (currentIndex < galleryModel.count - 1) {
                     //console.log("Getting next image");
                     currentIndex += 1;
                     load();
                 }
-                else if (currentIndex === galleryModel.count-1) {
+                else if (currentIndex === galleryModel.count - 1) {
                     //console.log("Getting new list of images");
                     page += 1;
                     currentIndex = 0;
