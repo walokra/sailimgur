@@ -27,28 +27,7 @@ Panel {
                 width: parent.width;
             }
 
-            BackgroundItem {
-                id: signInItem;
-                anchors.left: parent.left; anchors.right: parent.right;
-
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: loggedIn ? qsTr("logout") : qsTr("sign in");
-                    font.pixelSize: constant.fontSizeMedium;
-                    color: signInItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                }
-
-                onClicked: {
-                    if (loggedIn === false) {
-                        pageStack.push(signInPage);
-                    } else {
-                        settings.resetTokens();
-                        settings.settingsLoaded();
-                    }
-                }
-            }
-
+            /*
             BackgroundItem {
                 id: uploadImagesItem;
                 anchors.left: parent.left; anchors.right: parent.right;
@@ -65,7 +44,29 @@ Panel {
                     pageStack.push(uploadPage);
                 }
             }
+            */
 
+            BackgroundItem {
+                id: favoritesItem;
+                anchors.left: parent.left; anchors.right: parent.right;
+                visible: loggedIn;
+
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: qsTr("favorites");
+                    font.pixelSize: constant.fontSizeMedium;
+                    color: favoritesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                }
+
+                onClicked: {
+                    //pageStack.push(favoritiesPage);
+                    settings.mode = "favorites";
+                    settings.section = "";
+                    galleryModel.processGalleryMode();
+                    viewer.hidePanel();
+                }
+            }
 
             BackgroundItem {
                 id: imagesItem;
@@ -103,24 +104,7 @@ Panel {
                 }
             }
 
-            BackgroundItem {
-                id: galleryProfileItem;
-                anchors.left: parent.left; anchors.right: parent.right;
-                visible: loggedIn;
-
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("gallery profile");
-                    font.pixelSize: constant.fontSizeMedium;
-                    color: galleryProfileItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                }
-
-                onClicked: {
-
-                }
-            }
-
+            /*
             BackgroundItem {
                 id: messagesItem;
                 anchors.left: parent.left; anchors.right: parent.right;
@@ -138,6 +122,7 @@ Panel {
 
                 }
             }
+            */
 
             BackgroundItem {
                 id: accountSettingsItem;
@@ -156,13 +141,35 @@ Panel {
 
                 }
             }
+
+            BackgroundItem {
+                id: signInItem;
+                anchors.left: parent.left; anchors.right: parent.right;
+
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: loggedIn ? qsTr("logout") : qsTr("sign in");
+                    font.pixelSize: constant.fontSizeMedium;
+                    color: signInItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                }
+
+                onClicked: {
+                    if (loggedIn === false) {
+                        pageStack.push(signInPage);
+                    } else {
+                        settings.resetTokens();
+                        settings.settingsLoaded();
+                    }
+                }
+            }
         }
 
         VerticalScrollDecorator { }
     }
 
     onClicked: {
-        //viewer.hidePanel();
+        viewer.hidePanel();
     }
 
 }

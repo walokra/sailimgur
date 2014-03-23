@@ -101,6 +101,13 @@ function refreshAccessToken(refresh_token, onSuccess, onFailure) {
 
 /**
   Get current user info.
+
+Account Base
+Request standard user information. If you need the username for the account that is logged in,
+it is returned in the request for an access token.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}
+Response Model	Account
 */
 function getAccountCurrent(onSuccess, onFailure) {
     var url = ENDPOINT_ACCOUNT_CURRENT;
@@ -127,6 +134,49 @@ function getAccountCurrent(onSuccess, onFailure) {
     xhr = createGETHeader(xhr);
     xhr.send();
 }
+
+/**
+  Get current user's favorited images.
+
+Account Favorites
+Returns the users favorited images, only accessible if you're logged in as the user.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}/favorites
+Response Model	Gallery Image OR Gallery Album
+*/
+function getFavorites(model, page, settings, onSuccess, onFailure) {
+    var url = ENDPOINT_ACCOUNT_CURRENT;
+    url += "/favorites";
+
+    sendJSONRequest(url, 1, model, onSuccess, onFailure);
+}
+
+/*
+Account Settings
+Returns the account settings, only accessible if you're logged in as the user.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}/settings
+Response Model	Account Settings
+*/
+
+/*
+Albums
+Get all the albums associated with the account. Must be logged in as the user to see secret and hidden albums.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}/albums/{page}
+Response Model	Album
+Parameters
+Key	Required	Description
+page	optional	integer - allows you to set the page number so you don't have to retrieve all the data at once.
+*/
+
+/*
+Images
+Return all of the images associated with the account. You can page through the images by setting the page, this defaults to 0.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}/images/{page}
+Response Model	Image
+*/
 
 /*
 Gallery
@@ -617,6 +667,8 @@ function processGalleryMode(query, model, page, settings, onSuccess, onFailure) 
         getRandomGalleryImages(model, page, onSuccess, onFailure);
     } else if (settings.mode === "memes") {
         getMemesSubGallery(model, page, settings, onSuccess, onFailure);
+    } else if (settings.mode === "favorites") {
+        getFavorites(model, onSuccess, onFailure);
     }
 }
 
@@ -667,6 +719,7 @@ function uploadImage(imagePath, album, name, title, desc, onSuccess, onFailure) 
 
     //console.log("message=" + message);
 
+    /*
     var xhr = new XMLHttpRequest();
     xhr.open('POST', ENDPOINT_IMAGE);
     xhr.onreadystatechange = function () {
@@ -685,4 +738,5 @@ function uploadImage(imagePath, album, name, title, desc, onSuccess, onFailure) 
 
     xhr = createPOSTHeader(xhr, message);
     //xhr.send(message);
+    */
 }

@@ -108,66 +108,6 @@ Page {
 
         } // Pulldown menu
 
-        /*
-        PushUpMenu {
-            id: pushUpMenu;
-
-            MenuItem {
-                ListItem {
-                    id: navigation;
-
-                    Label {
-                        id: prev;
-                        text: qsTr("« Previous");
-                        font.pixelSize: constant.fontSizeSmall;
-
-                        anchors.left: parent.left;
-                        anchors.leftMargin: constant.paddingMedium;
-
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                if (page > 0) {
-                                    page -= 1;
-                                }
-                                //console.log("Previous clicked!: " + page);
-                                galleryModel.processGalleryMode(searchTextField.text);
-                                if (page == 0) {
-                                    prevEnabled = false;
-                                }
-                                pushUpMenu.close();
-                                galgrid.scrollToTop();
-                            }
-                        }
-                        enabled: prevEnabled;
-                        visible: prevEnabled;
-                    }
-
-                    Label {
-                        id: next;
-                        text: qsTr("Next »");
-                        font.pixelSize: constant.fontSizeSmall;
-
-                        anchors.right: parent.right;
-                        anchors.rightMargin: constant.paddingMedium;
-
-                        MouseArea {
-                            anchors.fill: parent;
-                            onClicked: {
-                                page += 1;
-                                //console.log("Next clicked!: " + page);
-                                galleryModel.processGalleryMode(searchTextField.text);
-                                prevEnabled = true;
-                                pushUpMenu.close();
-                                galgrid.scrollToTop();
-                            }
-                        }
-                    }
-                } // ListItem
-            }
-        } // Pushup menu
-        */
-
         anchors.fill: parent;
 
         GalleryMode { id: galleryMode; }
@@ -191,6 +131,7 @@ Page {
 
             VerticalScrollDecorator { flickable: galgrid; }
 
+            // Timer for top/bottom buttons
             Timer {
                 id: idle;
                 property bool moving: galgrid.moving || galgrid.dragging || galgrid.flicking;
@@ -200,6 +141,7 @@ Page {
                 interval: galgrid.atYBeginning || galgrid.atYEnd ? 300 : 2000;
             }
 
+            // to top button
             Rectangle {
                 visible: opacity > 0;
                 width: 64;
@@ -221,6 +163,7 @@ Page {
                 }
             }
 
+            // to bottom button
             Rectangle {
                 visible: opacity > 0;
                 width: 64;
@@ -255,6 +198,7 @@ Page {
                 }
             }
 
+            // Load next/previous page when at the end or at the top
             onMovementEnded: {
                 if(atYBeginning) {
                     if (page > 0) {

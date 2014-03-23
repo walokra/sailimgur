@@ -21,7 +21,7 @@ QtObject {
     property int albumImagesSlice : 5;
 
     // default options for gallery
-    property string mode : "main";
+    property string mode : "main"; // main | user | random | memes | favorities
     property string section : "hot"; // hot | top | user
     property string sort : "viral"; // viral | time
     property string window : "day"; // day | week | month | year | all

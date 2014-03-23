@@ -19,14 +19,22 @@ Row {
         font.pixelSize: constant.fontSizeMedium;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: searchTextField.text.trim().length > 1;
-        //anchors.verticalCenter: parent.verticalCenter;
+    }
+
+    Label {
+        id: favoritiesLabel;
+        width: parent.width / 2;
+        text: qsTr("Your favorite images");
+        font.pixelSize: constant.fontSizeMedium;
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
+        visible: settings.mode === "favorites";
     }
 
     ComboBox {
         id: modeBox;
         currentIndex: 0;
         width: parent.width / 2;
-        visible: searchModeLabel.visible == false;
+        visible: searchModeLabel.visible == false && favoritiesLabel.visible == false;
 
         menu: ContextMenu {
 
@@ -100,6 +108,7 @@ Row {
         width: parent.width / 2;
         currentIndex: 0;
         label: qsTr("sort:");
+        visible: favoritiesLabel.visible == false;
 
         menu: ContextMenu {
             MenuItem {
@@ -124,4 +133,5 @@ Row {
             }
         }
     }
+
 } // galleryMode
