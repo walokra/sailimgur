@@ -580,14 +580,8 @@ function handleGalleryImageJSON(response, model, albumModel) {
 }
 
 function fillAlbumImagesModel(output, model) {
-    var title = "";
-    if (output.title) {
-        title = output.title;
-    }
-    var description = "";
-    if (output.description) {
-        description = output.description;
-    }
+    var title = setVariable(output.title);
+    var description = setVariable(output.description);
 
     if (output.link) {
         if (parseInt(output.width) > 640) {
@@ -621,78 +615,25 @@ function fillAlbumImagesModel(output, model) {
 }
 
 function fillAlbumVariables(output, model) {
-    if (output.title) {
-        model.title = output.title;
-    }
-    else {
-        model.title = "";
-    }
-
-    if (output.description) {
-        model.description = output.description;
-    }
-    else {
-        model.description = "";
-    }
-
-    if (output.datetime) {
-        model.datetime = formatEpochDate(output.datetime);
-    }
-    else {
-        model.datetime = "";
-    }
-
-    if (output.link) {
-        model.link = output.link;
-    }
-    else {
-        model.link = "";
-    }
-
-    if (output.account_url) {
-        model.account_url = output.account_url;
-    } else {
-        model.account_url = "";
-    }
-
+    model.title = setVariable(output.title);
+    model.description = setVariable(output.description);
+    model.datetime = (output.datetime) ? formatEpochDate(output.datetime) : "";
+    model.link = setVariable(output.link);
+    model.account_url = setVariable(output.account_url);
     model.views = output.views;
+    model.deletehash = setVariable(output.deletehash);
 
-    if (model.is_gallery === true) {
-        model.ups = output.ups;
-        model.downs = output.downs;
-        model.score = output.score;
-    } else {
-        model.ups = 0;
-        model.downs = 0;
-        model.score = 0;
-    }
+    model.ups = (output.ups) ? output.ups : 0;
+    model.downs = (output.downs) ? output.downs : 0;
+    model.score = (output.score) ? output.score : 0;
 
-    if (output.vote) {
-        model.vote = output.vote;
-    } else {
-        model.vote = "";
-    }
-
-    if (output.favorite) {
-        model.favorite = output.favorite;
-    } else {
-        model.favorite = false;
-    }
-
-    if (output.images_count) {
-        model.images_count = output.images_count;
-    } else {
-        model.images_count = 0;
-    }
-
-    if(output.is_album) {
-        model.is_album = output.is_album;
-    } else {
-        model.is_album = false;
-    }
+    model.vote = setVariable(output.vote);
+    model.favorite = (output.favorite) ? output.favorite : false;
+    model.images_count = (output.images_count) ? output.images_count : 0;
+    model.is_album = (output.is_album) ? output.is_album : false;
 
     var total = 0;
-    if (model.is_gallery === true) {
+    if (model.ups && model.downs) {
         total = parseInt(model.ups) + parseInt(model.downs);
         model.upsPercent = Math.floor(100 * (model.ups/total));
         model.downsPercent = Math.ceil(100 * (model.downs/total));

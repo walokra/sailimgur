@@ -3,9 +3,9 @@ import Sailfish.Silica 1.0
 
 Row {
     id: galleryMode;
-    anchors { top: header.bottom; left: parent.left; right: parent.right; bottomMargin: constant.paddingMedium; }
+    anchors { top: header.bottom; left: parent.left; right: parent.right; }
     width: parent.width;
-    height: childrenRect.height;
+    //height: childrenRect.height;
     z: 1;
     anchors.leftMargin: constant.paddingMedium;
     anchors.rightMargin: constant.paddingMedium;
@@ -17,13 +17,16 @@ Row {
         width: parent.width / 2;
         text: searchModeText;
         font.pixelSize: constant.fontSizeMedium;
+        color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-        visible: searchTextField.text.trim().length > 1;
+        visible: searchModeText.trim().length > 1;
+        anchors.verticalCenter: parent.verticalCenter;
     }
 
     Label {
         id: accountModeLabel;
         width: parent.width;
+        height: Theme.itemSizeExtraSmall;
         text:
             settings.mode === constant.mode_favorites ?
                 qsTr("Your favorite images") : (
@@ -31,6 +34,7 @@ Row {
                             settings.mode === constant.mode_images) ? qsTr("Your images") : ""
                     );
         font.pixelSize: constant.fontSizeMedium;
+        color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images;
     }

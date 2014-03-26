@@ -33,25 +33,15 @@ Page {
         commentsModel.index = 0;
         commentsModel.allComments = [];
 
-        //albumTitle = galleryModel.get(currentIndex).title;
-        //albumDescription =  galleryModel.get(currentIndex).description;
         imgur_id = galleryModel.get(currentIndex).id;
         is_album = galleryModel.get(currentIndex).is_album;
         is_gallery = galleryModel.get(currentIndex).is_gallery;
 
         if (is_album === true) {
-            if (is_gallery == true) {
-                galleryContentPageTitle = qsTr("Gallery album");
-            } else {
-                galleryContentPageTitle = qsTr("Album");
-            }
+            galleryContentPageTitle = (is_gallery == true) ? qsTr("Gallery album") : qsTr("Album");
             galleryContentModel.getAlbum(imgur_id, is_gallery);
         } else {
-            if (is_gallery == true) {
-                galleryContentPageTitle = qsTr("Gallery image");
-            } else {
-                galleryContentPageTitle = qsTr("Image");
-            }
+            galleryContentPageTitle = (is_gallery == true) ? qsTr("Gallery image") : qsTr("Image");
             showMoreItem.visible = false;
             galleryContentModel.getImage(imgur_id, is_gallery);
         }
@@ -90,11 +80,18 @@ Page {
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
 
+            GalleryContentLink {
+                id: galleryContentLink;
+                link: galleryContentModel.link;
+                deletehash: galleryContentModel.deletehash;
+            }
+
             Label {
                 id: titleText;
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeXSmall;
+                color: constant.colorHighlight;
                 text: galleryContentModel.title;
             }
             Label {
@@ -102,6 +99,7 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeXSmall;
+                color: constant.colorHighlight;
                 text: galleryContentModel.description;
             }
 
@@ -276,6 +274,7 @@ Page {
                                 anchors.verticalCenter: parent.verticalCenter;
                                 font.pixelSize: constant.fontSizeXSmall;
                                 text: galleryContentModel.score + " points";
+                                color: constant.colorHighlight;
                             }
 
                             Rectangle {
@@ -308,6 +307,7 @@ Page {
                             anchors { left: parent.left; right: parent.right; }
                             wrapMode: Text.Wrap;
                             font.pixelSize: constant.fontSizeXSmall;
+                            color: constant.colorHighlight;
                             text: qsTr("by") + " " + galleryContentModel.account_url + ", " + galleryContentModel.views + " " + qsTr("views");
                         }
                    }
@@ -402,6 +402,7 @@ Page {
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
                     font.pixelSize: constant.fontSizeXSmall;
+                    color: constant.colorHighlight;
                     text: galleryContentModel.datetime;
                 }
                 Label {
@@ -409,6 +410,7 @@ Page {
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
                     font.pixelSize: constant.fontSizeXSmall;
+                    color: constant.colorHighlight;
                     text: galleryContentModel.views + ", " + qsTr("views");
                 }
             }

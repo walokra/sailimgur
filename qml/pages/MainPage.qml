@@ -3,11 +3,10 @@ import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
 Page {
-    id: mainPage;
+    id: mp;
     allowedOrientations: Orientation.All;
 
     property string searchModeText : "";
-
     property alias contentItem: flickable;
 
     Connections {
@@ -56,6 +55,13 @@ Page {
             }
         }
     }
+    Connections {
+        target: accountPanel;
+        onClicked: {
+            searchModeText = "";
+            searchTextField.text = "";
+        }
+    }
 
     SilicaFlickable {
         id: flickable;
@@ -97,7 +103,7 @@ Page {
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept";
                 EnterKey.onClicked: {
                     //console.log("Searched: " + query);
-                    searchModeText = "Results for \"" + text + "\"";
+                    searchModeText = "\"" + text + "\"";
                     galleryModel.clear();
                     galleryModel.processGalleryMode(searchTextField.text);
                     pullDownMenu.close();

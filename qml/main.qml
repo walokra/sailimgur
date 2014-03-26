@@ -17,11 +17,13 @@ ApplicationWindow {
 
     initialPage: Component {
         id: mainPage;
+
         MainPage {
             id: mp;
-            property bool __isMainPage: true;
+            property bool __isMainPage : true;
+
             Binding {
-                target: mp.contentItem
+                target: mp.contentItem;
                 property: "parent";
                 value: mp.status === PageStatus.Active ? viewer : mp;
             }
@@ -186,7 +188,7 @@ ApplicationWindow {
         }
 
         leftPanel: AccountPanel {
-            id: leftPanel;
+            id: accountPanel;
         }
     }
 

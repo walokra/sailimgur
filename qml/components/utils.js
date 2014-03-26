@@ -27,3 +27,7 @@ function formatEpochDate(epoch) {
             date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
 }
 
+
+function setVariable(value) {
+    return (value) ? value : "";
+}

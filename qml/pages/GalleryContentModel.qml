@@ -11,6 +11,7 @@ ListModel {
     property string description : "";
     property string datetime;
     property string link : "";
+    property string deletehash : "";
 
     // Gallery props
     property string ups : "0";

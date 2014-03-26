@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Panel {
-    id: panel;
+    id: accountPanel;
 
     signal clicked();
 
@@ -60,10 +60,8 @@ Panel {
 
                 onClicked: {
                     settings.mode = constant.mode_main;
-                    currentIndex = 0;
-                    page = 0;
-                    galleryModel.processGalleryMode();
-                    viewer.hidePanel();
+
+                    internal.setCommonValues();
                 }
             }
 
@@ -82,10 +80,8 @@ Panel {
 
                 onClicked: {
                     settings.mode = constant.mode_favorites;
-                    currentIndex = 0;
-                    page = 0;
-                    galleryModel.processGalleryMode();
-                    viewer.hidePanel();
+
+                    internal.setCommonValues();
                 }
             }
 
@@ -104,10 +100,8 @@ Panel {
 
                 onClicked: {
                     settings.mode = constant.mode_albums;
-                    currentIndex = 0;
-                    page = 0;
-                    galleryModel.processGalleryMode();
-                    viewer.hidePanel();
+
+                    internal.setCommonValues();
                 }
             }
 
@@ -126,10 +120,8 @@ Panel {
 
                 onClicked: {
                     settings.mode = constant.mode_images;
-                    currentIndex = 0;
-                    page = 0;
-                    galleryModel.processGalleryMode();
-                    viewer.hidePanel();
+
+                    internal.setCommonValues();
                 }
             }
 
@@ -201,4 +193,15 @@ Panel {
         viewer.hidePanel();
     }
 
+    QtObject {
+        id: internal;
+
+        function setCommonValues() {
+            currentIndex = 0;
+            page = 0;
+            galleryModel.processGalleryMode();
+            viewer.hidePanel();
+            clicked();
+        }
+    }
 }
