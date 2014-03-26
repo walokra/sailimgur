@@ -4,9 +4,15 @@ import "../components/imgur.js" as Imgur
 ListModel {
     id: listModel;
 
-    // Gallery props
+    // Album props
     property string account_url : "";
     property string views : "0";
+    property string title : "";
+    property string description : "";
+    property string datetime;
+    property string link : "";
+
+    // Gallery props
     property string ups : "0";
     property string downs : "0";
     property string score : "0";
@@ -16,6 +22,7 @@ ListModel {
     property int upsPercent : 0;
     property int downsPercent : 0;
     property bool is_album: false;
+
     //
     property int index : 0;
     property var allImages : [];

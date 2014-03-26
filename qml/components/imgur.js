@@ -621,6 +621,34 @@ function fillAlbumImagesModel(output, model) {
 }
 
 function fillAlbumVariables(output, model) {
+    if (output.title) {
+        model.title = output.title;
+    }
+    else {
+        model.title = "";
+    }
+
+    if (output.description) {
+        model.description = output.description;
+    }
+    else {
+        model.description = "";
+    }
+
+    if (output.datetime) {
+        model.datetime = formatEpochDate(output.datetime);
+    }
+    else {
+        model.datetime = "";
+    }
+
+    if (output.link) {
+        model.link = output.link;
+    }
+    else {
+        model.link = "";
+    }
+
     if (output.account_url) {
         model.account_url = output.account_url;
     } else {
@@ -629,7 +657,7 @@ function fillAlbumVariables(output, model) {
 
     model.views = output.views;
 
-    if (model.is_gallery) {
+    if (model.is_gallery === true) {
         model.ups = output.ups;
         model.downs = output.downs;
         model.score = output.score;
@@ -664,7 +692,7 @@ function fillAlbumVariables(output, model) {
     }
 
     var total = 0;
-    if (model.is_gallery) {
+    if (model.is_gallery === true) {
         total = parseInt(model.ups) + parseInt(model.downs);
         model.upsPercent = Math.floor(100 * (model.ups/total));
         model.downsPercent = Math.ceil(100 * (model.downs/total));
@@ -690,11 +718,7 @@ function handleCommentsJSON(response, model) {
 }
 
 function parseComments(output, depth, model) {
-    var date = new Date(output.datetime * 1000);
-    var datetime = date.getHours() + ":" +
-            date.getMinutes() + ":" +
-            date.getSeconds() + ", " +
-            date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+    var date = formatEpochDatetime(output.datetime);
 
     var childrens = parseInt(output.children.length);
     model.push({

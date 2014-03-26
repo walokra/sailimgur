@@ -6,8 +6,6 @@ Page {
     id: galleryContentPage;
     allowedOrientations: Orientation.All;
 
-    property string albumTitle : "";
-
     property bool is_album: false;
     property bool is_gallery: true;
     property string imgur_id : "";
@@ -35,7 +33,8 @@ Page {
         commentsModel.index = 0;
         commentsModel.allComments = [];
 
-        albumTitle = galleryModel.get(currentIndex).title;
+        //albumTitle = galleryModel.get(currentIndex).title;
+        //albumDescription =  galleryModel.get(currentIndex).description;
         imgur_id = galleryModel.get(currentIndex).id;
         is_album = galleryModel.get(currentIndex).is_album;
         is_gallery = galleryModel.get(currentIndex).is_gallery;
@@ -96,7 +95,14 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeXSmall;
-                text: albumTitle;
+                text: galleryContentModel.title;
+            }
+            Label {
+                id: descText;
+                anchors { left: parent.left; right: parent.right; }
+                wrapMode: Text.Wrap;
+                font.pixelSize: constant.fontSizeXSmall;
+                text: galleryContentModel.description;
             }
 
             Column {
@@ -146,6 +152,7 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 height: albumInfo.height + infoColumn.height + constant.paddingSmall;
                 spacing: constant.paddingSmall;
+                visible: is_gallery == true;
 
                 ListItem {
                     id: albumInfo;
@@ -301,7 +308,7 @@ Page {
                             anchors { left: parent.left; right: parent.right; }
                             wrapMode: Text.Wrap;
                             font.pixelSize: constant.fontSizeXSmall;
-                            text: "by " + galleryContentModel.account_url + ", " + galleryContentModel.views + " views";
+                            text: qsTr("by") + " " + galleryContentModel.account_url + ", " + galleryContentModel.views + " " + qsTr("views");
                         }
                    }
                 }
@@ -312,13 +319,13 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 height: childrenRect.height + showCommentsItem.height + 200;
                 width: parent.width;
-                visible: is_gallery == true;
+                //visible: is_gallery == true;
 
                 Item {
                     id: showCommentsItem;
                     width: parent.width
                     height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
-                    visible: commentsModel.count == 0;
+                    visible: commentsModel.count == 0 && is_gallery == true;
 
                     Button {
                         id: showCommentsButton;
@@ -377,6 +384,32 @@ Page {
                     running: visible;
                     size: BusyIndicatorSize.Medium;
                     Behavior on opacity { FadeAnimation {} }
+                }
+            }
+
+            Row {
+                id: albumMetaRow;
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: childrenRect.height + 150;
+                z: 1;
+                anchors.leftMargin: constant.paddingMedium;
+                anchors.rightMargin: constant.paddingMedium;
+                visible: is_gallery == false;
+
+                Label {
+                    id: datetimeText;
+                    width: parent.width / 2;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: constant.fontSizeXSmall;
+                    text: galleryContentModel.datetime;
+                }
+                Label {
+                    id: viewsText;
+                    width: parent.width / 2;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: constant.fontSizeXSmall;
+                    text: galleryContentModel.views + ", " + qsTr("views");
                 }
             }
         }

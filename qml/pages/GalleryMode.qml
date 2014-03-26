@@ -48,11 +48,10 @@ Row {
                 text: qsTr("most viral");
                 onClicked: {
                     sortBox.visible = true;
-                    searchTextField.text = "";
                     settings.mode = constant.mode_main;
                     settings.section = "hot";
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode();
+
+                    internal.setModeCommon();
                 }
             }
 
@@ -61,11 +60,10 @@ Row {
                 text: qsTr("user submitted");
                 onClicked: {
                     sortBox.visible = true;
-                    searchTextField.text = "";
                     settings.mode = constant.mode_user;
                     settings.section = constant.mode_user;
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode();
+
+                    internal.setModeCommon();
                 }
             }
 
@@ -74,10 +72,9 @@ Row {
                 text: qsTr("random");
                 onClicked: {
                     sortBox.visible = false;
-                    searchTextField.text = "";
                     settings.mode = constant.mode_random;
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode();
+
+                    internal.setModeCommon();
                 }
             }
 
@@ -86,11 +83,10 @@ Row {
                 text: qsTr("highest scoring");
                 onClicked: {
                     sortBox.visible = false;
-                    searchTextField.text = "";
                     settings.mode = constant.mode_score;
                     settings.section = "top";
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode();
+
+                    internal.setModeCommon();
                 }
             }
 
@@ -99,10 +95,9 @@ Row {
                 text: qsTr("memes");
                 onClicked: {
                     sortBox.visible = true;
-                    searchTextField.text = "";
                     settings.mode = constant.mode_memes;
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode();
+
+                    internal.setModeCommon();
                 }
             }
         }
@@ -121,9 +116,8 @@ Row {
                 text: qsTr("popularity");
                 onClicked: {
                     settings.sort = "viral";
-                    galgrid.scrollToTop();
-                    galleryModel.clear();
-                    galleryModel.processGalleryMode(searchTextField.text);
+
+                    internal.setSortCommon();
                 }
             }
 
@@ -132,11 +126,26 @@ Row {
                 text: qsTr("newest");
                 onClicked: {
                     settings.sort = "time";
-                    galgrid.scrollToTop();
-                    galleryModel.processGalleryMode(searchTextField.text);
+
+                    internal.setSortCommon();
                 }
             }
         }
     }
 
-} // galleryMode
+    QtObject {
+        id: internal;
+
+        function setModeCommon() {
+            searchTextField.text = "";
+            galgrid.scrollToTop();
+            galleryModel.processGalleryMode();
+        }
+
+        function setSortCommon() {
+            galgrid.scrollToTop();
+            galleryModel.processGalleryMode(searchTextField.text);
+        }
+    }
+
+}// galleryMode

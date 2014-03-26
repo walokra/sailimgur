@@ -19,3 +19,11 @@ function replaceURLWithHTMLLinks(text) {
     return text;
 }
 
+function formatEpochDate(epoch) {
+    var date = new Date(epoch * 1000);
+    return date.getHours() + ":" +
+            date.getMinutes() + ":" +
+            date.getSeconds() + ", " +
+            date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+}
+

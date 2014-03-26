@@ -6,7 +6,6 @@ Page {
     id: mainPage;
     allowedOrientations: Orientation.All;
 
-    //property bool prevEnabled : page > 0;
     property string searchModeText : "";
 
     property alias contentItem: flickable;
@@ -21,7 +20,7 @@ Page {
                 loggedIn = false;
                 console.log("Not signed in. Using anonymous mode.");
                 infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
-                settings.user = "anonymous";
+                settings.user = qsTr("anonymous");
                 galleryModel.processGalleryMode();
             } else {
                 loggedIn = true;
