@@ -69,7 +69,7 @@ Click the button below will launch an external web browser for you to sign in.")
                     id: pinCodeTextField;
                     anchors.centerIn: parent;
                     width: parent.width;
-                    inputMethodHints: Qt.ImhDigitsOnly;
+                    //inputMethodHints: Qt.ImhDigitsOnly;
                     placeholderText: qsTr("PIN");
                     label: qsTr("PIN");
 
