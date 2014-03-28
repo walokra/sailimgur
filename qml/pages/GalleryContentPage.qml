@@ -69,13 +69,14 @@ Page {
         PageHeader { id: header; title: galleryContentPageTitle; }
 
         anchors.fill: parent;
-        contentHeight: contentArea.height;
+        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium;
         clip: true;
 
         Column {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right;}
             height: childrenRect.height;
+            spacing: constant.paddingMedium;
 
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
@@ -90,7 +91,7 @@ Page {
                 id: titleText;
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: constant.fontSizeMedium;
                 color: constant.colorHighlight;
                 text: galleryContentModel.title;
             }
@@ -98,9 +99,10 @@ Page {
                 id: descText;
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: constant.fontSizeSmall;
                 color: constant.colorHighlight;
                 text: galleryContentModel.description;
+                visible: is_gallery == false;
             }
 
             Column {
@@ -127,6 +129,7 @@ Page {
                         }
                     }
                 }
+
                 Item {
                     id: showMoreItem;
                     width: parent.width;
@@ -317,15 +320,15 @@ Page {
             Column {
                 id: commentsColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: childrenRect.height + showCommentsItem.height + 200;
+                height: childrenRect.height + showCommentsItem.height;
                 width: parent.width;
-                //visible: is_gallery == true;
+                visible: is_gallery == true;
 
                 Item {
                     id: showCommentsItem;
                     width: parent.width
                     height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
-                    visible: commentsModel.count == 0 && is_gallery == true;
+                    visible: commentsModel.count == 0;
 
                     Button {
                         id: showCommentsButton;
@@ -391,7 +394,7 @@ Page {
                 id: albumMetaRow;
                 anchors { left: parent.left; right: parent.right; }
                 width: parent.width;
-                height: childrenRect.height + 150;
+                //height: datetimeText.height;
                 z: 1;
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
@@ -411,7 +414,7 @@ Page {
                     wrapMode: Text.Wrap;
                     font.pixelSize: constant.fontSizeXSmall;
                     color: constant.colorHighlight;
-                    text: galleryContentModel.views + ", " + qsTr("views");
+                    text: " : " + galleryContentModel.views + " " + qsTr("views");
                 }
             }
         }

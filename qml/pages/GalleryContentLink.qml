@@ -1,25 +1,22 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Row {
+Column {
     id: galleryContentLink;
 
     property string link : "";
     property string deletehash : "";
 
     anchors { left: parent.left; right: parent.right; }
-    width: parent.width;
-    anchors.leftMargin: constant.paddingMedium;
-    anchors.rightMargin: constant.paddingMedium;
     visible: is_gallery == false;
 
     ComboBox {
         id: linkBox;
         currentIndex: 0;
-        width: parent.width / 4;
+        width: parent.width;
+        contentHeight: linkItem.height;
 
         menu: ContextMenu {
-
             MenuItem {
                 id: linkItem;
                 text: qsTr("Link");
@@ -41,7 +38,7 @@ Row {
     TextField {
         id: albumLink;
         anchors.topMargin: constant.paddingLarge;
-        width: (parent.width / 4) * 3;
+        width: parent.width;
         font.pixelSize: constant.fontSizeXSmall;
         text: link;
     }

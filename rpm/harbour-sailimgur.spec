@@ -13,7 +13,6 @@ Name:       harbour-sailimgur
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt and QML
-Version:    0.2.3
 Version:    0.3.0
 Release:    1
 Group:      Applications/Internet
@@ -34,8 +33,9 @@ BuildRequires:  desktop-file-utils
 
 %description
 Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt, QML
-and JavaScript. It has a simple, native and easy-to-use UI. At the moment it provides
-basic anonymous user\u2019s imgur functionality like browsing and search.
+and JavaScript. It has a simple, native and easy-to-use UI. It provides
+browsing and search functionality for anonymous users and voting, favoriting,
+showing images and albums for logged in users.
 
 
 %prep

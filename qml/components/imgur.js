@@ -617,7 +617,7 @@ function fillAlbumImagesModel(output, model) {
 function fillAlbumVariables(output, model) {
     model.title = setVariable(output.title);
     model.description = setVariable(output.description);
-    model.datetime = (output.datetime) ? formatEpochDate(output.datetime) : "";
+    model.datetime = (output.datetime) ? formatEpochDatetime(output.datetime) : "";
     model.link = setVariable(output.link);
     model.account_url = setVariable(output.account_url);
     model.views = output.views;
@@ -669,7 +669,7 @@ function parseComments(output, depth, model) {
                    ups: output.ups,
                    downs: output.downs,
                    points: output.points,
-                   datetime: datetime,
+                   datetime: date,
                    children: output.children,
                    //childrens: childrens,
                    depth: depth
