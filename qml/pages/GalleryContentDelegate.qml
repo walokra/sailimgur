@@ -60,6 +60,7 @@ Item {
                         wrapMode: Text.Wrap;
                         text: title;
                         font.pixelSize: constant.fontSizeXSmall;
+                        color: constant.colorHighlight;
                         anchors { left: parent.left; right: parent.right; }
                         visible: (title && is_album) ? true : false;
                     }

@@ -88,11 +88,12 @@ ApplicationWindow {
             if (text) {
                 infoLabel.text = text;
                 opacity = 0.9;
-                console.log("infoBanner: " + text);
+                //console.log("infoBanner: " + text);
             }
         }
 
         function showHttpError(errorCode, errorMessage) {
+            console.log("API error: code=" + errorCode + "; message=" + errorMessage);
             showError(errorMessage);
             /*
             switch (errorCode) {

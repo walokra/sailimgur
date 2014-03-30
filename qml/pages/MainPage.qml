@@ -8,13 +8,15 @@ Page {
 
     property string searchModeText : "";
     property alias contentItem: flickable;
+    property bool refreshDone : false;
 
     Connections {
         target: settings;
         onSettingsLoaded: {
             galleryModel.clear();
+            refreshDone = false;
 
-            Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+            signInPage.init();
             if (settings.accessToken === "" || settings.refreshToken === "") {
                 loggedIn = false;
                 console.log("Not signed in. Using anonymous mode.");
@@ -22,43 +24,10 @@ Page {
                 settings.user = qsTr("anonymous");
                 galleryModel.processGalleryMode();
             } else {
-                Imgur.getAccountCurrent(function(url) {
-                    loggedIn = true;
-                    settings.user = url;
-                    galleryModel.processGalleryMode();
-                }, function(status, statusText){
-                    if (status === 403) {
-                        console.log("Permission denied. Trying to refresh tokens.");
-                        Imgur.refreshAccessToken(settings.refreshToken,
-                            function(access_token, refresh_token){
-                                loggedIn = true;
-                                settings.accessToken = access_token;
-                                settings.refreshToken = refresh_token;
-                                settings.saveTokens();
-
-                                // retry the api call
-                                Imgur.getAccountCurrent(
-                                    function(url) {
-                                        settings.user = url;
-                                        galleryModel.processGalleryMode();
-                                    }, function(status, statusText) {
-                                        infoBanner.showHttpError(status, statusText);
-                                        loadingRect.visible = false;
-                                        loggedIn = false;
-                                    }
-                                );
-                            }, function(status, statusText) {
-                                loggedIn = false;
-                                infoBanner.showHttpError(status, statusText + ". Can't refresh tokens. Please sign in.");
-                                loadingRect.visible = false;
-                            }
-                        );
-                    } else {
-                        loggedIn = true;
-                        infoBanner.showHttpError(status, statusText);
-                        loadingRect.visible = false;
-                    };
-                });
+                var accountCurrent = Imgur.getAccountCurrent(
+                    internal.accountCurrentOnSuccess(),
+                    internal.accountCurrentOnFailure(accountCurrent)
+                );
             }
         }
     }
@@ -67,6 +36,36 @@ Page {
         onClicked: {
             searchModeText = "";
             searchTextField.text = "";
+        }
+    }
+
+    QtObject {
+        id: internal;
+
+        function accountCurrentOnSuccess() {
+            return function(url) {
+                loggedIn = true;
+                settings.user = url;
+                galleryModel.processGalleryMode();
+            }
+        }
+
+        function accountCurrentOnFailure(func) {
+            return function(status, statusText) {
+                if (status === 403 && refreshDone == false) {
+                    refreshDone = true;
+                    signInPage.tryRefreshingTokens(
+                        function() {
+                            refreshDone = false; // new tokens, we can retry later again
+                            // retry the api call
+                            this.func();
+                        }
+                    );
+                } else {
+                    infoBanner.showHttpError(status, statusText);
+                    loadingRect.visible = false;
+                };
+            }
         }
     }
 

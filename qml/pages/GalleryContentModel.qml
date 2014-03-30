@@ -31,29 +31,20 @@ ListModel {
     property int left : 0;
 
     property bool loaded: false;
+    property bool refreshDone : false;
 
     function getAlbum(id, is_gallery) {
-        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+        signInPage.init();
 
         if (is_gallery) {
-            Imgur.getGalleryAlbum(id, allImages, listModel,
-                                  function(status){
-                                      loaded = true;
-                                      getNextImages(settings.albumImagesLimit);
-                                  }, function(status, statusText){
-                                      loaded = true;
-                                      infoBanner.showHttpError(status, statusText);
-                                  }
+            var getGalleryAlbum = Imgur.getGalleryAlbum(id, allImages, listModel,
+                onSuccess(settings.albumImagesLimit),
+                onFailure(getGalleryAlbum)
             );
         } else {
-            Imgur.getAlbum(id, allImages, listModel,
-                           function(status){
-                               loaded = true;
-                               getNextImages(settings.albumImagesLimit);
-                           }, function(status, statusText){
-                               loaded = true;
-                               infoBanner.showHttpError(status, statusText);
-                           }
+            var getAlbum = Imgur.getAlbum(id, allImages, listModel,
+                onSuccess(settings.albumImagesLimit),
+                onFailure(getAlbum)
             );
         }
 
@@ -62,28 +53,18 @@ ListModel {
     }
 
     function getImage(id, is_gallery) {
-        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+        signInPage.init();
 
         if (is_gallery) {
-            Imgur.getGalleryImage(id, allImages, listModel,
-                                  function(status){
-                                      loaded = true;
-                                      getNextImages();
-                                  }, function(status, statusText){
-                                      loaded = true;
-                                      infoBanner.showHttpError(status, statusText);
-                                  }
+            var getGalleryImage = Imgur.getGalleryImage(id, allImages, listModel,
+                onSuccess(),
+                onFailure(getGalleryImage)
             );
         } else {
-            Imgur.getImage(id, allImages, listModel,
-                                function(status){
-                                    loaded = true;
-                                    getNextImages();
-                                }, function(status, statusText){
-                                    loaded = true;
-                                    infoBanner.showHttpError(status, statusText);
-                                }
-                );
+            var getImage = Imgur.getImage(id, allImages, listModel,
+                onSuccess(),
+                onFailure(getImage)
+            );
        }
     }
 
@@ -100,6 +81,32 @@ ListModel {
         left = total - listModel.count;
 
         showMoreItem.visible = listModel.count < listModel.total;
+    }
+
+    function onSuccess(albumImagesLimit) {
+        return function(status) {
+            loaded = true;
+            getNextImages(albumImagesLimit);
+        }
+    }
+
+    function onFailure(func){
+        return function(status, statusText) {
+            if (status === 403 && refreshDone == false) {
+                refreshDone = true;
+                signInPage.tryRefreshingTokens(
+                    function() {
+                        refreshDone = false; // new tokens, we can retry later again
+                        // retry the api call
+                        func();
+                    }
+                );
+            } else {
+                infoBanner.showHttpError(status, statusText);
+                loadingRect.visible = false;
+                loaded = true;
+            }
+        }
     }
 
 }

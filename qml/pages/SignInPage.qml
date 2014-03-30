@@ -125,4 +125,28 @@ Click the button below will launch an external web browser for you to sign in.")
             header.busy = true;
         }
     }
+
+    function init() {
+        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+    }
+
+    function tryRefreshingTokens(onSuccess) {
+        console.log("Permission denied. Trying to refresh tokens.");
+        loggedIn = false;
+
+        Imgur.refreshAccessToken(settings.refreshToken,
+            function(access_token, refresh_token) {
+                loggedIn = true;
+                settings.accessToken = access_token;
+                settings.refreshToken = refresh_token;
+                settings.saveTokens();
+                onSuccess();
+            }, function(status, statusText) {
+                loggedIn = false;
+                infoBanner.showHttpError(status, statusText + ". Can't refresh tokens. Please sign in again.");
+                loadingRect.visible = false;
+                settings.resetTokens();
+            }
+        );
+    }
 }

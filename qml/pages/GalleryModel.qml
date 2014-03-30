@@ -7,34 +7,55 @@ ListModel {
     property bool loaded: false;
 
     property string query : "";
+    property bool refreshDone : false;
 
     function processGalleryMode(searchText) {
         loaded = false;
+        refreshDone = false;
         if (searchText) {
             query = searchText;
         } else {
             query = "";
         }
 
-        Imgur.init(constant.clientId, constant.clientSecret, settings.accessToken, settings.refreshToken, constant.userAgent);
+        signInPage.init();
 
         loadingRect.visible = true;
         listModel.clear();
 
-        Imgur.processGalleryMode(query, listModel, page, settings,
-            function(status){
-                if(currentIndex === -1) {
-                    currentIndex = listModel.count - 1;
-                }
-                galleryContentPage.load();
-                loadingRect.visible = false;
-                loaded = true;
-            }, function(status, statusText){
+        var processGalleryMode = Imgur.processGalleryMode(query, listModel, page, settings,
+                onSuccess(),
+                onFailure(processGalleryMode)
+        );
+    }
+
+    function onSuccess() {
+        return function(status) {
+            if(currentIndex === -1) {
+                currentIndex = listModel.count - 1;
+            }
+            galleryContentPage.load();
+            loadingRect.visible = false;
+            loaded = true;
+        }
+    }
+
+    function onFailure(func){
+        return function(status, statusText) {
+            if (status === 403 && refreshDone == false) {
+                refreshDone = true;
+                signInPage.tryRefreshingTokens(
+                            function() {
+                                refreshDone = false; // new tokens, we can retry later again
+                                // retry the api call
+                                func();
+                            }
+                );
+            } else {
                 infoBanner.showHttpError(status, statusText);
                 loadingRect.visible = false;
                 loaded = true;
             }
-        );
+        }
     }
-
 }
