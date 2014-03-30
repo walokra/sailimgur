@@ -15,18 +15,19 @@ Row {
     Label {
         id: searchModeLabel;
         width: parent.width / 2;
+        height: Theme.itemSizeSmall;
         text: searchModeText;
         font.pixelSize: constant.fontSizeMedium;
         color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: searchModeText.trim().length > 1;
-        anchors.verticalCenter: parent.verticalCenter;
+        //anchors.verticalCenter: parent.verticalCenter;
     }
 
     Label {
         id: accountModeLabel;
         width: parent.width;
-        height: Theme.itemSizeExtraSmall;
+        height: Theme.itemSizeSmall;
         text:
             settings.mode === constant.mode_favorites ?
                 qsTr("Your favorite images") : (
@@ -46,6 +47,7 @@ Row {
         visible: searchModeLabel.visible == false && accountModeLabel.visible == false;
 
         menu: ContextMenu {
+            width: galleryMode.width / 2;
 
             MenuItem {
                 id: mainMode;
@@ -115,6 +117,8 @@ Row {
         visible: accountModeLabel.visible == false;
 
         menu: ContextMenu {
+            width: galleryMode.width / 2;
+
             MenuItem {
                 id: viralSort;
                 text: qsTr("popularity");

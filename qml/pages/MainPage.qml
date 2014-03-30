@@ -22,32 +22,39 @@ Page {
                 settings.user = qsTr("anonymous");
                 galleryModel.processGalleryMode();
             } else {
-                loggedIn = true;
                 Imgur.getAccountCurrent(function(url) {
+                    loggedIn = true;
                     settings.user = url;
                     galleryModel.processGalleryMode();
                 }, function(status, statusText){
                     if (status === 403) {
                         console.log("Permission denied. Trying to refresh tokens.");
-                        Imgur.refreshAccessToken(settings.refreshToken, function(access_token, refresh_token){
-                            settings.accessToken = access_token;
-                            settings.refreshToken = refresh_token;
-                            settings.saveTokens();
+                        Imgur.refreshAccessToken(settings.refreshToken,
+                            function(access_token, refresh_token){
+                                loggedIn = true;
+                                settings.accessToken = access_token;
+                                settings.refreshToken = refresh_token;
+                                settings.saveTokens();
 
-                            // retry the api call
-                            Imgur.getAccountCurrent(function(url) {
-                                settings.user = url;
-                                galleryModel.processGalleryMode();
+                                // retry the api call
+                                Imgur.getAccountCurrent(
+                                    function(url) {
+                                        settings.user = url;
+                                        galleryModel.processGalleryMode();
+                                    }, function(status, statusText) {
+                                        infoBanner.showHttpError(status, statusText);
+                                        loadingRect.visible = false;
+                                        loggedIn = false;
+                                    }
+                                );
                             }, function(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
+                                loggedIn = false;
+                                infoBanner.showHttpError(status, statusText + ". Can't refresh tokens. Please sign in.");
                                 loadingRect.visible = false;
-                            });
-                        }, function(status, statusText) {
-                            loggedIn = false;
-                            infoBanner.showHttpError(status, statusText + ". Can't refresh tokens. Please sign in.");
-                            loadingRect.visible = false;
-                        });
+                            }
+                        );
                     } else {
+                        loggedIn = true;
                         infoBanner.showHttpError(status, statusText);
                         loadingRect.visible = false;
                     };
