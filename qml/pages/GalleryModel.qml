@@ -7,11 +7,10 @@ ListModel {
     property bool loaded: false;
 
     property string query : "";
-    property bool refreshDone : false;
 
     function processGalleryMode(searchText) {
         loaded = false;
-        refreshDone = false;
+        signInPage.refreshDone = false;
         if (searchText) {
             query = searchText;
         } else {
@@ -23,9 +22,9 @@ ListModel {
         loadingRect.visible = true;
         listModel.clear();
 
-        var processGalleryMode = Imgur.processGalleryMode(query, listModel, page, settings,
-                onSuccess(),
-                onFailure(processGalleryMode)
+       Imgur.processGalleryMode(query, listModel, page, settings,
+            onSuccess(),
+            onFailure()
         );
     }
 
@@ -40,17 +39,13 @@ ListModel {
         }
     }
 
-    function onFailure(func){
+    function onFailure(){
         return function(status, statusText) {
-            if (status === 403 && refreshDone == false) {
-                refreshDone = true;
+            if (status === 403 && signInPage.refreshDone == false) {
                 signInPage.tryRefreshingTokens(
-                            function() {
-                                refreshDone = false; // new tokens, we can retry later again
-                                // retry the api call
-                                func();
-                            }
-                );
+                    function() {
+
+                    });
             } else {
                 infoBanner.showHttpError(status, statusText);
                 loadingRect.visible = false;
@@ -58,4 +53,5 @@ ListModel {
             }
         }
     }
+
 }

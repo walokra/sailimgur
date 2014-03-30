@@ -14,21 +14,21 @@ Name:       harbour-sailimgur
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt and QML
 Version:    0.3.0
-Release:    3
+Release:    4
 Group:      Applications/Internet
 License:    GPLv3
 URL:        http://ruleoftech.com/lab/sailimgur
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-sailimgur.yaml
-Requires:   sailfishsilica-qt5
-Requires:   qt5-qtsvg-plugin-imageformat-svg
-Requires:   qt5-plugin-imageformat-gif
 Requires:   qt5-qtsvg
-BuildRequires:  pkgconfig(Qt5Svg)
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Qml)
-BuildRequires:  pkgconfig(Qt5Quick)
+Requires:   qt5-plugin-imageformat-gif
+Requires:   qt5-qtsvg-plugin-imageformat-svg
+Requires:   sailfishsilica-qt5
 BuildRequires:  pkgconfig(sailfishapp)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Svg)
 BuildRequires:  desktop-file-utils
 
 %description

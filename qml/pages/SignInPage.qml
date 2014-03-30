@@ -6,6 +6,8 @@ Page {
     id: signInPage;
     allowedOrientations: Orientation.All;
 
+    property bool refreshDone : false;
+
     SilicaFlickable {
         id: signInFlickable;
 
@@ -133,10 +135,13 @@ Click the button below will launch an external web browser for you to sign in.")
     function tryRefreshingTokens(onSuccess) {
         console.log("Permission denied. Trying to refresh tokens.");
         loggedIn = false;
+        refreshDone = true;
 
         Imgur.refreshAccessToken(settings.refreshToken,
             function(access_token, refresh_token) {
+                console.log("Tokens refreshed.");
                 loggedIn = true;
+                refreshDone = false; // new tokens, we can retry later again
                 settings.accessToken = access_token;
                 settings.refreshToken = refresh_token;
                 settings.saveTokens();

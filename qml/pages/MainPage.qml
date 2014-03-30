@@ -8,13 +8,12 @@ Page {
 
     property string searchModeText : "";
     property alias contentItem: flickable;
-    property bool refreshDone : false;
 
     Connections {
         target: settings;
         onSettingsLoaded: {
             galleryModel.clear();
-            refreshDone = false;
+            signInPage.refreshDone = false;
 
             signInPage.init();
             if (settings.accessToken === "" || settings.refreshToken === "") {
@@ -24,9 +23,9 @@ Page {
                 settings.user = qsTr("anonymous");
                 galleryModel.processGalleryMode();
             } else {
-                var accountCurrent = Imgur.getAccountCurrent(
+                Imgur.getAccountCurrent(
                     internal.accountCurrentOnSuccess(),
-                    internal.accountCurrentOnFailure(accountCurrent)
+                    internal.accountCurrentOnFailure()
                 );
             }
         }
@@ -50,15 +49,15 @@ Page {
             }
         }
 
-        function accountCurrentOnFailure(func) {
+        function accountCurrentOnFailure() {
             return function(status, statusText) {
-                if (status === 403 && refreshDone == false) {
-                    refreshDone = true;
+                if (status === 403 && signInPage.refreshDone == false) {
                     signInPage.tryRefreshingTokens(
                         function() {
-                            refreshDone = false; // new tokens, we can retry later again
-                            // retry the api call
-                            this.func();
+                            Imgur.getAccountCurrent(
+                               internal.accountCurrentOnSuccess(),
+                               internal.accountCurrentOnFailure()
+                           );
                         }
                     );
                 } else {

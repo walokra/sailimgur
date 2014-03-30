@@ -31,22 +31,38 @@ ListModel {
     property int left : 0;
 
     property bool loaded: false;
-    property bool refreshDone : false;
+
+    function callImgur(mode, id, is_gallery) {
+        if (is_gallery) {
+            if (mode === "album") {
+                Imgur.getGalleryAlbum(id, allImages, listModel,
+                                      onSuccess(settings.albumImagesLimit),
+                                      onFailure(mode, id, is_gallery)
+                                      );
+            } else if (mode === "image") {
+                Imgur.getGalleryImage(id, allImages, listModel,
+                                      onSuccess(),
+                                      onFailure(mode, id, is_gallery)
+                 );
+            }
+        } else {
+            if (mode === "album") {
+                Imgur.getAlbum(id, allImages, listModel,
+                               onSuccess(settings.albumImagesLimit),
+                               onFailure(mode, id, is_gallery)
+                               );
+            } else if (mode === "image") {
+                Imgur.getImage(id, allImages, listModel,
+                                onSuccess(),
+                               onFailure(mode, id, is_gallery)
+                );
+            }
+        }
+    }
 
     function getAlbum(id, is_gallery) {
         signInPage.init();
-
-        if (is_gallery) {
-            var getGalleryAlbum = Imgur.getGalleryAlbum(id, allImages, listModel,
-                onSuccess(settings.albumImagesLimit),
-                onFailure(getGalleryAlbum)
-            );
-        } else {
-            var getAlbum = Imgur.getAlbum(id, allImages, listModel,
-                onSuccess(settings.albumImagesLimit),
-                onFailure(getAlbum)
-            );
-        }
+        callImgur("album", id, is_gallery);
 
         total = allImages.length;
         left = total;
@@ -54,18 +70,7 @@ ListModel {
 
     function getImage(id, is_gallery) {
         signInPage.init();
-
-        if (is_gallery) {
-            var getGalleryImage = Imgur.getGalleryImage(id, allImages, listModel,
-                onSuccess(),
-                onFailure(getGalleryImage)
-            );
-        } else {
-            var getImage = Imgur.getImage(id, allImages, listModel,
-                onSuccess(),
-                onFailure(getImage)
-            );
-       }
+        callImgur("image", id, is_gallery);
     }
 
     function getNextImages(initialLimit) {
@@ -90,16 +95,13 @@ ListModel {
         }
     }
 
-    function onFailure(func){
+    function onFailure(mode, id, is_gallery){
         return function(status, statusText) {
-            if (status === 403 && refreshDone == false) {
-                refreshDone = true;
+            if (status === 403 && signInPage.refreshDone == false) {
                 signInPage.tryRefreshingTokens(
-                    function() {
-                        refreshDone = false; // new tokens, we can retry later again
-                        // retry the api call
-                        func();
-                    }
+                            function() {
+                                return callImgur(mode, id, is_gallery);
+                            }
                 );
             } else {
                 infoBanner.showHttpError(status, statusText);
