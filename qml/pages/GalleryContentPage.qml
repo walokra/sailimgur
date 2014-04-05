@@ -65,7 +65,7 @@ Page {
 
     SilicaFlickable {
         id: galleryContentFlickable;
-        pressDelay: 0;
+        // pressDelay: 0; // can't set this as there's Drawer
 
         PageHeader { id: header; title: galleryContentPageTitle; }
 
