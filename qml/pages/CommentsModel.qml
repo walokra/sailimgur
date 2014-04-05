@@ -6,6 +6,7 @@ ListModel {
 
     property int index : 0;
     property var allComments : [];
+    property int total : 0;
     property bool loaded: false;
 
     function getComments(id) {
@@ -22,6 +23,7 @@ ListModel {
                                      infoBanner.showHttpError(status, statusText);
                                  }
         );
+        total = allComments.length;
     }
 
     function getNextComments() {

@@ -65,6 +65,7 @@ Page {
 
     SilicaFlickable {
         id: galleryContentFlickable;
+        pressDelay: 0;
 
         PageHeader { id: header; title: galleryContentPageTitle; }
 
@@ -356,9 +357,12 @@ Page {
                     clip: true;
                     visible: commentsModel.count > 0;
 
+                    pressDelay: 0;
+                    interactive: true;
+                    boundsBehavior: Flickable.StopAtBounds;
+
                     delegate: Loader {
                         id: commentsLoader;
-                        width: ListView.view.width;
                         asynchronous: true;
 
                         sourceComponent: CommentDelegate {
@@ -394,7 +398,6 @@ Page {
                 id: albumMetaRow;
                 anchors { left: parent.left; right: parent.right; }
                 width: parent.width;
-                //height: datetimeText.height;
                 z: 1;
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
@@ -418,7 +421,7 @@ Page {
                 }
             }
         }
-        VerticalScrollDecorator {}
+        VerticalScrollDecorator { flickable: galleryContentFlickable; }
     }
 
     GalleryNavigation {
