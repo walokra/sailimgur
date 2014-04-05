@@ -680,7 +680,8 @@ function parseComments(output, depth, model) {
     if (childrens > 0) {
         depth += 1;
         for (var j=0; j < childrens; j++) {
-            if (output.children[j].points > 1) {
+            var points = parseInt(output.children[j].points);
+            if ( points > 0) {
                 parseComments(output.children[j], depth, model);
             }
         }

@@ -109,7 +109,7 @@ Page {
             Column {
                 id: galleryContentColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: albumListView.height + showMoreButton.height;
+                height: (showMoreItem.visible) ? albumListView.height + showMoreButton.height : albumListView.height;
                 width: parent.width;
 
                 Flow {
@@ -135,7 +135,6 @@ Page {
                     id: showMoreItem;
                     width: parent.width;
                     height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
-                    //visible: galleryContentModel.count < galleryContentModel.total;
 
                     Button {
                         id: showMoreButton;
@@ -321,7 +320,7 @@ Page {
             Column {
                 id: commentsColumn;
                 anchors { left: parent.left; right: parent.right; }
-                height: childrenRect.height + showCommentsItem.height;
+                height: childrenRect.height + showCommentsItem.height + galleryNavigation.height + constant.paddingMedium;
                 width: parent.width;
                 visible: is_gallery == true;
 

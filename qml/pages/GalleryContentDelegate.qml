@@ -50,7 +50,7 @@ Item {
                 foreground: Column {
                     id: imageColumn;
                     anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
-                    height: childrenRect.height;
+                    height: (image.status != AnimatedImage.Ready) ? loadingImageIndicator.height + 2 * constant.paddingMedium : imageTitleText.height  + image.height;
                     spacing: constant.paddingSmall;
 
                     enabled: !drawer.opened;
@@ -77,6 +77,7 @@ Item {
                         paused: false;
                         onStatusChanged: playing;
                         smooth: false;
+
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
@@ -114,7 +115,6 @@ Item {
                         BusyIndicator {
                             id: loadingImageIndicator;
                             anchors.horizontalCenter: parent.horizontalCenter;
-                            anchors.top: parent.top;
                             running: image.status != AnimatedImage.Ready;
                             size: BusyIndicatorSize.Medium;
                         }
