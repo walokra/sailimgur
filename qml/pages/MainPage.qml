@@ -70,7 +70,7 @@ Page {
 
     SilicaFlickable {
         id: flickable;
-        interactive: !galgrid.flicking;
+        //interactive: !galgrid.flicking;
         pressDelay: 0;
         z: -2;
 
