@@ -4,7 +4,7 @@ Version: 0.3.1
 Release: 1
 Group: Applications/Internet
 URL: http://ruleoftech.com/lab/sailimgur
-License: GPLv3
+License: LICENSE
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
@@ -22,14 +22,16 @@ PkgConfigBR:
 - Qt5Core
 - Qt5Qml
 - Qt5Quick
-- sailfishapp
+- sailfishapp >= 1.0.2
 Requires:
-- sailfishsilica-qt5
+- sailfishsilica-qt5 >= 0.10.9
 - qt5-qtsvg-plugin-imageformat-svg
 - qt5-plugin-imageformat-gif
 - qt5-qtsvg
 Files:
-- '%{_bindir}/%{name}'
+- '%defattr(0644,root,root,-)'
+- '%attr(0755,root,root) %{_bindir}'
+- '%{_datadir}/%{name}'
 - '%{_datadir}/%{name}/qml'
 - '%{_datadir}/applications/%{name}.desktop'
 - '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
