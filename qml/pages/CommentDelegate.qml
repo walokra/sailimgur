@@ -45,9 +45,10 @@ Item {
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 text: comment;
-                textFormat: Text.RichText;
                 font.pixelSize: constant.fontSizeXSmall;
                 height: commentText.paintedHeight;
+                textFormat: Text.StyledText;
+                linkColor: Theme.highlightColor;
                 onLinkActivated: {
                     //console.log("Link clicked! " + link);
                     contextLink = link;

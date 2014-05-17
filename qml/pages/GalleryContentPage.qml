@@ -146,6 +146,7 @@ Page {
                         }
                     }
                 }
+
             } // galleryContentColumn
 
             Column {
@@ -366,6 +367,7 @@ Page {
 
                         sourceComponent: CommentDelegate {
                             id: commentDelegate;
+                            width: commentListView.width
                         }
                     }
 
