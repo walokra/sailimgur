@@ -11,6 +11,43 @@ Rectangle {
     opacity: 0.7;
     visible: galleryModel.count > 1 || page > 0;
 
+    function previous() {
+        //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
+        if (currentIndex > 0 && page >= 0) {
+            currentIndex -= 1;
+            load();
+        }
+        if (currentIndex === 0 && page >= 1) {
+            //console.log("Getting previous list of images");
+            page -= 1;
+
+            loadingRect.visible = true;
+            galleryModel.clear();
+            currentIndex = -1;
+            galleryModel.processGalleryMode(galleryModel.query);
+        }
+        setPrevButton();
+    }
+
+    function next() {
+        //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
+        if (currentIndex < galleryModel.count - 1) {
+            //console.log("Getting next image");
+            currentIndex += 1;
+            load();
+        }
+        else if (currentIndex === galleryModel.count - 1) {
+            //console.log("Getting new list of images");
+            page += 1;
+            currentIndex = 0;
+
+            loadingRect.visible = true;
+            galleryModel.clear();
+            galleryModel.processGalleryMode(galleryModel.query);
+        }
+        prevEnabled = true;
+    }
+
     ListItem {
         id: navigationItem;
 
@@ -22,21 +59,7 @@ Rectangle {
             anchors.left: parent.left;
 
             onClicked: {
-                //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
-                if (currentIndex > 0 && page >= 0) {
-                    currentIndex -= 1;
-                    load();
-                }
-                if (currentIndex === 0 && page >= 1) {
-                    //console.log("Getting previous list of images");
-                    page -= 1;
-
-                    loadingRect.visible = true;
-                    galleryModel.clear();
-                    currentIndex = -1;
-                    galleryModel.processGalleryMode(galleryModel.query);
-                }
-                setPrevButton();
+                previous();
             }
             enabled: prevEnabled;
             visible: prevEnabled;
@@ -51,22 +74,7 @@ Rectangle {
             visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
 
             onClicked: {
-                //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
-                if (currentIndex < galleryModel.count - 1) {
-                    //console.log("Getting next image");
-                    currentIndex += 1;
-                    load();
-                }
-                else if (currentIndex === galleryModel.count - 1) {
-                    //console.log("Getting new list of images");
-                    page += 1;
-                    currentIndex = 0;
-
-                    loadingRect.visible = true;
-                    galleryModel.clear();
-                    galleryModel.processGalleryMode(galleryModel.query);
-                }
-                prevEnabled = true;
+                next();
             }
         }
     } // navigationItem
