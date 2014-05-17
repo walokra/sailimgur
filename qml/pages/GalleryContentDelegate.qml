@@ -152,12 +152,13 @@ Item {
             Label {
                 id: imageDescText;
                 wrapMode: Text.Wrap;
-                textFormat: Text.RichText;
                 text: description;
                 font.pixelSize: constant.fontSizeXSmall;
                 anchors { left: parent.left; right: parent.right; }
                 visible: (description) ? true : false;
                 elide: Text.ElideRight;
+                textFormat: Text.StyledText;
+                linkColor: Theme.highlightColor;
                 onLinkActivated: {
                     //console.log("Link clicked! " + link);
                     contextLink = link;

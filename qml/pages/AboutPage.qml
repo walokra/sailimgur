@@ -45,8 +45,11 @@ Page {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: constant.fontSizeMedium;
-                    text: qsTr("Sailimgur is a simple Imgur app for Sailfish OS, powered by Qt, QML and JavaScript. \
-It has a simple, native and easy-to-use UI. Sailimgur is Open Source and licensed under GPL v3.")
+                    text: qsTr("Sailimgur is a simple <a href='http://imgur.com'>Imgur</a> app for Sailfish OS, powered by Qt, QML and JavaScript. \
+It has a simple, native and easy-to-use UI. Sailimgur is Open Source and licensed under GPL v3.");
+                    textFormat: Text.StyledText;
+                    linkColor: Theme.highlightColor;
+                    onLinkActivated: Qt.openUrlExternally(link);
                 }
             }
 
@@ -83,6 +86,16 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 }
             }
 
+            Label {
+                anchors { right: parent.right; rightMargin: Theme.paddingLarge; }
+                textFormat: Text.StyledText;
+                linkColor: Theme.highlightColor;
+                font.pixelSize: Theme.fontSizeSmall;
+                truncationMode: TruncationMode.Fade;
+                text: qsTr("Bug reports") + ": " + "<a href='https://github.com/walokra/sailimgur/issues'>Github</a>";
+                onLinkActivated: Qt.openUrlExternally(link);
+            }
+
             SectionHeader { text: qsTr("Powered By") }
 
             ListItem {
@@ -94,8 +107,11 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 }
                 Label {
                     anchors { left: imgurImage.right; leftMargin: constant.paddingLarge; }
-                    text: "Imgur";
+                    text: "<a href='http://imgur.com'>Imgur</a>";
                     font.pixelSize: constant.fontSizeLarge;
+                    textFormat: Text.StyledText;
+                    linkColor: Theme.highlightColor;
+                    onLinkActivated: Qt.openUrlExternally(link);
                 }
             }
 
