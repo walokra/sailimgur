@@ -4,11 +4,15 @@ import "../components/imgur.js" as Imgur
 ListModel {
     id: listModel;
 
-    property bool loaded: false;
+    signal galleryModelLoaded;
+
+    property bool loaded : false;
+    property bool busy : false;
 
     property string query : "";
 
     function processGalleryMode(searchText) {
+        busy = true;
         loaded = false;
         signInPage.refreshDone = false;
         if (searchText) {
@@ -36,6 +40,8 @@ ListModel {
             galleryContentPage.load();
             loadingRect.visible = false;
             loaded = true;
+            busy = false;
+            galleryModelLoaded();
         }
     }
 
@@ -51,6 +57,8 @@ ListModel {
                 loadingRect.visible = false;
                 loaded = true;
             }
+            busy = false;
+            galleryModelLoaded();
         }
     }
 

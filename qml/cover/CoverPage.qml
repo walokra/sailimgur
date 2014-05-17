@@ -6,27 +6,118 @@ CoverBackground {
 
     anchors.fill: parent;
 
-    CoverPlaceholder {
-        icon.source: "../images/sailimgur-logo_86x86.svg";
+    property int start : 0;
+
+    ListModel {
+        id: coverModel;
+        property bool loaded : false;
     }
 
-    Column {
-        //anchors { left: parent.left; right: parent.right;}
-        anchors.centerIn: parent;
-        width: parent.width;
-        height: childrenRect.height;
+    Connections {
+        target: galleryModel;
 
-        Item { width: 1; height: Theme.paddingLarge }
-        //Item { width: 1; height: Theme.paddingLarge }
-        Image {
-            id: image;
-            anchors { left: parent.left; right: parent.right;}
+        onGalleryModelLoaded: {
+            //fillCoverModel();
+        }
+    }
 
-            property int currentIndex: 0;
-            height: 160;
-            width: 160;
-            source: (galleryModel.count > 0) ? galleryModel.get(currentIndex).link : "";
-            fillMode: Image.PreserveAspectCrop;
+    onStatusChanged: {
+        if (status == PageStatus.Deactivating) {
+            start = 0;
+        }
+        if (status == PageStatus.Activating) {
+            fillCoverModel();
+        }
+    }
+
+    function fillCoverModel() {
+        coverModel.loaded = false;
+        coverModel.clear();
+        var end = start + 9;
+        end = (end < galleryModel.count) ? end : galleryModel.count;
+        for (var i=start; i < end; i++) {
+            coverModel.append(galleryModel.get(i));
+        }
+        coverModel.loaded = true;
+    }
+
+    Image {
+        anchors.left: parent.left;
+        anchors.bottom: parent.bottom;
+        source: "../images/sailimgur-overlay_292x292.svg";
+        opacity: 0.1;
+    }
+
+    //Item { width: 1; height: Theme.paddingLarge }
+    /*
+    Image {
+        id: image;
+        anchors { left: parent.left; right: parent.right;}
+
+        property int currentIndex: 0;
+        height: 150;
+        width: 150;
+        source: (galleryModel.count > 0) ? galleryModel.get(currentIndex).link : "";
+        fillMode: Image.PreserveAspectCrop;
+    }
+    */
+
+    Flow {
+        id: root;
+        anchors { top: parent.top; left: parent.left; right: parent.right; }
+        anchors.leftMargin: constant.paddingMedium;
+        anchors.topMargin: constant.paddingMedium;
+
+        Repeater {
+            id: covergrid;
+            model: 9;
+
+            delegate: imageDelegate;
+        }
+    }
+
+    Component {
+        id: imageDelegate
+
+        Item {
+            width: 73;
+            height:  73;
+
+            Image {
+                id: image;
+                asynchronous: true;
+
+                width: 60;
+                height: 60;
+
+                smooth: false;
+                source: (coverModel.loaded && coverModel.count > 0 && index < coverModel.count) ? coverModel.get(index).link : "";
+                fillMode: Image.PreserveAspectCrop;
+            }
+        }
+    }
+
+    Label {
+        anchors { left: parent.left; right: parent.right; top: root.bottom; }
+        anchors.leftMargin: constant.paddingLarge;
+        visible: galleryModel.busy;
+        font.pixelSize: Theme.fontSizeLarge
+        color: Theme.highlightColor
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        text: qsTr("Refreshing")
+
+        Timer {
+            property int angle: 0
+
+            running: cover.status === Cover.Active && parent.visible
+            interval: 50
+            repeat: true
+
+            onTriggered: {
+                var a = angle;
+                parent.opacity = 0.5 + 0.5 * Math.sin(angle * (Math.PI / 180.0));
+                angle = (angle + 10) % 360;
+            }
         }
     }
 
@@ -34,21 +125,19 @@ CoverBackground {
         id: coverAction;
 
         CoverAction {
-            iconSource: "image://theme/icon-cover-previous";
+            iconSource: "image://theme/icon-cover-refresh"
             onTriggered: {
-                //console.log("CoverAction.previous: count=" + galleryModel.count + "; index=" + image.currentIndex);
-                image.currentIndex = (image.currentIndex - 1) % galleryModel.count;
+                galleryModel.processGalleryMode();
             }
         }
 
         CoverAction {
             iconSource: "image://theme/icon-cover-next";
             onTriggered: {
-                //console.log("CoverAction.next: count=" + galleryModel.count + "; index=" + image.currentIndex);
-                image.currentIndex = (image.currentIndex + 1) % galleryModel.count;
+                start = start + 9;
+                fillCoverModel();
             }
         }
     }
-
 
 }
