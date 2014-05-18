@@ -636,7 +636,11 @@ function fillAlbumVariables(output, model) {
     model.favorite = (output.favorite) ? output.favorite : false;
     model.images_count = (output.images_count) ? output.images_count : 0;
     model.is_album = (output.is_album) ? output.is_album : false;
-    model.gallery_page_link = "http://imgur.com/" + output.id;
+    if (output.is_album) {
+        model.gallery_page_link = "http://imgur.com/a/" + output.id;
+    } else {
+        model.gallery_page_link = "http://imgur.com/" + output.id;
+    }
 
     var total = 0;
     if (model.ups && model.downs) {

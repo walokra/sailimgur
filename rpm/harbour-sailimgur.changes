@@ -1,0 +1,38 @@
+* Sun May 18 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1
+- In landscape mode show original images
+- Web view for opening image and imgur's gallery page
+- Add gallery navigation as swipe left/right when flicking over image
+- Showing 9 images in CoverPage and refresh/next actions.
+- Fixed comments wrapping
+- Fixed scrolling in main gallery
+
+* Fri Apr 7 2014 Marko Wallin <mtw@iki.fi> 0.3.1-1
+- Fixed main gallery and comments scrolling issues.
+- Limiting comments to over 0 points. Minor UI fixes.
+
+* Sun Mar 30 2014 Marko Wallin <mtw@iki.fi> 0.3.0-4
+- Sign in, vote and favorite albums/images, view your favorites, albums and images.
+- Load next/prev gallery page when end/top of page.
+
+* Wed Feb 26 2014 Marko Wallin <mtw@iki.fi> 0.2.3-1
+- Harbour required location for storage, fixed using settings values for album images.
+
+* Tue Feb 18 2014 Marko Wallin <mtw@iki.fi> 0.2.2-1
+- Better paging for gallery album's images and comments.
+
+* Sun Feb 16 2014 Marko Wallin <mtw@iki.fi> 0.2.1-1
+- Partial landscape support.
+- Fancy scroll in main gallery.
+- Refactored imgur functions and models.
+
+* Mon Feb 10 2014 Marko Wallin <mtw@iki.fi> 0.2.0-1
+- More gallery modes and sorting.
+- Settings for showing limited number of images and hiding comments.
+
+* Sat Jan 25 2014 Marko Wallin <mtw@iki.fi> 0.1-2
+- Open / copy image's link and links in image's descriptions.
+- Showing better loading indicators.
+- Remaining API rate limit visible in About page.
+
+* Fri Jan 17 2014 Marko Wallin <mtw@iki.fi> 0.1-1
+- First release
