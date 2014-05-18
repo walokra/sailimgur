@@ -69,6 +69,22 @@ Page {
 
         PageHeader { id: header; title: galleryContentPageTitle; }
 
+        PullDownMenu {
+            id: pullDownMenu;
+
+            MenuItem {
+                id: aboutMenu;
+                text: qsTr("Open page in browser");
+                onClicked: {
+                    var props = {
+                        "url": galleryContentModel.gallery_page_link
+                    }
+                    pageStack.push(Qt.resolvedUrl("WebPage.qml"), props);
+                }
+            }
+
+        } // Pulldown menu
+
         anchors.fill: parent;
         contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium;
         clip: true;

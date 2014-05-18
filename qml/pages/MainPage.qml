@@ -128,6 +128,7 @@ Page {
             cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
             cellHeight: 175;
             clip: true;
+            pressDelay: 0;
 
             model: galleryModel;
 

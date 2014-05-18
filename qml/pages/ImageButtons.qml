@@ -15,7 +15,7 @@ Column {
         color: constant.colorHighlight;
         wrapMode: Text.Wrap;
         elide: Text.ElideRight;
-        text: link;
+        text: link_original;
     }
     Separator {
         id: drawerSep;
@@ -32,13 +32,17 @@ Column {
             anchors { left: parent.left; right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
             font.pixelSize: constant.fontSizeXSmall;
-            text: qsTr("Open link in browser");
+            text: qsTr("Open image in browser");
             color: browserItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
         }
 
         onClicked: {
-            Qt.openUrlExternally(link);
-            infoBanner.showText(qsTr("Launching browser."));
+            //Qt.openUrlExternally(link);
+            //infoBanner.showText(qsTr("Launching browser."));
+            var props = {
+                "url": link_original
+            }
+            pageStack.push(Qt.resolvedUrl("WebPage.qml"), props);
         }
     }
 
@@ -51,13 +55,13 @@ Column {
             anchors { left: parent.left; right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
             font.pixelSize: constant.fontSizeXSmall;
-            text: qsTr("Copy link to clipboard");
+            text: qsTr("Copy image link to clipboard");
             color: clipboardItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
         }
 
         onClicked: {
-            textArea.text = link; textArea.selectAll(); textArea.copy();
-            infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
+            textArea.text = link_original; textArea.selectAll(); textArea.copy();
+            infoBanner.showText(qsTr("Image link " + textArea.text + " copied to clipboard."));
         }
     }
 

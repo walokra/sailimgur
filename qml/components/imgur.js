@@ -582,10 +582,13 @@ function handleGalleryImageJSON(response, model, albumModel) {
 function fillAlbumImagesModel(output, model) {
     var title = setVariable(output.title);
     var description = setVariable(output.description);
+    var link;
+    var link_original;
 
     if (output.link) {
+        link = "http://i.imgur.com/";
+        link_original = output.link;
         if (parseInt(output.width) > 640) {
-            var link = "http://i.imgur.com/";
             // if image isn't gif then get the smaller one
             var ext = getExt(output.link);
             if (ext === "gif" || ext === "GIF") {
@@ -596,6 +599,7 @@ function fillAlbumImagesModel(output, model) {
         } else {
             link = output.link;
         }
+
     }
 
     var imageData = {
@@ -609,7 +613,8 @@ function fillAlbumImagesModel(output, model) {
         size: output.size,
         views: output.views,
         bandwidth: output.bandwidth,
-        link: link
+        link: link,
+        link_original: link_original
     };
     model.push(imageData);
 }
@@ -631,6 +636,7 @@ function fillAlbumVariables(output, model) {
     model.favorite = (output.favorite) ? output.favorite : false;
     model.images_count = (output.images_count) ? output.images_count : 0;
     model.is_album = (output.is_album) ? output.is_album : false;
+    model.gallery_page_link = "http://imgur.com/" + output.id;
 
     var total = 0;
     if (model.ups && model.downs) {

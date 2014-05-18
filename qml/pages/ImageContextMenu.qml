@@ -24,8 +24,12 @@ ContextMenu {
         font.pixelSize: constant.fontSizeXSmall;
         text: qsTr("Open link in browser");
         onClicked: {
-            Qt.openUrlExternally(url);
-            infoBanner.showText(qsTr("Launching browser."));
+            var props = {
+                "url": url
+            }
+            pageStack.push(Qt.resolvedUrl("WebPage.qml"), props);
+            //Qt.openUrlExternally(url);
+            //infoBanner.showText(qsTr("Launching browser."));
         }
     }
     MenuItem {

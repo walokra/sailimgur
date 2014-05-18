@@ -23,6 +23,7 @@ ListModel {
     property int upsPercent : 0;
     property int downsPercent : 0;
     property bool is_album: false;
+    property string gallery_page_link : "http://imgur.com";
 
     //
     property int index : 0;
