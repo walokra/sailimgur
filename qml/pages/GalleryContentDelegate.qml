@@ -71,7 +71,7 @@ Item {
                         asynchronous: true;
 
                         fillMode: Image.PreserveAspectFit;
-                        source: link;
+                        source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? link_original : link;
                         width: parent.width;
                         playing: settings.autoplayAnim;
                         paused: false;
@@ -123,9 +123,9 @@ Item {
                                     if (abs_x_diff > abs_y_diff) {
                                         if (abs_x_diff > 50) {
                                             if (x_diff > 0) {
-                                                galleryNavigation.next();
-                                            } else if (x_diff < 0) {
                                                 if (prevEnabled) { galleryNavigation.previous(); }
+                                            } else if (x_diff < 0) {
+                                                galleryNavigation.next();
                                             }
                                         }
                                     }
