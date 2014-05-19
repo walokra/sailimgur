@@ -24,9 +24,8 @@ function formatEpochDatetime(epoch) {
     return date.getHours() + ":" +
             date.getMinutes() + ":" +
             date.getSeconds() + ", " +
-            date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+            date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 }
-
 
 function setVariable(value) {
     return (value) ? value : "";

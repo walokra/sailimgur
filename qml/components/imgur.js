@@ -33,6 +33,7 @@ var ENDPOINT_IMAGE = BASEURL + "/image/";
 var ENDPOINT_ACCOUNT = BASEURL + "/account";
 var ENDPOINT_ACCOUNT_CURRENT = ENDPOINT_ACCOUNT + "/me";
 var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
+var ENDPOINT_COMMENT = BASEURL + "/comment";
 
 function init(client_id, client_secret, access_token, refresh_token, user_agent) {
     OAUTH_CONSUMER_KEY = client_id;
@@ -734,7 +735,75 @@ function galleryVote(id, vote, onSuccess, onFailure) {
     sendJSONPOSTRequest(url, onSuccess, onFailure);
 }
 
-function sendJSONPOSTRequest(url, onSuccess, onFailure) {
+/**
+Vote
+Vote on a comment. The {vote} variable can only be set as "up" or "down".
+Method          POST
+Route           https://api.imgur.com/3/comment/{id}/vote/{vote}
+Response Model	Basic
+*/
+function commentVote(id, vote, onSuccess, onFailure) {
+    var url = ENDPOINT_COMMENT + "/" + id + "/vote/" + vote;
+    sendJSONPOSTRequest(url, onSuccess, onFailure);
+}
+
+/**
+Comment Creation
+Creates a new comment, returns the ID of the comment.
+
+Method          POST
+Route           https://api.imgur.com/3/comment
+Response Model	Basic
+
+Parameters
+image_id        required	The ID of the image in the gallery that you wish to comment on
+comment         required	The comment text, this is what will be displayed
+parent_id       optional	The ID of the parent comment, this is an alternative method to create a reply.
+*/
+function commentCreation(image_id, comment, parent_id, onSuccess, onFailure) {
+    var url = ENDPOINT_COMMENT;
+    if (parent_id) {
+         url += "/" + parent_id;
+    }
+
+    var message = "image_id=" + image_id + "&" + "comment=" + comment;
+    sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure);
+}
+
+/**
+Comment Deletion
+Delete a comment by the given id.
+
+Method          DELETE
+Route           https://api.imgur.com/3/comment/{id}
+Response Model	Basic
+*/
+function commentDeletion(id, onSuccess, onFailure) {
+    var url = ENDPOINT_COMMENT + "/" + id;
+
+    sendJSONDELETERequest(url, onSuccess, onFailure);
+}
+
+/**
+Reply Creation
+Create a reply for the given comment.
+
+Method          POST
+Route           https://api.imgur.com/3/comment/{id}
+Response Model	Basic
+
+Parameters
+image_id	required	The ID of the image in the gallery that you wish to comment on
+comment     required	The comment text, this is what will be displayed
+*/
+/*
+function commentReply(image_id, comment, id, onSuccess, onFailure) {
+    var url = ENDPOINT_COMMENT + "/" + id;
+    //sendJSONPOSTRequest(url, image_id, comment, onSuccess, onFailure);
+}
+*/
+
+function sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
 
     xhr.open("POST", url, true);
@@ -756,6 +825,63 @@ function sendJSONPOSTRequest(url, onSuccess, onFailure) {
        onFailure(xhr.status, "You need to be signed in for this action.");
     } else {
        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
+       xhr.setRequestHeader("Content-length", message.length);
+       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+       xhr.setRequestHeader("User-Agent", USER_AGENT);
+    }
+
+   xhr.send(message);
+}
+
+function sendJSONPOSTRequest(url, onSuccess, onFailure) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                var jsonObject = JSON.parse(xhr.responseText);
+                //console.log("output=" + JSON.stringify(jsonObject));
+                onSuccess(jsonObject.data);
+            } else {
+                //console.log("error: " + xhr.status+"; "+xhr.responseText);
+                onFailure(xhr.status, xhr.responseText);
+            }
+        }
+    }
+
+    // Send the proper header information along with the request
+    if (OAUTH_ACCESS_TOKEN === "") {
+       onFailure(xhr.status, "You need to be signed in for this action.");
+    } else {
+        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
+    }
+
+    xhr.send();
+}
+
+function sendJSONDELETERequest(url, onSuccess, onFailure) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("DELETE", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                var jsonObject = JSON.parse(xhr.responseText);
+                //console.log("output=" + JSON.stringify(jsonObject));
+                onSuccess(jsonObject.data);
+            } else {
+                //console.log("error: " + xhr.status+"; "+xhr.responseText);
+                onFailure(xhr.status, xhr.responseText);
+            }
+        }
+    }
+
+    // Send the proper header information along with the request
+    if (OAUTH_ACCESS_TOKEN === "") {
+       onFailure(xhr.status, "You need to be signed in for this action.");
+    } else {
+        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
 
     xhr.send();

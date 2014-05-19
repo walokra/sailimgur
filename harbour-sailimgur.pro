@@ -43,6 +43,7 @@ OTHER_FILES = \
     qml/pages/AccountPanel.qml \
     qml/pages/UploadPage.qml \
     qml/pages/GalleryContentLink.qml \
-    qml/pages/WebPage.qml
+    qml/pages/WebPage.qml \
+    qml/pages/AlbumInfoColumn.qml
 
 INCLUDEPATH += $$PWD

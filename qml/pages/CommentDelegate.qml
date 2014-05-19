@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components/imgur.js" as Imgur
 
 Item {
     id: commentDelegate;
@@ -34,11 +35,26 @@ Item {
         anchors { left: depthRow.right; right: parent.right; leftMargin: constant.paddingSmall; }
         contentHeight: commentColumn.height + 2 * constant.paddingMedium;
 
+        MouseArea {
+            anchors.fill: parent;
+            onClicked: {
+                console.log("Comment actions");
+
+                if (commentActionButtons.visible) {
+                    commentActionButtons.visible = false;
+                } else {
+                    commentActionButtons.visible = true;
+                }
+            }
+        }
+
         Column {
             id: commentColumn;
             anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
-            height: commentText.paintedHeight + commentMeta.height;
-            spacing: constant.paddingSmall;
+            height: commentText.paintedHeight + commentMeta.height
+                    + ((commentActionButtons.visible) ? commentActionButtons.height : 0)
+                    + ((writeCommentField.visible) ? writeCommentField.height: 0);
+            //spacing: constant.paddingSmall;
 
             Label {
                 id: commentText;
@@ -56,21 +72,6 @@ Item {
                     contextMenu.show(commentDelegate);
                 }
             }
-
-            /*
-            IconButton {
-                id: more;
-                anchors { left: commentText.right; right: parent.right; leftMargin: constant.paddingMedium; rightMargin: constant.paddingMedium; }
-                icon.source: "../images/icons/more-comments.svg";
-                width: 31;
-                height: 31;
-                onClicked: {
-                    console.log("Show comment's childrens");
-                }
-                enabled: false;
-                visible: childrens > 0;
-            }
-            */
 
             Item {
                 id: commentMeta;
@@ -100,6 +101,130 @@ Item {
                     elide: Text.ElideRight;
                 }
             }
+
+            ListItem {
+                id: commentActionButtons;
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: 62;
+                visible: false;
+
+                IconButton {
+                    id: likeButton;
+                    anchors { left: parent.left; }
+                    icon.source: constant.iconLike;
+                    enabled: loggedIn;
+                    icon.height: 31;
+                    icon.width: 31;
+                    width: 62;
+                    height: 62;
+                    onClicked: {
+                        //console.log("Like comment action");
+                        Imgur.commentVote(id, "up",
+                            function (data) {
+                                //console.log("data=" + JSON.stringify(data));
+                                likeButton.icon.source = constant.iconLiked;
+                                dislikeButton.icon.source = constant.iconDislike;
+                                points += 1;
+                                infoBanner.showText("Comment liked!");
+                            },
+                            function(status, statusText) {
+                                infoBanner.showHttpError(status, statusText);
+                            }
+                        );
+                    }
+                }
+
+                IconButton {
+                    id: dislikeButton;
+                    anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
+                    icon.source: constant.iconDislike;
+                    enabled: loggedIn;
+                    icon.height: 31;
+                    icon.width: 31;
+                    width: 62;
+                    height: 62;
+                    onClicked: {
+                        //console.log("Dislike comment action");
+                        Imgur.commentVote(id, "down",
+                            function (data) {
+                                //console.log("data=" + JSON.stringify(data));
+                                likeButton.icon.source = constant.iconLike;
+                                dislikeButton.icon.source = constant.iconDisliked;
+                                points -= 1;
+                                infoBanner.showText("Comment disliked!");
+                            },
+                            function(status, statusText) {
+                                infoBanner.showHttpError(status, statusText);
+                            }
+                        );
+                    }
+                }
+
+                IconButton {
+                    id: deleteButton;
+                    anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; }
+                    icon.source: constant.iconDelete;
+                    enabled: loggedIn && author === settings.user;
+                    width: 62;
+                    height: 62;
+                    onClicked: {
+                        //console.log("Delete comment action");
+                        Imgur.commentDeletion(id,
+                            function (data) {
+                                //console.log("data=" + JSON.stringify(data));
+                                infoBanner.showText("Comment deleted!");
+                            },
+                            function(status, statusText) {
+                                infoBanner.showHttpError(status, statusText);
+                            }
+                        );
+                    }
+                }
+
+                IconButton {
+                    id: replyButton;
+                    anchors { right: parent.right; rightMargin: constant.paddingLarge; }
+                    icon.source: constant.iconReply;
+                    enabled: loggedIn;
+                    width: 62;
+                    height: 62;
+                    onClicked: {
+                        //console.log("Reply comment action");
+                        if (writeCommentField.visible) {
+                            writeCommentField.visible = false;
+                        } else {
+                            writeCommentField.visible = true;
+                        }
+                    }
+                }
+            }
+
+            TextArea {
+                id: writeCommentField;
+                anchors { left: parent.left; right: parent.right; }
+                anchors.topMargin: constant.paddingMedium;
+                visible: false;
+                placeholderText: qsTr("Reply to comment");
+
+                EnterKey.enabled: text.trim().length > 0;
+                EnterKey.iconSource: "image://theme/icon-m-enter-accept";
+                EnterKey.onClicked: {
+                    //console.log("Comment: " + text);
+                    Imgur.commentCreation(imgur_id, text, id,
+                          function (data) {
+                              //console.log("data: " + JSON.stringify(data));
+                              infoBanner.showText(qsTr("Comment sent!"));
+                              visible = false;
+                              text = "";
+                              writeCommentField.focus = false;
+                          },
+                          function(status, statusText) {
+                              infoBanner.showHttpError(status, statusText);
+                          }
+                    );
+                }
+            }
         }
 
         Separator {
@@ -115,5 +240,4 @@ Item {
             url: contextLink;
         }
     }
-
 }
