@@ -52,7 +52,7 @@ Rectangle {
         id: navigationItem;
 
         Button {
-            id: prev;
+            id: prevButton;
             text: qsTr("« Previous");
 
             height: Theme.itemSizeExtraSmall;
@@ -66,7 +66,7 @@ Rectangle {
         }
 
         Button {
-            id: next;
+            id: nextButton;
             text: qsTr("Next »");
 
             height: Theme.itemSizeExtraSmall;
