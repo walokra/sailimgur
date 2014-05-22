@@ -132,7 +132,7 @@ Column {
 
         Item {
             id: pointColumn;
-            anchors { top: parent.top; left: actionButtons.right; right: parent.right; }
+            anchors { top: parent.top; right: parent.right; }
             anchors.leftMargin: constant.paddingMedium;
             height: childrenRect.height;
 

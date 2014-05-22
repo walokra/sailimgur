@@ -179,6 +179,7 @@ Panel {
                     if (loggedIn === false) {
                         pageStack.push(signInPage);
                     } else {
+                        loggedIn = false;
                         settings.resetTokens();
                         settings.settingsLoaded();
                     }

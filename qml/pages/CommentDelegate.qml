@@ -38,7 +38,7 @@ Item {
         MouseArea {
             anchors.fill: parent;
             onClicked: {
-                console.log("Comment actions");
+                //console.log("Comment actions");
 
                 if (commentActionButtons.visible) {
                     commentActionButtons.visible = false;
@@ -112,7 +112,7 @@ Item {
                 IconButton {
                     id: likeButton;
                     anchors { left: parent.left; }
-                    icon.source: constant.iconLike;
+                    icon.source: (vote === "up") ? constant.iconLiked : constant.iconLike;
                     enabled: loggedIn;
                     icon.height: 31;
                     icon.width: 31;
@@ -122,11 +122,26 @@ Item {
                         //console.log("Like comment action");
                         Imgur.commentVote(id, "up",
                             function (data) {
-                                //console.log("data=" + JSON.stringify(data));
-                                likeButton.icon.source = constant.iconLiked;
-                                dislikeButton.icon.source = constant.iconDislike;
-                                points += 1;
                                 infoBanner.showText("Comment liked!");
+
+                                if (commentsModel) {
+                                var commentArr = [];
+                                Imgur.getComment(id, commentArr, function () {
+                                        //console.log("data=" + JSON.stringify(commentArr));
+
+                                        for (var i = 0; i < commentsModel.count; i++) {
+                                            //console.log("commentsModel.get(i).id=" + commentsModel.get(i).id + "; id=" + id);
+                                            if (commentsModel.get(i).id === id) {
+                                                //console.log("i=" + i);
+                                                commentsModel.set(i, commentArr);
+                                                break;
+                                            }
+                                        }
+                                    },function(status, statusText) {
+                                        infoBanner.showHttpError(status, statusText);
+                                    }
+                                );
+                                }
                             },
                             function(status, statusText) {
                                 infoBanner.showHttpError(status, statusText);
@@ -138,7 +153,7 @@ Item {
                 IconButton {
                     id: dislikeButton;
                     anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
-                    icon.source: constant.iconDislike;
+                    icon.source: (vote === "down") ? constant.iconDisliked : constant.iconDislike;
                     enabled: loggedIn;
                     icon.height: 31;
                     icon.width: 31;
@@ -149,9 +164,6 @@ Item {
                         Imgur.commentVote(id, "down",
                             function (data) {
                                 //console.log("data=" + JSON.stringify(data));
-                                likeButton.icon.source = constant.iconLike;
-                                dislikeButton.icon.source = constant.iconDisliked;
-                                points -= 1;
                                 infoBanner.showText("Comment disliked!");
                             },
                             function(status, statusText) {
@@ -184,7 +196,7 @@ Item {
 
                 IconButton {
                     id: replyButton;
-                    anchors { right: parent.right; rightMargin: constant.paddingLarge; }
+                    anchors { left: deleteButton.right; right: parent.right; rightMargin: constant.paddingLarge; }
                     icon.source: constant.iconReply;
                     enabled: loggedIn;
                     width: 62;

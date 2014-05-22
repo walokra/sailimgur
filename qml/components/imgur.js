@@ -1,15 +1,7 @@
 .pragma library
 
+Qt.include("imgur_oauth.js");
 Qt.include("utils.js");
-
-// OAUTH
-var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
-var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
-var OAUTH_CONSUMER_KEY;
-var OAUTH_CONSUMER_SECRET;
-var OAUTH_ACCESS_TOKEN;
-var OAUTH_REFRESH_TOKEN;
-var USER_AGENT;
 
 // ENDPOINTS
 var BASEURL = "https://api.imgur.com/3";
@@ -29,11 +21,24 @@ var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
 var ENDPOINT_ALBUM = BASEURL + "/album/";
 var ENDPOINT_IMAGE = BASEURL + "/image/";
 
+var IMGUR_IMG_URL = "http://i.imgur.com/";
+
+
+// OAUTH
+var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
+var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
+var OAUTH_CONSUMER_KEY;
+var OAUTH_CONSUMER_SECRET;
+var OAUTH_ACCESS_TOKEN;
+var OAUTH_REFRESH_TOKEN;
+var USER_AGENT;
+
 // needs sign in
 var ENDPOINT_ACCOUNT = BASEURL + "/account";
 var ENDPOINT_ACCOUNT_CURRENT = ENDPOINT_ACCOUNT + "/me";
 var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
 var ENDPOINT_COMMENT = BASEURL + "/comment";
+
 
 function init(client_id, client_secret, access_token, refresh_token, user_agent) {
     OAUTH_CONSUMER_KEY = client_id;
@@ -41,156 +46,6 @@ function init(client_id, client_secret, access_token, refresh_token, user_agent)
     OAUTH_ACCESS_TOKEN = access_token;
     OAUTH_REFRESH_TOKEN = refresh_token;
     USER_AGENT = user_agent;
-}
-
-function exchangePinForAccessToken(pin, onSuccess, onFailure) {
-    var message = "client_id=" + OAUTH_CONSUMER_KEY + "&client_secret=" + OAUTH_CONSUMER_SECRET + "&grant_type=pin&pin=" + pin;
-    //console.log("message=" + message);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', ACCESS_TOKEN_URL);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            //console.log("headers: " + xhr.getAllResponseHeaders());
-            var jsonObject = JSON.parse(xhr.responseText);
-            if (xhr.status == 200) {
-                //console.log("response: " + JSON.stringify(jsonObject));
-                OAUTH_ACCESS_TOKEN = jsonObject.access_token;
-                OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
-                onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
-            } else {
-                //console.log("exchangePinForAccessToken", xhr.status, xhr.statusText, xhr.responseText);
-                onFailure(xhr.status, xhr.statusText + ": " +jsonObject.data.error);
-            }
-        }
-    }
-
-    xhr = createPOSTHeader(xhr, message);
-    xhr.send(message);
-}
-
-function refreshAccessToken(refresh_token, onSuccess, onFailure) {
-    var message = "client_id=" + OAUTH_CONSUMER_KEY + "&client_secret=" + OAUTH_CONSUMER_SECRET + "&grant_type=refresh_token&refresh_token=" + refresh_token;
-    //console.log("message=" + message);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', ACCESS_TOKEN_URL);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            //console.log("headers: " + xhr.getAllResponseHeaders());
-            var jsonObject = JSON.parse(xhr.responseText);
-            if (xhr.status == 200) {
-                //console.log("response: " + JSON.stringify(jsonObject));
-                var tokenType = jsonObject.token_type;
-                if (tokenType === "bearer") {
-                    OAUTH_ACCESS_TOKEN = jsonObject.access_token;
-                    OAUTH_REFRESH_TOKEN = jsonObject.refresh_token;
-                    onSuccess(OAUTH_ACCESS_TOKEN, OAUTH_REFRESH_TOKEN);
-                } else {
-                    onFailure(xhr.status, "Wrong token type.");
-                }
-            } else {
-                //console.log(xhr.status, xhr.statusText, xhr.responseText);
-                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
-            }
-        }
-    }
-
-    xhr = createPOSTHeader(xhr, message);
-    xhr.send(message);
-}
-
-/**
-  Get current user info.
-
-Account Base
-Request standard user information. If you need the username for the account that is logged in,
-it is returned in the request for an access token.
-Method	GET
-Route	https://api.imgur.com/3/account/{username}
-Response Model	Account
-*/
-function getAccountCurrent(onSuccess, onFailure) {
-    var url = ENDPOINT_ACCOUNT_CURRENT;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            //console.log("headers: " + xhr.getAllResponseHeaders());
-            // permission denied, check if token expired and try to refresh it
-            if (xhr.status == 403) {
-                onFailure(xhr.status, xhr.statusText);
-            } else if (xhr.status == 200) {
-                var jsonObject = JSON.parse(xhr.responseText);
-                //console.log("response: " + JSON.stringify(jsonObject));
-                onSuccess(jsonObject.data.url);
-            } else {
-                //console.log(xhr.status, xhr.statusText, xhr.responseText);
-                onFailure(xhr.status, xhr.statusText);
-            }
-        }
-    }
-
-    xhr = createGETHeader(xhr);
-    xhr.send();
-}
-
-/**
-  Get current user's favorited images.
-
-Account Favorites
-Returns the users favorited images, only accessible if you're logged in as the user.
-Method	GET
-Route	https://api.imgur.com/3/account/{username}/favorites
-Response Model	Gallery Image OR Gallery Album
-*/
-function getFavorites(model, onSuccess, onFailure) {
-    var url = ENDPOINT_ACCOUNT_CURRENT;
-    url += "/favorites";
-
-    sendJSONRequest(url, 1, model, onSuccess, onFailure);
-}
-
-/*
-Account Settings
-Returns the account settings, only accessible if you're logged in as the user.
-Method	GET
-Route	https://api.imgur.com/3/account/{username}/settings
-Response Model	Account Settings
-*/
-
-/*
-Albums
-Get all the albums associated with the account. Must be logged in as the user to see secret and hidden albums.
-Method	GET
-Route	https://api.imgur.com/3/account/{username}/albums/{page}
-Response Model	Album
-Parameters
-Key	Required	Description
-page	optional	integer - allows you to set the page number so you don't have to retrieve all the data at once.
-*/
-function getAlbums(model, page, onSuccess, onFailure) {
-    var url = ENDPOINT_ACCOUNT_CURRENT;
-    url += "/albums";
-    url += "/" + page;
-
-    sendJSONRequest(url, "albums", model, onSuccess, onFailure);
-}
-
-/*
-Images
-Return all of the images associated with the account. You can page through the images by setting the page, this defaults to 0.
-Method	GET
-Route	https://api.imgur.com/3/account/{username}/images/{page}
-Response Model	Image
-*/
-function getImages(model, page, onSuccess, onFailure) {
-    var url = ENDPOINT_ACCOUNT_CURRENT;
-    url += "/images";
-    url += "/" + page;
-
-    sendJSONRequest(url, "images", model, onSuccess, onFailure);
 }
 
 /*
@@ -258,6 +113,8 @@ function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
                     handleGalleryJSON(xhr.responseText, model);
                 } else if (actiontype === 4) {
                     handleCommentsJSON(xhr.responseText, model);
+                } else if (actiontype === 5) {
+                    handleCommentJSON(xhr.responseText, model);
                 } else if (actiontype === "albums") {
                     handleAlbumsJSON(xhr.responseText, model);
                 } else if (actiontype === "images") {
@@ -290,7 +147,6 @@ page 	optional 	integer - the data paging number
 function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
-    //console.log("getGallerySearch: " + url);
 
     sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
@@ -299,7 +155,6 @@ function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
 function getGalleryAlbum(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_ALBUM;
     url += "/" + id;
-    //console.log("getGalleryAlbum: " + url);
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -307,10 +162,8 @@ function getGalleryAlbum(id, model, albumModel, onSuccess, onFailure) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 handleGalleryAlbumJSON(xhr.responseText, model, albumModel);
-                //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
             } else {
-                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
@@ -325,7 +178,6 @@ function getGalleryAlbum(id, model, albumModel, onSuccess, onFailure) {
 function getAlbum(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_ALBUM;
     url += "/" + id;
-    //console.log("getAlbum: " + url);
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -333,10 +185,8 @@ function getAlbum(id, model, albumModel, onSuccess, onFailure) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 handleGalleryAlbumJSON(xhr.responseText, model, albumModel);
-                //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
             } else {
-                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
@@ -351,7 +201,6 @@ function getAlbum(id, model, albumModel, onSuccess, onFailure) {
 function getGalleryImage(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_IMAGE;
     url += "/" + id;
-    //console.log("getGalleryImage: " + url);
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -374,7 +223,6 @@ function getGalleryImage(id, model, albumModel, onSuccess, onFailure) {
 function getImage(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_IMAGE;
     url += "/" + id;
-    //console.log("getImage: " + url);
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -408,7 +256,6 @@ sort	optional	best | top | new - defaults to best
 function getGalleryComments(id, model, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY;
     url += "/" + id + "/comments";
-    //console.log("getGalleryComments: " + url);
 
     sendJSONRequest(url, 4, model, onSuccess, onFailure);
 }
@@ -428,7 +275,6 @@ function getCredits(onSuccess, onFailure) {
                 var data = jsonObject.data;
                 onSuccess(data.UserRemaining, data.ClientRemaining);
             } else {
-                //console.log("error: " + xhr.status+"; "+ xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
             }
         }
@@ -443,12 +289,11 @@ function getCredits(onSuccess, onFailure) {
 */
 function handleGalleryJSON(response, model) {
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
         var ext = 'jpg';
-        var link = "http://i.imgur.com/";
+        var link = IMGUR_IMG_URL;
         var linkLarge = output.link;
         var id = "";
 
@@ -456,11 +301,9 @@ function handleGalleryJSON(response, model) {
             id = output.id;
         } else {
             id = output.cover;
-            //console.log("album cover=" + id);
         }
 
         link += id+"b."+ext; // s=90x90, b=160x160, t=160x160 (aspect)
-        //console.log("link=" + link);
 
         var title = "";
         if (output.title) {
@@ -487,13 +330,11 @@ function handleGalleryJSON(response, model) {
 */
 function handleAlbumsJSON(response, model) {
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
-    //console.log("response: " + JSON.stringify(jsonObject.data));
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
         var ext = 'jpg';
-        var link = "http://i.imgur.com/";
+        var link = IMGUR_IMG_URL;
         var linkLarge = output.link;
         var id = output.cover;
 
@@ -520,13 +361,11 @@ function handleAlbumsJSON(response, model) {
 */
 function handleImagesJSON(response, model) {
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
-    //console.log("response: " + JSON.stringify(jsonObject.data));
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
         var ext = 'jpg';
-        var link = "http://i.imgur.com/";
+        var link = IMGUR_IMG_URL;
         var linkLarge = output.link;
         var id = output.id;
 
@@ -538,13 +377,13 @@ function handleImagesJSON(response, model) {
         }
 
         model.append({
-                         id: output.id,
-                         title: title,
-                         link: link,
-                         is_album: false,
-                         vote: "",
-                         is_gallery: false
-                     });
+                     id: output.id,
+                     title: title,
+                     link: link,
+                     is_album: false,
+                     vote: "",
+                     is_gallery: false
+                 });
     }
 }
 
@@ -554,16 +393,11 @@ function handleImagesJSON(response, model) {
 */
 function handleGalleryAlbumJSON(response, model, albumModel) {
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     var data = jsonObject.data;
-    //console.log("data.is_album=" + data.is_album + "; data.images_count=" + data.images_count);
     for (var i in jsonObject.data.images) {
-        //console.log("image[" + i + "]=" + JSON.stringify(jsonObject.data.images[i]));
-        //console.log("output=" + JSON.stringify(output));
         fillAlbumImagesModel(jsonObject.data.images[i], model);
     }
-    //console.log("count=" + model.count);
 
     fillAlbumVariables(data, albumModel);
 }
@@ -574,7 +408,6 @@ function handleGalleryAlbumJSON(response, model, albumModel) {
 */
 function handleGalleryImageJSON(response, model, albumModel) {
     var jsonObject = JSON.parse(response);
-    //console.log("response: status=" + JSON.stringify(jsonObject.status) + "; success=" + JSON.stringify(jsonObject.success));
 
     fillAlbumImagesModel(jsonObject.data, model);
     fillAlbumVariables(jsonObject.data, albumModel);
@@ -587,7 +420,7 @@ function fillAlbumImagesModel(output, model) {
     var link_original;
 
     if (output.link) {
-        link = "http://i.imgur.com/";
+        link = IMGUR_IMG_URL;
         link_original = output.link;
         if (parseInt(output.width) > 640) {
             // if image isn't gif then get the smaller one
@@ -658,20 +491,25 @@ function fillAlbumVariables(output, model) {
 
 function handleCommentsJSON(response, model) {
     var jsonObject = JSON.parse(response);
-    //console.log("handleCommentsJSON()");
-    //console.log("comments: " + JSON.stringify(jsonObject));
 
     for (var i in jsonObject.data) {
         var output = jsonObject.data[i];
         parseComments(output, 0, model);
     }
 
-    //console.log("comments=" + model.count);
+}
+
+function handleCommentJSON(response, model) {
+    var jsonObject = JSON.parse(response);
+    var output = jsonObject.data;
+    console.log("handleCommentJSON " + JSON.stringify(output));
+    parseComment(output, model);
 }
 
 function parseComments(output, depth, model) {
     var date = formatEpochDatetime(output.datetime);
 
+    var vote = (output.vote) ? output.vote : "veto";
     var childrens = parseInt(output.children.length);
     model.push({
                    id: output.id,
@@ -681,10 +519,10 @@ function parseComments(output, depth, model) {
                    downs: output.downs,
                    points: output.points,
                    datetime: date,
-                   children: output.children,
-                   //childrens: childrens,
-                   depth: depth
-               });
+                   //children: output.children,
+                   depth: depth,
+                   vote: vote
+    });
 
     //console.log("childrens: " + JSON.stringify(output.children));
 
@@ -692,212 +530,57 @@ function parseComments(output, depth, model) {
         depth += 1;
         for (var j=0; j < childrens; j++) {
             var points = parseInt(output.children[j].points);
-            if ( points > 0) {
+            //if ( points >= 0) {
                 parseComments(output.children[j], depth, model);
-            }
+            //}
         }
     }
 }
 
+function parseComment(output, model) {
+    var date = formatEpochDatetime(output.datetime);
+
+    model.push({
+       id: output.id,
+       comment: replaceURLWithHTMLLinks(output.comment),
+       author: output.author,
+       ups: output.ups,
+       downs: output.downs,
+       points: output.points,
+       datetime: date,
+       vote: output.vote
+    });
+}
+
+
 /**
-    Favorite an album with a given ID. The user is required to be logged in to favorite the album.
-    Method	POST
-    Route	https://api.imgur.com/3/album/{id}/favorite
-    Response Model	Basic
+Replies
+Get the comment with all of the replies for the comment.
+Method          GET
+Route           https://api.imgur.com/3/comment/{id}/replies
+Response Model	Comment
 */
-function albumFavorite(id, onSuccess, onFailure) {
-    var url = ENDPOINT_ALBUM + "/" + id + "/favorite";
-    sendJSONPOSTRequest(url, onSuccess, onFailure);
+function getCommentReplies(id, model, onSuccess, onFailure) {
+    var url = ENDPOINT_COMMENT + "/" + id + "/replies";
+
+    sendJSONRequest(url, 4, model, onSuccess, onFailure);
 }
 
 /**
-    Favorite an image with the given ID. The user is required to be logged in to favorite the image.
-    Method	POST
-    Route	https://api.imgur.com/3/image/{id}/favorite
-    Response Model	Basic
-*/
-function imageFavorite(id, onSuccess, onFailure) {
-    var url = ENDPOINT_IMAGE+ "/" + id + "/favorite";
-    sendJSONPOSTRequest(url, onSuccess, onFailure);
-}
+Comment
+Get information about a specific comment.
 
-/**
-    Album/Image Voting
-    Vote for an image, 'up' or 'down' vote. Send the same value again to undo a vote.
-    Method	POST
-    Route	https://api.imgur.com/3/gallery/album/{id}/vote/{vote}
-    Route	https://api.imgur.com/3/gallery/image/{id}/vote/{vote}
-    Route	https://api.imgur.com/3/gallery/{id}/vote/{vote}
-    Response Model	Basic
-*/
-function galleryVote(id, vote, onSuccess, onFailure) {
-    var url = ENDPOINT_GALLERY + "/" + id + "/vote/" + vote;
-    sendJSONPOSTRequest(url, onSuccess, onFailure);
-}
-
-/**
-Vote
-Vote on a comment. The {vote} variable can only be set as "up" or "down".
-Method          POST
-Route           https://api.imgur.com/3/comment/{id}/vote/{vote}
-Response Model	Basic
-*/
-function commentVote(id, vote, onSuccess, onFailure) {
-    var url = ENDPOINT_COMMENT + "/" + id + "/vote/" + vote;
-    sendJSONPOSTRequest(url, onSuccess, onFailure);
-}
-
-/**
-Comment Creation
-Creates a new comment, returns the ID of the comment.
-
-Method          POST
-Route           https://api.imgur.com/3/comment
-Response Model	Basic
-
-Parameters
-image_id        required	The ID of the image in the gallery that you wish to comment on
-comment         required	The comment text, this is what will be displayed
-parent_id       optional	The ID of the parent comment, this is an alternative method to create a reply.
-*/
-function commentCreation(image_id, comment, parent_id, onSuccess, onFailure) {
-    var url = ENDPOINT_COMMENT;
-    if (parent_id) {
-         url += "/" + parent_id;
-    }
-
-    var message = "image_id=" + image_id + "&" + "comment=" + comment;
-    sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure);
-}
-
-/**
-Comment Deletion
-Delete a comment by the given id.
-
-Method          DELETE
+Method          GET
 Route           https://api.imgur.com/3/comment/{id}
-Response Model	Basic
+Response Model	Comment
 */
-function commentDeletion(id, onSuccess, onFailure) {
+function getComment(id, model, onSuccess, onFailure) {
     var url = ENDPOINT_COMMENT + "/" + id;
 
-    sendJSONDELETERequest(url, onSuccess, onFailure);
-}
-
-/**
-Reply Creation
-Create a reply for the given comment.
-
-Method          POST
-Route           https://api.imgur.com/3/comment/{id}
-Response Model	Basic
-
-Parameters
-image_id	required	The ID of the image in the gallery that you wish to comment on
-comment     required	The comment text, this is what will be displayed
-*/
-/*
-function commentReply(image_id, comment, id, onSuccess, onFailure) {
-    var url = ENDPOINT_COMMENT + "/" + id;
-    //sendJSONPOSTRequest(url, image_id, comment, onSuccess, onFailure);
-}
-*/
-
-function sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("POST", url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status == 200) {
-                var jsonObject = JSON.parse(xhr.responseText);
-                //console.log("output=" + JSON.stringify(jsonObject));
-                onSuccess(jsonObject.data);
-            } else {
-                //console.log("error: " + xhr.status+"; "+xhr.responseText);
-                onFailure(xhr.status, xhr.responseText);
-            }
-        }
-    }
-
-    // Send the proper header information along with the request
-   if (OAUTH_ACCESS_TOKEN === "") {
-       onFailure(xhr.status, "You need to be signed in for this action.");
-    } else {
-       xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
-       xhr.setRequestHeader("Content-length", message.length);
-       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-       xhr.setRequestHeader("User-Agent", USER_AGENT);
-    }
-
-   xhr.send(message);
-}
-
-function sendJSONPOSTRequest(url, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("POST", url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status == 200) {
-                var jsonObject = JSON.parse(xhr.responseText);
-                //console.log("output=" + JSON.stringify(jsonObject));
-                onSuccess(jsonObject.data);
-            } else {
-                //console.log("error: " + xhr.status+"; "+xhr.responseText);
-                onFailure(xhr.status, xhr.responseText);
-            }
-        }
-    }
-
-    // Send the proper header information along with the request
-    if (OAUTH_ACCESS_TOKEN === "") {
-       onFailure(xhr.status, "You need to be signed in for this action.");
-    } else {
-        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
-    }
-
-    xhr.send();
-}
-
-function sendJSONDELETERequest(url, onSuccess, onFailure) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("DELETE", url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status == 200) {
-                var jsonObject = JSON.parse(xhr.responseText);
-                //console.log("output=" + JSON.stringify(jsonObject));
-                onSuccess(jsonObject.data);
-            } else {
-                //console.log("error: " + xhr.status+"; "+xhr.responseText);
-                onFailure(xhr.status, xhr.responseText);
-            }
-        }
-    }
-
-    // Send the proper header information along with the request
-    if (OAUTH_ACCESS_TOKEN === "") {
-       onFailure(xhr.status, "You need to be signed in for this action.");
-    } else {
-        xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
-    }
-
-    xhr.send();
-}
-
-function createPOSTHeader(xhr, message) {
-    // Send the proper header information along with the request
-    xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
-    xhr.setRequestHeader("Content-length", message.length);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("User-Agent", USER_AGENT);
-    return xhr;
+    sendJSONRequest(url, 5, model, onSuccess, onFailure);
 }
 
 function createGETHeader(xhr) {
-    //console.log("OAUTH_CONSUMER_KEY=" + OAUTH_CONSUMER_KEY + "; OAUTH_ACCESS_TOKEN=" + OAUTH_ACCESS_TOKEN);
     if (OAUTH_ACCESS_TOKEN === "") {
         xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     } else {
@@ -927,71 +610,3 @@ function processGalleryMode(query, model, page, settings, onSuccess, onFailure) 
     }
 }
 
-/**
-Image Upload
-Upload a new image.
-Method	POST
-Route	https://api.imgur.com/3/image
-Alternative Route	https://api.imgur.com/3/upload
-Response Model	Basic
-
-Parameters
-Key	Required	Description
-image	required	A binary file, base64 data, or a URL for an image
-album	optional    The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.
-type	optional	The type of the file that's being sent; file, base64 or URL
-name	optional	The name of the file, this is automatically detected if uploading a file with a POST and multipart / form-data
-title	optional	The title of the image.
-description	optional	The description of the image.
-*/
-function uploadImage(imagePath, album, name, title, desc, onSuccess, onFailure) {
-
-    /*
-    var reader = new FileReader();
-    reader.onload = function(evt) {
-        var fileData = evt.target.result;
-        console.log("File contents: " + fileData);
-    };
-    reader.onerror = function(event) {
-        console.error("File could not be read! Code " + event.target.error.code);
-    };
-    var message = "image=" + reader.readAsDataURL(imagePath);
-    */
-
-    if (album) {
-        message += "&album=" + album;
-    }
-    if (name) {
-        message += "&name=" + name;
-    }
-    message += "&type=base64";
-    if (title) {
-        message += "&title=" + title;
-    }
-    if (desc) {
-        message += "&description=" + desc;
-    }
-
-    //console.log("message=" + message);
-
-    /*
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', ENDPOINT_IMAGE);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            //console.log("headers: " + xhr.getAllResponseHeaders());
-            var jsonObject = JSON.parse(xhr.responseText);
-            if (xhr.status == 200) {
-                console.log("response: " + JSON.stringify(jsonObject));
-                onSuccess();
-            } else {
-                //console.log(xhr.status, xhr.statusText, xhr.responseText);
-                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
-            }
-        }
-    }
-
-    xhr = createPOSTHeader(xhr, message);
-    //xhr.send(message);
-    */
-}

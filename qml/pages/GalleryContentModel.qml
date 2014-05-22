@@ -85,8 +85,6 @@ ListModel {
 
         total = allImages.length;
         left = total - listModel.count;
-
-        showMoreItem.visible = listModel.count < listModel.total;
     }
 
     function onSuccess(albumImagesLimit) {

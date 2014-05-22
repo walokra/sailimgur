@@ -4,6 +4,7 @@ import "../components/imgur.js" as Imgur
 
 Page {
     id: galleryContentPage;
+
     allowedOrientations: Orientation.All;
 
     property bool is_album: false;
@@ -33,9 +34,11 @@ Page {
         commentsModel.index = 0;
         commentsModel.allComments = [];
 
-        imgur_id = galleryModel.get(currentIndex).id;
-        is_album = galleryModel.get(currentIndex).is_album;
-        is_gallery = galleryModel.get(currentIndex).is_gallery;
+        if (galleryModel) {
+            imgur_id = galleryModel.get(currentIndex).id;
+            is_album = galleryModel.get(currentIndex).is_album;
+            is_gallery = galleryModel.get(currentIndex).is_gallery;
+        }
 
         if (is_album === true) {
             galleryContentPageTitle = (is_gallery == true) ? qsTr("Gallery album") : qsTr("Album");
@@ -151,6 +154,7 @@ Page {
                     id: showMoreItem;
                     width: parent.width;
                     height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
+                    visible: galleryContentModel.count < galleryContentModel.total;
 
                     Button {
                         id: showMoreButton;

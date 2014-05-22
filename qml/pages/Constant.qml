@@ -43,6 +43,9 @@ QtObject {
     property string iconLiked : "../images/icons/liked.svg";
     property string iconFavorite : "../images/icons/favorite.svg";
     property string iconFavorited : "../images/icons/favorited.svg";
+    property string iconMoreComments : "../images/icons/more-comments.svg";
+    property string iconReply : "../images/icons/add.svg";
+    property string iconDelete : "../images/icons/delete.svg";
 
     // modes
     property string mode_main : "main";
