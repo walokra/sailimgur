@@ -27,12 +27,10 @@ Page {
 
     onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
+        galleryContentModel.resetVariables();
         galleryContentModel.clear();
-        galleryContentModel.index = 0;
-        galleryContentModel.allImages = [];
+        commentsModel.resetVariables();
         commentsModel.clear();
-        commentsModel.index = 0;
-        commentsModel.allComments = [];
 
         if (galleryModel) {
             imgur_id = galleryModel.get(currentIndex).id;
@@ -40,12 +38,11 @@ Page {
             is_gallery = galleryModel.get(currentIndex).is_gallery;
         }
 
-        if (is_album === true) {
+        if (is_album == true) {
             galleryContentPageTitle = (is_gallery == true) ? qsTr("Gallery album") : qsTr("Album");
             galleryContentModel.getAlbum(imgur_id, is_gallery);
         } else {
             galleryContentPageTitle = (is_gallery == true) ? qsTr("Gallery image") : qsTr("Image");
-            showMoreItem.visible = false;
             galleryContentModel.getImage(imgur_id, is_gallery);
         }
 

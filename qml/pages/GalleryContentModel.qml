@@ -33,6 +33,34 @@ ListModel {
 
     property bool loaded: false;
 
+    function resetVariables() {
+        // Album props
+        account_url = "";
+        views = "0";
+        title = "";
+        description = "";
+        datetime = "";
+        link = "";
+        deletehash = "";
+
+        // Gallery props
+        ups = "0";
+        downs = "0";
+        score = "0";
+        vote = "none";
+        favorite = false;
+        images_count = "0";
+        upsPercent = 0;
+        downsPercent = 0;
+        is_album = false;
+
+        index = 0;
+        total = 0;
+        left = 0;
+        allImages = [];
+        loaded = false;
+    }
+
     function callImgur(mode, id, is_gallery) {
         if (is_gallery) {
             if (mode === "album") {
