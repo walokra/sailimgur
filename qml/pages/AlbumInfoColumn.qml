@@ -9,6 +9,57 @@ Column {
     spacing: constant.paddingSmall;
     visible: is_gallery == true;
 
+    QtObject {
+        id: internal;
+
+        function galleryVote(vote) {
+            Imgur.galleryVote(imgur_id, vote,
+                function (data) {
+                    //console.log("Vote success: " + vote);
+                    if (galleryContentModel.vote === vote) {
+                        galleryContentModel.vote = "";
+                    } else {
+                        galleryContentModel.vote = vote;
+                    }
+                },
+                function(status, statusText) {
+                    infoBanner.showHttpError(status, statusText);
+                }
+            );
+        }
+
+        function galleryFavorite(is_album) {
+            if (is_album) {
+                Imgur.albumFavorite(imgur_id,
+                    function (data) {
+                        if (data === "favorited") {
+                           galleryContentModel.favorite = true;
+                        } else if (data === "unfavorited") {
+                            galleryContentModel.favorite = false;
+                        }
+                    },
+                    function(status, statusText) {
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            }
+            else {
+                Imgur.imageFavorite(imgur_id,
+                    function (data) {
+                        if (data === "favorited") {
+                           galleryContentModel.favorite = true;
+                        } else if (data === "unfavorited") {
+                            galleryContentModel.favorite = false;
+                        }
+                    },
+                    function(status, statusText) {
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            }
+        }
+    }
+
     ListItem {
         id: actionButtons;
         anchors { left: parent.left; }
@@ -23,21 +74,7 @@ Column {
             width: 62;
             height: 62;
             onClicked: {
-                //console.log("Like!");
-                Imgur.galleryVote(imgur_id, "up",
-                    function (data) {
-                        //infoBanner.showText(data);
-                        //console.log("Like success: " + vote);
-                        if (galleryContentModel.vote === "up") {
-                            galleryContentModel.vote = "";
-                        } else {
-                            galleryContentModel.vote = "up";
-                        }
-                    },
-                    function(status, statusText) {
-                        infoBanner.showHttpError(status, statusText);
-                    }
-                );
+                internal.galleryVote("up");
             }
         }
 
@@ -49,21 +86,7 @@ Column {
             width: 62;
             height: 62;
             onClicked: {
-                //console.log("Dislike!");
-                Imgur.galleryVote(imgur_id, "down",
-                    function (data) {
-                        //infoBanner.showText(data);
-                        //console.log("Dislike success: " + vote);
-                        if (galleryContentModel.vote === "down") {
-                            galleryContentModel.vote = "";
-                        } else {
-                            galleryContentModel.vote = "down";
-                        }
-                    },
-                    function(status, statusText) {
-                        infoBanner.showHttpError(status, statusText);
-                    }
-                );
+                internal.galleryVote("down");
             }
         }
 
@@ -75,39 +98,7 @@ Column {
             width: 62;
             height: 62;
             onClicked: {
-                //console.log("Hearth!");
-                if (is_album) {
-                    Imgur.albumFavorite(imgur_id,
-                        function (data) {
-                            //console.log("data: " + data);
-                            //infoBanner.showText(data);
-                            if (data === "favorited") {
-                               galleryContentModel.favorite = true;
-                            } else if (data === "unfavorited") {
-                                galleryContentModel.favorite = false;
-                            }
-                        },
-                        function(status, statusText) {
-                            infoBanner.showHttpError(status, statusText);
-                        }
-                    );
-                }
-                else {
-                    Imgur.imageFavorite(imgur_id,
-                        function (data) {
-                            //console.log("data: " + data);
-                            //infoBanner.showText(data);
-                            if (data === "favorited") {
-                               galleryContentModel.favorite = true;
-                            } else if (data === "unfavorited") {
-                                galleryContentModel.favorite = false;
-                            }
-                        },
-                        function(status, statusText) {
-                            infoBanner.showHttpError(status, statusText);
-                        }
-                    );
-                }
+                internal.galleryFavorite(is_album);
             }
         }
 
@@ -121,7 +112,6 @@ Column {
             width: 62;
             height: 62;
             onClicked: {
-                //console.log("Write comment action");
                 if (writeCommentField.visible) {
                     writeCommentField.visible = false;
                 } else {
@@ -194,11 +184,13 @@ Column {
             //console.log("Comment: " + text);
             Imgur.commentCreation(imgur_id, text, null,
                   function (data) {
-                      console.log("data: " + JSON.stringify(data));
+                      //console.log("data: " + JSON.stringify(data));
                       infoBanner.showText(qsTr("Comment sent!"));
                       visible = false;
                       text = "";
                       writeCommentField.focus = false;
+
+                      commentsModel.getComments(imgur_id);
                   },
                   function(status, statusText) {
                       infoBanner.showHttpError(status, statusText);

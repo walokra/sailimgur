@@ -502,7 +502,7 @@ function handleCommentsJSON(response, model) {
 function handleCommentJSON(response, model) {
     var jsonObject = JSON.parse(response);
     var output = jsonObject.data;
-    console.log("handleCommentJSON " + JSON.stringify(output));
+    //console.log("handleCommentJSON " + JSON.stringify(output));
     parseComment(output, model);
 }
 

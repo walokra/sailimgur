@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../components/imgur.js" as Imgur
 
 Item {
     id: commentDelegate;
@@ -38,8 +37,6 @@ Item {
         MouseArea {
             anchors.fill: parent;
             onClicked: {
-                //console.log("Comment actions");
-
                 if (commentActionButtons.visible) {
                     commentActionButtons.visible = false;
                 } else {
@@ -54,7 +51,6 @@ Item {
             height: commentText.paintedHeight + commentMeta.height
                     + ((commentActionButtons.visible) ? commentActionButtons.height : 0)
                     + ((writeCommentField.visible) ? writeCommentField.height: 0);
-            //spacing: constant.paddingSmall;
 
             Label {
                 id: commentText;
@@ -66,7 +62,6 @@ Item {
                 textFormat: Text.StyledText;
                 linkColor: Theme.highlightColor;
                 onLinkActivated: {
-                    //console.log("Link clicked! " + link);
                     contextLink = link;
                     contextMenu = commentContextMenu.createObject(commentListView);
                     contextMenu.show(commentDelegate);
@@ -119,34 +114,7 @@ Item {
                     width: 62;
                     height: 62;
                     onClicked: {
-                        //console.log("Like comment action");
-                        Imgur.commentVote(id, "up",
-                            function (data) {
-                                infoBanner.showText("Comment liked!");
-
-                                if (commentsModel) {
-                                var commentArr = [];
-                                Imgur.getComment(id, commentArr, function () {
-                                        //console.log("data=" + JSON.stringify(commentArr));
-
-                                        for (var i = 0; i < commentsModel.count; i++) {
-                                            //console.log("commentsModel.get(i).id=" + commentsModel.get(i).id + "; id=" + id);
-                                            if (commentsModel.get(i).id === id) {
-                                                //console.log("i=" + i);
-                                                commentsModel.set(i, commentArr);
-                                                break;
-                                            }
-                                        }
-                                    },function(status, statusText) {
-                                        infoBanner.showHttpError(status, statusText);
-                                    }
-                                );
-                                }
-                            },
-                            function(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
-                            }
-                        );
+                        commentsModel.commentVote(id, "up");
                     }
                 }
 
@@ -160,16 +128,7 @@ Item {
                     width: 62;
                     height: 62;
                     onClicked: {
-                        //console.log("Dislike comment action");
-                        Imgur.commentVote(id, "down",
-                            function (data) {
-                                //console.log("data=" + JSON.stringify(data));
-                                infoBanner.showText("Comment disliked!");
-                            },
-                            function(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
-                            }
-                        );
+                        commentsModel.commentVote(id, "down");
                     }
                 }
 
@@ -181,16 +140,7 @@ Item {
                     width: 62;
                     height: 62;
                     onClicked: {
-                        //console.log("Delete comment action");
-                        Imgur.commentDeletion(id,
-                            function (data) {
-                                //console.log("data=" + JSON.stringify(data));
-                                infoBanner.showText("Comment deleted!");
-                            },
-                            function(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
-                            }
-                        );
+                        commentsModel.commentDelete(id);
                     }
                 }
 
@@ -202,7 +152,6 @@ Item {
                     width: 62;
                     height: 62;
                     onClicked: {
-                        //console.log("Reply comment action");
                         if (writeCommentField.visible) {
                             writeCommentField.visible = false;
                         } else {
@@ -222,18 +171,13 @@ Item {
                 EnterKey.enabled: text.trim().length > 0;
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept";
                 EnterKey.onClicked: {
-                    //console.log("Comment: " + text);
-                    Imgur.commentCreation(imgur_id, text, id,
-                          function (data) {
-                              //console.log("data: " + JSON.stringify(data));
-                              infoBanner.showText(qsTr("Comment sent!"));
-                              visible = false;
-                              text = "";
-                              writeCommentField.focus = false;
-                          },
-                          function(status, statusText) {
-                              infoBanner.showHttpError(status, statusText);
-                          }
+                    commentsModel.commentCreate(imgur_id, id, text,
+                        function (data) {
+                            infoBanner.showText(qsTr("Comment sent!"));
+                            visible = false;
+                            text = "";
+                            writeCommentField.focus = false;
+                        }
                     );
                 }
             }
