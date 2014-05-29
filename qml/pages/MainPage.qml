@@ -23,17 +23,10 @@ Page {
                 settings.user = qsTr("anonymous");
                 galleryModel.processGalleryMode();
             } else {
-                if (loggedIn) {
-                    Imgur.getAccountCurrent(
-                        internal.accountCurrentOnSuccess(),
-                        internal.accountCurrentOnFailure()
-                    );
-                } else {
-                    console.log("Not signed in. Using anonymous mode.");
-                    infoBanner.showText(qsTr("Not signed in. Using anonymous mode."));
-                    settings.user = qsTr("anonymous");
-                    galleryModel.processGalleryMode();
-                }
+                Imgur.getAccountCurrent(
+                    internal.accountCurrentOnSuccess(),
+                    internal.accountCurrentOnFailure()
+                );
             }
         }
     }

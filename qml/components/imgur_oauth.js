@@ -73,7 +73,7 @@ function getAccountCurrent(onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
             //console.log("headers: " + xhr.getAllResponseHeaders());
             // permission denied, check if token expired and try to refresh it
             if (xhr.status == 403) {

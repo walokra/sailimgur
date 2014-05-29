@@ -105,6 +105,7 @@ Click the button below will launch an external web browser for you to sign in.")
 
             Imgur.exchangePinForAccessToken(pinCodeTextField.text,
                 function (access_token, refresh_token) {
+                    loggedIn = true;
                     settings.accessToken = access_token;
                     settings.refreshToken = refresh_token;
                     infoBanner.showText(qsTr("Signed in successfully"));
@@ -114,6 +115,7 @@ Click the button below will launch an external web browser for you to sign in.")
                     pageStack.pop(null);
                 },
                 function(status, statusText) {
+                    loggedIn = false;
                     if (status === 401) {
                         pinCodeTextField.text = "";
                         infoBanner.showText(qsTr("Error: Unable to authorize with imgur. Please sign in again and enter the correct PIN code."))
