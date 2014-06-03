@@ -1,10 +1,10 @@
-* Sun May 18 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1
+* Thu May 29 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1
 - In landscape mode show original images
 - Web view for opening image and imgur's gallery page
 - Add gallery navigation as swipe left/right when flicking over image
 - Showing 9 images in CoverPage and refresh/next actions.
-- Fixed comments wrapping
-- Fixed scrolling in main gallery
+- Add comment, reply to comment, vote comment.
+- Fixed comments wrapping and scrolling in main gallery.
 
 * Fri Apr 7 2014 Marko Wallin <mtw@iki.fi> 0.3.1-1
 - Fixed main gallery and comments scrolling issues.
