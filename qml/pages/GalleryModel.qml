@@ -4,8 +4,6 @@ import "../components/imgur.js" as Imgur
 ListModel {
     id: listModel;
 
-    signal galleryModelLoaded;
-
     property bool loaded : false;
     property bool busy : false;
 
@@ -14,6 +12,7 @@ ListModel {
     function processGalleryMode(searchText) {
         busy = true;
         loaded = false;
+        loadingRect.visible = true;
         signInPage.refreshDone = false;
         if (searchText) {
             query = searchText;
@@ -23,7 +22,6 @@ ListModel {
 
         signInPage.init();
 
-        loadingRect.visible = true;
         listModel.clear();
 
        Imgur.processGalleryMode(query, listModel, page, settings,
@@ -41,7 +39,6 @@ ListModel {
             loadingRect.visible = false;
             loaded = true;
             busy = false;
-            galleryModelLoaded();
         }
     }
 
@@ -50,15 +47,13 @@ ListModel {
             if (status === 403 && signInPage.refreshDone == false) {
                 signInPage.tryRefreshingTokens(
                     function() {
-
                     });
             } else {
                 infoBanner.showHttpError(status, statusText);
-                loadingRect.visible = false;
-                loaded = true;
             }
+            loadingRect.visible = false;
             busy = false;
-            galleryModelLoaded();
+            loaded = true;
         }
     }
 

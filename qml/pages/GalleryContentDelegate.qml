@@ -15,7 +15,7 @@ Item {
         id: galleryContent;
         width: parent.width;
         contentHeight: galleryContainer.height + 2 * constant.paddingMedium;
-        clip: true;
+        //clip: true;
 
         MouseArea {
             enabled: drawer.open;

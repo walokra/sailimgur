@@ -6,8 +6,6 @@ Page {
 
     property string url
 
-    signal webViewClosed;
-
     // work around Silica bug: don't let webview enable forward navigation
     onForwardNavigationChanged: {
         if (forwardNavigation) {

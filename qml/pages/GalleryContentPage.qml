@@ -31,6 +31,7 @@ Page {
         galleryContentModel.clear();
         commentsModel.resetVariables();
         commentsModel.clear();
+        loadingRectComments.visible = false;
 
         if (galleryModel) {
             imgur_id = galleryModel.get(currentIndex).id;

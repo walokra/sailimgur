@@ -14,6 +14,7 @@ Page {
         onSettingsLoaded: {
             galleryModel.clear();
             signInPage.refreshDone = false;
+            loadingRect.visible = false;
 
             signInPage.init();
             if (settings.accessToken === "" || settings.refreshToken === "") {
@@ -52,6 +53,7 @@ Page {
         function accountCurrentOnFailure() {
             return function(status, statusText) {
                 if (status === 403 && signInPage.refreshDone == false) {
+                    signInPage.refreshDone = true;
                     signInPage.tryRefreshingTokens(
                         function() {
                             Imgur.getAccountCurrent(
@@ -70,7 +72,6 @@ Page {
 
     SilicaFlickable {
         id: flickable;
-        //interactive: !galgrid.flicking;
         pressDelay: 0;
         z: -2;
 

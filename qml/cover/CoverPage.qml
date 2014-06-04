@@ -13,19 +13,12 @@ CoverBackground {
         property bool loaded : false;
     }
 
-    Connections {
-        target: galleryModel;
-
-        onGalleryModelLoaded: {
-            //fillCoverModel();
-        }
-    }
-
     onStatusChanged: {
         if (status == PageStatus.Deactivating) {
             start = 0;
         }
         if (status == PageStatus.Activating) {
+            loadingRect.visible = false;
             fillCoverModel();
         }
     }
@@ -47,20 +40,6 @@ CoverBackground {
         source: "../images/sailimgur-overlay_292x292.svg";
         opacity: 0.1;
     }
-
-    //Item { width: 1; height: Theme.paddingLarge }
-    /*
-    Image {
-        id: image;
-        anchors { left: parent.left; right: parent.right;}
-
-        property int currentIndex: 0;
-        height: 150;
-        width: 150;
-        source: (galleryModel.count > 0) ? galleryModel.get(currentIndex).link : "";
-        fillMode: Image.PreserveAspectCrop;
-    }
-    */
 
     Flow {
         id: root;
