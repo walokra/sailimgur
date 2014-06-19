@@ -9,6 +9,8 @@ Page {
     property string searchModeText : "";
     property alias contentItem: flickable;
 
+    property bool hasQuickScroll : galgrid.hasOwnProperty("quickScroll") || galgrid.quickScroll;
+
     Connections {
         target: settings;
         onSettingsLoaded: {
@@ -155,7 +157,7 @@ Page {
 
             // to top button
             Rectangle {
-                visible: opacity > 0;
+                visible: !hasQuickScroll && opacity > 0;
                 width: 64;
                 height: 64;
                 anchors { top: parent.top; right: parent.right; margins: Theme.paddingLarge; }
@@ -176,7 +178,7 @@ Page {
 
             // to bottom button
             Rectangle {
-                visible: opacity > 0;
+                visible: !hasQuickScroll && opacity > 0;
                 width: 64;
                 height: 64;
                 anchors { bottom: parent.bottom; right: parent.right; margins: Theme.paddingLarge; }
