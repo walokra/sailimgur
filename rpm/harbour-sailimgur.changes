@@ -1,3 +1,7 @@
+* Thu Jul XX 2014 Marko Wallin <mtw@iki.fi> 0.5.0-1
+- Upload feature added for anonymous and logged in user.
+- Remove fancy scroll as SilicaListView has now one.
+
 * Thu May 29 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1
 - In landscape mode show original images
 - Web view for opening image and imgur's gallery page

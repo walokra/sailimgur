@@ -255,6 +255,62 @@ function commentReply(image_id, comment, id, onSuccess, onFailure) {
 }
 */
 
+/**
+Submit to Gallery
+Add an Album or Image to the Gallery.
+
+Method	POST | PUT
+Route	https://api.imgur.com/3/gallery/image/{id}
+Route	https://api.imgur.com/3/gallery/album/{id}
+Route	https://api.imgur.com/3/gallery/{id}
+
+Response Model	Gallery Image OR Gallery Album
+
+Parameters
+Key     Required	Value
+title	required	The title of the image. This is required.
+terms	optional	If the user has not accepted our terms yet, this endpoint will return an error.
+                    To by-pass the terms in general simply set this value to 1.
+*/
+function submitToGallery(id, title, onSuccess, onFailure) {
+    var url = ENDPOINT_GALLERY_IMAGE + "/" + id;
+    var message = "title=" + title + "&" + "terms=" + 1;
+    sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure);
+}
+
+/**
+Image Deletion
+    Deletes an image. For an anonymous image, {id} must be the image's deletehash.
+    If the image belongs to your account then passing the ID of the image is sufficient.
+
+Method	DELETE
+Route	https://api.imgur.com/3/image/{id}
+
+Response Model	Basic
+*/
+function imageDeletion(id, onSuccess, onFailure) {
+    var url = ENDPOINT_IMAGE + "/" + id;
+
+    sendJSONDELETERequest(url, onSuccess, onFailure);
+}
+
+/**
+Album Deletion
+    Delete an album with a given ID. You are required to be logged in as the user to delete the album.
+    Takes parameter, ids[], as an array of ids and removes from the labum.
+    For anonymous albums, {album} should be the deletehash that is returned at creation.
+
+Method	DELETE
+Route	https://api.imgur.com/3/album/{album}
+
+Response Model	Basic
+*/
+function albumDeletion(id, onSuccess, onFailure) {
+    var url = ENDPOINT_ALBUM + "/" + id;
+
+    sendJSONDELETERequest(url, onSuccess, onFailure);
+}
+
 function sendJSONPOSTMessageRequest(url, message, onSuccess, onFailure) {
     var xhr = new XMLHttpRequest();
 

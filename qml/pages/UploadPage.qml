@@ -8,6 +8,7 @@ Page {
     allowedOrientations: Orientation.All;
 
     property string imagePath: "";
+    property bool submitToGallery: false;
 
     Connections{
         target: imageUploader
@@ -111,28 +112,15 @@ Page {
                 label: qsTr("Description");
             }
 
-            /*
             ListItem {
-                BackgroundItem {
-                    id: galleryItem;
-                    anchors { left: parent.left; }
-                    width: parent.width / 2;
-                    enabled: false;
-                    opacity: 0.6;
-
-                    Label {
-                        anchors.horizontalCenter: parent.horizontalCenter;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        text: qsTr("Add to gallery");
-                        font.pixelSize: constant.fontSizeMedium;
-                        color: galleryItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                    }
-
-                    onClicked: {
-
+                TextSwitch {
+                    text: qsTr("Add to gallery");
+                    onCheckedChanged: {
+                        checked ? submitToGallery = true : submitToGallery = false;
                     }
                 }
 
+                /*
                 BackgroundItem {
                     id: albumItem;
                     anchors { left: galleryItem.right; right: parent.right; }
@@ -152,8 +140,8 @@ Page {
 
                     }
                 }
+                */
             }
-            */
 
             SectionHeader { text: qsTr("Selected image"); }
 
@@ -177,7 +165,6 @@ Page {
             ListItem {
                 Button {
                     id: uploadButton;
-                    //anchors.horizontalCenter: parent.horizontalCenter;
                     anchors { left: parent.left; }
                     width: parent.width / 2;
                     text: qsTr("Start upload");
@@ -188,7 +175,6 @@ Page {
                 }
                 Button {
                     id: removeButton;
-                    //anchors.horizontalCenter: parent.horizontalCenter;
                     anchors { left: uploadButton.right; right: parent.right; }
                     width: parent.width / 2;
                     text: qsTr("Clear image");
@@ -273,10 +259,23 @@ Page {
 
         function onSuccess(data) {
             infoBanner.showText(qsTr("Image uploaded successfully"));
+
+            if (submitToGallery) {
+                Imgur.submitToGallery(data.id, imageTitle,
+                    function(data){
+                        console.log("Submitted to gallery. " + data);
+                        infoBanner.showText(qsTr("Image submitted to gallery"));
+                    },
+                    onFailure
+                );
+            }
+
+            imageAlbum = "";
             imagePath = "";
             uploadPage.imagePath = "";
-            //nameTextField.text = "";
+            imageTitle = "";
             titleTextField.text = "";
+            imageDesc = "";
             descTextField.text = "";
         }
 

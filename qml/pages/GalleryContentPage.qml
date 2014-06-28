@@ -87,7 +87,7 @@ Page {
         } // Pulldown menu
 
         anchors.fill: parent;
-        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium;
+        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium + 100;
         clip: true;
 
         Column {
@@ -99,9 +99,11 @@ Page {
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
 
+            // Shown if not in gallery, like user's albums/images
             GalleryContentLink {
                 id: galleryContentLink;
                 link: galleryContentModel.link;
+                title: galleryContentModel.title;
                 deletehash: galleryContentModel.deletehash;
             }
 
@@ -248,6 +250,7 @@ Page {
                 }
             }
 
+            // Shown if not in gallery, like user's albums/images
             Row {
                 id: albumMetaRow;
                 anchors { left: parent.left; right: parent.right; }
@@ -271,7 +274,7 @@ Page {
                     wrapMode: Text.Wrap;
                     font.pixelSize: constant.fontSizeXSmall;
                     color: constant.colorHighlight;
-                    text: " : " + galleryContentModel.views + " " + qsTr("views");
+                    text: qsTr("views") + ": " + galleryContentModel.views;
                 }
             }
         }
