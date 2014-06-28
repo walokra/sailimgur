@@ -27,11 +27,11 @@ void ImageUploader::setFile(const QString &fileName) {
 void ImageUploader::setParameters(const QString &album, const QString &title, const QString &description) {
     postdata.append(QString("album=").toUtf8());
     postdata.append(QUrl::toPercentEncoding(album));
-    if (title.isEmpty()) {
+    if (!title.isEmpty()) {
         postdata.append(QString("&title=").toUtf8());
         postdata.append(QUrl::toPercentEncoding(title));
     }
-    if (description.isEmpty()) {
+    if (!description.isEmpty()) {
         postdata.append(QString("&description=").toUtf8());
         postdata.append(QUrl::toPercentEncoding(description));
     }
