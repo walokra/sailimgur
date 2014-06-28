@@ -10,16 +10,6 @@ Page {
     property string imagePath: "";
     property bool submitToGallery: false;
 
-    Connections{
-        target: imageUploader
-        onProgressChanged: {
-            uploadProgress.value = percentage;
-            if (percentage === 100) {
-                uploadProgress.visible=false;
-            }
-        }
-    }
-
     SilicaFlickable {
         id: uploadFlickable;
 
@@ -37,11 +27,10 @@ Page {
             width: uploadPage.width;
             height: childrenRect.height;
 
-            anchors.leftMargin: constant.paddingMedium;
-            anchors.rightMargin: constant.paddingMedium;
-
             ListItem {
                 anchors { left: parent.left; right: parent.right }
+                anchors.leftMargin: constant.paddingLarge;
+                anchors.rightMargin: constant.paddingLarge;
 
                 BackgroundItem {
                     id: deviceItem;
@@ -68,9 +57,8 @@ Page {
                 BackgroundItem {
                     id: cameraItem;
                     anchors { left: deviceItem.right; right: parent.right; }
-                    width: parent.width / 2;
+                    width: (parent.width / 2);
                     enabled: true;
-                    opacity: 0.6;
 
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter;
@@ -93,9 +81,15 @@ Page {
             Separator {
                 id: drawerSep;
                 anchors { left: parent.left; right: parent.right; }
+                anchors.bottomMargin: constant.paddingLarge;
                 color: constant.colorSecondary;
                 primaryColor: Theme.rgba(color, 0.5)
                 secondaryColor: Theme.rgba(color, 0.5)
+            }
+
+            Item {
+                height: 50;
+                anchors { left: parent.left; right: parent.right; }
             }
 
             TextField {
@@ -170,7 +164,8 @@ Page {
                     text: qsTr("Start upload");
                     enabled: imagePath != '';
                     onClicked: {
-                        imageUploadData.uploadImage(imagePath, "xvjOS", titleTextField.text, descTextField.text);
+                        imageUploadData.uploadImage(imagePath, "2izYw", titleTextField.text, descTextField.text);
+                        uploadProgress.visible = true;
                     }
                 }
                 Button {
@@ -188,7 +183,7 @@ Page {
             ProgressBar {
                 id: uploadProgress;
                 minimumValue: 0;
-                maximumValue: 100;
+                maximumValue: 1;
                 value: 0;
                 anchors { left: parent.left; right: parent.right; }
                 visible: false;
@@ -201,9 +196,18 @@ Page {
     ImageUploader {
         id: imageUploader
 
+        onProgressChanged: {
+            uploadProgress.value = progress;
+            //console.log("uploadProgress=" + progress)
+            if (progress === 1) {
+                uploadProgress.visible=false;
+            }
+        }
+
         onSuccess: {
             console.log(JSON.stringify(replyData));
             imageUploadData.onSuccess(JSON.stringify(replyData));
+            uploadProgress.visible=false;
         }
 
         onFailure: {

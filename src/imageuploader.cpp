@@ -90,6 +90,7 @@ void ImageUploader::upload() {
     QNetworkRequest request;
     request.setUrl(IMGUR_UPLOAD_URL);
     request.setRawHeader("Authorization", m_authorizationHeader);
+    request.setRawHeader("Content-Type", "application/x-www-form-urlencoded");
     request.setRawHeader("User-Agent", m_userAgent);
 
     m_reply = m_networkAccessManager->post(request, postdata);
@@ -98,17 +99,17 @@ void ImageUploader::upload() {
     connect(m_reply, SIGNAL(finished()), this, SLOT(replyFinished()));
 }
 
-qreal ImageUploader::progress() const
-{
+qreal ImageUploader::progress() const {
     return m_progress;
 }
 
 void ImageUploader::uploadProgress(qint64 bytesSent, qint64 bytesTotal) {
     qreal progress = qreal(bytesSent) / qreal(bytesTotal);
+    //qDebug("uploadProgress: %f , %f, %f", qreal(bytesSent), qreal(bytesTotal), qreal(progress));
 
     if (m_progress != progress) {
         m_progress = progress;
-        emit progressChanged(m_progress);
+        emit progressChanged();
     }
 }
 

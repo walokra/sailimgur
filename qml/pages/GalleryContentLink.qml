@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../components/imgur.js" as Imgur
+//import "../components/imgur.js" as Imgur
 
 Column {
     id: galleryContentLink;
@@ -11,47 +11,45 @@ Column {
 
     anchors { left: parent.left; right: parent.right; }
     visible: is_gallery == false;
+    height: childrenRect.height;
 
-    ListItem {
+    ComboBox {
+        id: linkBox;
+        currentIndex: 0;
+        width: parent.width;
         anchors { left: parent.left; right: parent.right; }
+        contentHeight: linkItem.height;
 
-        ComboBox {
-            id: linkBox;
-            currentIndex: 0;
-            width: parent.width / 3;
-            anchors { left: parent.left; }
-            contentHeight: linkItem.height;
+        menu: ContextMenu {
+            width: galleryContentLink.width;
 
-            menu: ContextMenu {
-                width: parent.width;
-
-                MenuItem {
-                    id: linkItem;
-                    text: qsTr("Link");
-                    onClicked: {
-                        albumLink.text = link;
-                    }
+            MenuItem {
+                id: linkItem;
+                text: qsTr("Link");
+                onClicked: {
+                    albumLink.text = link;
                 }
+            }
 
-                MenuItem {
-                    id: delItem;
-                    text: qsTr("Deletion link");
-                    onClicked: {
-                        albumLink.text = "http://imgur.com/delete/" + deletehash;
-                    }
+            MenuItem {
+                id: delItem;
+                text: qsTr("Deletion link");
+                onClicked: {
+                    albumLink.text = "http://imgur.com/delete/" + deletehash;
                 }
             }
         }
-
-        TextField {
-            id: albumLink;
-            width: parent.width * (2/3);
-            anchors { left: linkBox.right; right: parent.right; }
-            font.pixelSize: constant.fontSizeXSmall;
-            text: link;
-        }
     }
 
+    TextField {
+        id: albumLink;
+        width: parent.width;
+        anchors { left: parent.left; right: parent.right; }
+        font.pixelSize: constant.fontSizeXSmall;
+        text: link;
+    }
+
+    /*
     ComboBox {
         id: actionBox;
         currentIndex: 0;
@@ -113,4 +111,5 @@ Column {
             }
         }
     }
+    */
 }

@@ -10,6 +10,7 @@ Dialog {
         id: settingsFlickable;
 
         anchors.fill: parent;
+
         contentHeight: contentArea.height;
 
         DialogHeader {
@@ -21,11 +22,8 @@ Dialog {
         Column {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right }
-            width: settingsPage.width;
+            width: parent.width
             height: childrenRect.height;
-
-            anchors.leftMargin: constant.paddingMedium;
-            anchors.rightMargin: constant.paddingMedium;
 
             Slider {
                 value: settings.albumImagesLimit;
@@ -41,6 +39,10 @@ Dialog {
             }
 
             TextSwitch {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingMedium;
+                anchors.rightMargin: constant.paddingMedium;
+
                 text: qsTr("Show comments");
                 checked: settings.showComments;
                 onCheckedChanged: {

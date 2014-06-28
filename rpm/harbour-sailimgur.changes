@@ -1,5 +1,6 @@
-* Thu Jul XX 2014 Marko Wallin <mtw@iki.fi> 0.5.0-1
-- Upload feature added for anonymous and logged in user.
+* Thu Jul 4 2014 Marko Wallin <mtw@iki.fi> 0.5.0-1
+- Upload feature added for logged in user.
+- Delete image/album from user's image/album view
 - Remove fancy scroll as SilicaListView has now one.
 
 * Thu May 29 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1

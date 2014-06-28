@@ -84,12 +84,13 @@ ApplicationWindow {
             closeTimer.restart();
         }
 
-        function showError(text) {
-            if (text) {
-                infoLabel.text = text;
-                opacity = 0.9;
-                //console.log("infoBanner: " + text);
-            }
+        function showError(errorMessage) {
+            //if (errorMessage.error) {
+            //    infoLabel.text = qsTr("Error") + ": " + errorMessage.error;
+            //} else {
+                infoLabel.text = errorMessage;
+            //}
+            opacity = 0.9;
         }
 
         function showHttpError(errorCode, errorMessage) {

@@ -64,6 +64,39 @@ Page {
         }
     }
 
+    function deleteImageAlbum() {
+        remorse.execute(qsTr("Deleting image/album"), function() {
+            if (is_album) {
+                Imgur.albumDeletion(imgur_id,
+                    function(data){
+                        //console.log("Album deleted. " + data);
+                        infoBanner.showText(qsTr("Album deleted"));
+                        galleryModel.remove(currentIndex);
+                        galleryContentPage.backNavigation = true;
+                        pageStack.pop(PageStackAction.Animated);
+                    },
+                    function onFailure(status, statusText) {
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            } else {
+                Imgur.imageDeletion(imgur_id,
+                    function(data){
+                        //console.log("Image deleted. " + data);
+                        infoBanner.showText(qsTr("Image deleted"));
+                        galleryModel.remove(currentIndex);
+                        galleryContentPage.backNavigation = true;
+                        pageStack.pop(PageStackAction.Animated);
+                    },
+                    function onFailure(status, statusText) {
+                        infoBanner.showError(status, statusText);
+                    }
+                );
+            }
+        });
+    }
+    RemorsePopup { id: remorse }
+
     SilicaFlickable {
         id: galleryContentFlickable;
         // pressDelay: 0; // can't set this as there's Drawer
@@ -72,6 +105,41 @@ Page {
 
         PullDownMenu {
             id: pullDownMenu;
+
+            MenuItem {
+                id: imageInfoAction;
+                text: qsTr("image info");
+                visible: is_gallery == false;
+                onClicked: {
+
+                }
+            }
+
+            MenuItem {
+                id: submitToGalleryAction;
+                text: qsTr("Submit to gallery");
+                visible: is_gallery == false;
+                onClicked: {
+                    Imgur.submitToGallery(imgur_id, title,
+                        function(data){
+                            console.log("Submitted to gallery. " + data);
+                            infoBanner.showText(qsTr("Image submitted to gallery"));
+                        },
+                        function onFailure(status, statusText) {
+                            infoBanner.showHttpError(status, statusText);
+                        }
+                    );
+                }
+            }
+
+            MenuItem {
+                id: deleteAction;
+                text: qsTr("Delete image/album");
+                visible: is_gallery == false;
+                onClicked: {
+                    deleteImageAlbum();
+                }
+            }
 
             MenuItem {
                 id: aboutMenu;

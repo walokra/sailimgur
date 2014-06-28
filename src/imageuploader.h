@@ -26,7 +26,7 @@ public:
 signals:
     void success(const QString &replyData);
     void failure(const int status, const QString &statusText);
-    void progressChanged(int percentage);
+    void progressChanged();
 
 private slots:
     void uploadProgress(qint64 bytesSent, qint64 bytesTotal);
