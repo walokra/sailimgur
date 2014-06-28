@@ -27,7 +27,6 @@ Panel {
                 width: parent.width;
             }
 
-            /*
             BackgroundItem {
                 id: uploadImagesItem;
                 anchors.left: parent.left; anchors.right: parent.right;
@@ -44,7 +43,6 @@ Panel {
                     pageStack.push(uploadPage);
                 }
             }
-            */
 
             BackgroundItem {
                 id: mainItem;

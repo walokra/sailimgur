@@ -5,11 +5,15 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_RELEASE=\\\"$$RELEASE\\\"
 
 # Qt Library
-QT += svg
+QT += svg network
 
 CONFIG += sailfishapp
 
-SOURCES += main.cpp
+HEADERS += \
+    src/imageuploader.h
+
+SOURCES += main.cpp \
+    src/imageuploader.cpp
 
 OTHER_FILES = \
     rpm/harbour-sailimgur.changes \

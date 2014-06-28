@@ -1,12 +1,23 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
+import harbour.sailimgur.Uploader 1.0
 
 Page {
     id: uploadPage;
     allowedOrientations: Orientation.All;
 
     property string imagePath: "";
+
+    Connections{
+        target: imageUploader
+        onProgressChanged: {
+            uploadProgress.value = percentage;
+            if (percentage === 100) {
+                uploadProgress.visible=false;
+            }
+        }
+    }
 
     SilicaFlickable {
         id: uploadFlickable;
@@ -16,7 +27,7 @@ Page {
 
         PageHeader {
             id: header;
-            title: qsTr("Upload images");
+            title: qsTr("Upload image");
         }
 
         Column {
@@ -57,7 +68,7 @@ Page {
                     id: cameraItem;
                     anchors { left: deviceItem.right; right: parent.right; }
                     width: parent.width / 2;
-                    enabled: false;
+                    enabled: true;
                     opacity: 0.6;
 
                     Label {
@@ -76,34 +87,6 @@ Page {
                         });
                     }
                 }
-
-                /*
-                Button {
-                    id: deviceItem;
-                    anchors { left: parent.left; }
-                    text: qsTr("Device");
-                    onClicked: {
-                        console.log("Sailfish.Pickers.ImagePickerPage");
-                        var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
-                        imagePicker.selectedContentChanged.connect(function() {
-                            imagePath = imagePicker.selectedContent;
-                        });
-                    }
-                }
-
-                Button {
-                    id: cameraItem;
-                    anchors { left: deviceItem.right; }
-                    text: qsTr("Camera");
-                    onClicked: {
-                        console.log("Sailfish.Camera");
-                        var imagePicker = pageStack.push("Sailfish.Camera");
-                        imagePicker.selectedContentChanged.connect(function() {
-                            imagePath = imagePicker.selectedContent;
-                        });
-                    }
-                }
-                */
             }
 
             Separator {
@@ -114,6 +97,21 @@ Page {
                 secondaryColor: Theme.rgba(color, 0.5)
             }
 
+            TextField {
+                id: titleTextField;
+                width: parent.width;
+                placeholderText: qsTr("Title");
+                label: qsTr("Title");
+            }
+
+            TextField {
+                id: descTextField;
+                width: parent.width;
+                placeholderText: qsTr("Description");
+                label: qsTr("Description");
+            }
+
+            /*
             ListItem {
                 BackgroundItem {
                     id: galleryItem;
@@ -155,6 +153,7 @@ Page {
                     }
                 }
             }
+            */
 
             SectionHeader { text: qsTr("Selected image"); }
 
@@ -175,24 +174,115 @@ Page {
                 color: constant.colorHighlight;
             }
 
-            Button {
-                id: uploadButton;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                text: qsTr("Start upload");
-                enabled: imagePath != '';
-                onClicked: {
-                    //uploadImage(imagePath, album, name, title, desc, onSuccess, onFailure)
-                    Imgur.uploadImage(imagePath, "Test_image.jpg", "Test image", "Testing upload",
-                        function() {
-                        },
-                        function(status, statusText){
-                            infoBanner.showHttpError(status, statusText);
-                        });
+            ListItem {
+                Button {
+                    id: uploadButton;
+                    //anchors.horizontalCenter: parent.horizontalCenter;
+                    anchors { left: parent.left; }
+                    width: parent.width / 2;
+                    text: qsTr("Start upload");
+                    enabled: imagePath != '';
+                    onClicked: {
+                        imageUploadData.uploadImage(imagePath, "xvjOS", titleTextField.text, descTextField.text);
+                    }
                 }
+                Button {
+                    id: removeButton;
+                    //anchors.horizontalCenter: parent.horizontalCenter;
+                    anchors { left: uploadButton.right; right: parent.right; }
+                    width: parent.width / 2;
+                    text: qsTr("Clear image");
+                    enabled: imagePath != '';
+                    onClicked: {
+                        imagePath = "";
+                    }
+                }
+            }
+
+            ProgressBar {
+                id: uploadProgress;
+                minimumValue: 0;
+                maximumValue: 100;
+                value: 0;
+                anchors { left: parent.left; right: parent.right; }
+                visible: false;
             }
         }
 
         VerticalScrollDecorator { flickable: uploadFlickable; }
+    }
+
+    ImageUploader {
+        id: imageUploader
+
+        onSuccess: {
+            console.log(JSON.stringify(replyData));
+            imageUploadData.onSuccess(JSON.stringify(replyData));
+        }
+
+        onFailure: {
+            console.log(status, statusText);
+            imageUploadData.onFailure(status, statusText)
+        }
+
+        function run() {
+            imageUploader.setFile(imageUploadData.imagePath);
+            imageUploader.setParameters(imageUploadData.imageAlbum, imageUploadData.imageTitle, imageUploadData.imageDesc);
+
+            imageUploader.setAuthorizationHeader(Imgur.getAuthorizationHeader());
+            imageUploader.setUserAgent(constant.userAgent);
+
+            imageUploader.upload()
+        }
+    }
+
+    QtObject {
+        id: imageUploadData
+        property string imagePath : "";
+        property string imageAlbum : "";
+        property string imageTitle : "";
+        property string imageDesc : "";
+
+        /*
+        Image Upload
+        Upload a new image.
+        Method	POST
+        Route	https://api.imgur.com/3/image
+        Alternative Route	https://api.imgur.com/3/upload
+        Response Model	Basic
+
+        Parameters
+        Key	Required	Description
+        image	required	A binary file, base64 data, or a URL for an image
+        album	optional    The id of the album you want to add the image to. For anonymous albums, {album} should be the deletehash that is returned at creation.
+        type	optional	The type of the file that's being sent; file, base64 or URL
+        name	optional	The name of the file, this is automatically detected if uploading a file with a POST and multipart / form-data
+        title	optional	The title of the image.
+        description	optional	The description of the image.
+        */
+        function uploadImage(image, album, title, desc) {
+            imagePath = image;
+            imageAlbum = album;
+            imageTitle = title;
+            imageDesc = desc;
+
+            if (imagePath != '') {
+                imageUploader.run();
+            }
+        }
+
+        function onSuccess(data) {
+            infoBanner.showText(qsTr("Image uploaded successfully"));
+            imagePath = "";
+            uploadPage.imagePath = "";
+            //nameTextField.text = "";
+            titleTextField.text = "";
+            descTextField.text = "";
+        }
+
+        function onFailure(status, statusText) {
+            infoBanner.showHttpError(status, statusText);
+        }
     }
 
     Component.onCompleted: {

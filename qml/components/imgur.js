@@ -23,7 +23,6 @@ var ENDPOINT_IMAGE = BASEURL + "/image/";
 
 var IMGUR_IMG_URL = "http://i.imgur.com/";
 
-
 // OAUTH
 var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
 var ACCESS_TOKEN_URL = "https://api.imgur.com/oauth2/token"
@@ -38,7 +37,6 @@ var ENDPOINT_ACCOUNT = BASEURL + "/account";
 var ENDPOINT_ACCOUNT_CURRENT = ENDPOINT_ACCOUNT + "/me";
 var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
 var ENDPOINT_COMMENT = BASEURL + "/comment";
-
 
 function init(client_id, client_secret, access_token, refresh_token, user_agent) {
     OAUTH_CONSUMER_KEY = client_id;
@@ -589,6 +587,14 @@ function createGETHeader(xhr) {
 
     xhr.setRequestHeader("User-Agent", USER_AGENT);
     return xhr;
+}
+
+function getAuthorizationHeader() {
+    if (OAUTH_ACCESS_TOKEN === "") {
+        return "Client-ID " + OAUTH_CONSUMER_KEY;
+    } else {
+        return "Bearer " + OAUTH_ACCESS_TOKEN;
+    }
 }
 
 function processGalleryMode(query, model, page, settings, onSuccess, onFailure) {
