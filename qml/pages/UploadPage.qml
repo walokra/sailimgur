@@ -1,19 +1,26 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
+import "../components/storage.js" as Storage
 import harbour.sailimgur.Uploader 1.0
 
 Page {
     id: uploadPage;
     allowedOrientations: Orientation.All;
 
-    property string imagePath: "";
     property bool submitToGallery: false;
+    property string imagePath: "";
+    property string link: "";
+    property string deletehash: "";
+    property bool uploadDone: false;
+    property string previewSectionText: qsTr("Selected image");
 
     SilicaFlickable {
         id: uploadFlickable;
 
         anchors.fill: parent;
+        anchors.leftMargin: constant.paddingLarge;
+        anchors.rightMargin: constant.paddingLarge;
         contentHeight: contentArea.height;
 
         PageHeader {
@@ -25,12 +32,10 @@ Page {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right }
             width: uploadPage.width;
-            height: childrenRect.height;
+            height: childrenRect.height + 100;
 
             ListItem {
                 anchors { left: parent.left; right: parent.right }
-                anchors.leftMargin: constant.paddingLarge;
-                anchors.rightMargin: constant.paddingLarge;
 
                 BackgroundItem {
                     id: deviceItem;
@@ -46,11 +51,12 @@ Page {
                     }
 
                     onClicked: {
-                        console.log("Sailfish.Pickers.ImagePickerPage");
+                        //console.log("Sailfish.Pickers.ImagePickerPage");
                         var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
                         imagePicker.selectedContentChanged.connect(function() {
                             imagePath = imagePicker.selectedContent;
                         });
+                        resetUploadState();
                     }
                 }
 
@@ -69,11 +75,12 @@ Page {
                     }
 
                     onClicked: {
-                        console.log("Sailfish.Camera");
+                        //console.log("Sailfish.Camera");
                         var imagePicker = pageStack.push("Sailfish.Camera");
                         imagePicker.selectedContentChanged.connect(function() {
                             imagePath = imagePicker.selectedContent;
                         });
+                        resetUploadState();
                     }
                 }
             }
@@ -137,7 +144,7 @@ Page {
                 */
             }
 
-            SectionHeader { text: qsTr("Selected image"); }
+            SectionHeader { id: previewSection; text: previewSectionText }
 
             Image {
                 width: 200; height: 200;
@@ -164,6 +171,7 @@ Page {
                     text: qsTr("Start upload");
                     enabled: imagePath != '';
                     onClicked: {
+                        resetUploadState();
                         imageUploadData.uploadImage(imagePath, "2izYw", titleTextField.text, descTextField.text);
                         uploadProgress.visible = true;
                     }
@@ -188,6 +196,49 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 visible: false;
             }
+
+            Column {
+                id: imageLinkCol;
+                anchors { left: parent.left; right: parent.right; }
+                visible: uploadDone;
+                height: childrenRect.height;
+
+                ComboBox {
+                    id: linkBox;
+                    currentIndex: 0;
+                    width: parent.width;
+                    anchors { left: parent.left; right: parent.right; }
+                    //contentHeight: imageLinkCol.height;
+
+                    menu: ContextMenu {
+                        width: imageLinkCol.width;
+
+                        MenuItem {
+                            id: linkItem;
+                            text: qsTr("Link");
+                            onClicked: {
+                                albumLink.text = link;
+                            }
+                        }
+
+                        MenuItem {
+                            id: delItem;
+                            text: qsTr("Deletion link");
+                            onClicked: {
+                                albumLink.text = "http://imgur.com/delete/" + deletehash;
+                            }
+                        }
+                    }
+                }
+
+                TextField {
+                    id: albumLink;
+                    width: parent.width;
+                    anchors { left: parent.left; right: parent.right; }
+                    font.pixelSize: constant.fontSizeXSmall;
+                    text: link;
+                }
+            }
         }
 
         VerticalScrollDecorator { flickable: uploadFlickable; }
@@ -205,13 +256,13 @@ Page {
         }
 
         onSuccess: {
-            console.log(JSON.stringify(replyData));
-            imageUploadData.onSuccess(JSON.stringify(replyData));
+            //console.log(JSON.stringify(replyData));
+            imageUploadData.onSuccess(replyData);
             uploadProgress.visible=false;
         }
 
         onFailure: {
-            console.log(status, statusText);
+            //console.log(status, statusText);
             imageUploadData.onFailure(status, statusText)
         }
 
@@ -261,8 +312,17 @@ Page {
             }
         }
 
-        function onSuccess(data) {
+        function onSuccess(replyData) {
             infoBanner.showText(qsTr("Image uploaded successfully"));
+            var jsonObject = JSON.parse(replyData);
+            var data = jsonObject.data;
+
+            link = data.link;
+            deletehash = data.deletehash;
+            uploadDone = true;
+            previewSectionText = qsTr("Uploaded image");
+            titleTextField.text = "";
+            descTextField.text = "";
 
             if (submitToGallery) {
                 Imgur.submitToGallery(data.id, imageTitle,
@@ -274,13 +334,7 @@ Page {
                 );
             }
 
-            imageAlbum = "";
-            imagePath = "";
-            uploadPage.imagePath = "";
-            imageTitle = "";
-            titleTextField.text = "";
-            imageDesc = "";
-            descTextField.text = "";
+            Storage.writeUploadedImageInfo(data.id, data);
         }
 
         function onFailure(status, statusText) {
@@ -288,6 +342,25 @@ Page {
         }
     }
 
+    function resetFields() {
+        imagePath = "";
+        imageUploadData.imageAlbum = "";
+        imageUploadData.imagePath = "";
+        imageUploadData.imageTitle = "";
+        titleTextField.text = "";
+        imageUploadData.imageDesc = "";
+        descTextField.text = "";
+    }
+
+    function resetUploadState() {
+        previewSectionText = qsTr("Selected image");
+        link = "";
+        deletehash = "";
+        uploadDone = false;
+    }
+
     Component.onCompleted: {
+        resetFields();
+        resetUploadState();
     }
 }

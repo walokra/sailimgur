@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-//import "../components/imgur.js" as Imgur
 
 Column {
     id: galleryContentLink;
@@ -48,68 +47,4 @@ Column {
         font.pixelSize: constant.fontSizeXSmall;
         text: link;
     }
-
-    /*
-    ComboBox {
-        id: actionBox;
-        currentIndex: 0;
-        width: parent.width;
-        label: qsTr("Actions") + ": ";
-
-        menu: ContextMenu {
-
-            MenuItem {
-                id: imageInfoAction;
-                text: qsTr("image info");
-                onClicked: {
-
-                }
-            }
-
-            MenuItem {
-                id: submitToGalleryAction;
-                text: qsTr("submit to gallery");
-                onClicked: {
-                    Imgur.submitToGallery(imgur_id, title,
-                        function(data){
-                            console.log("Submitted to gallery. " + data);
-                            infoBanner.showText(qsTr("Image submitted to gallery"));
-                        },
-                        function onFailure(status, statusText) {
-                            infoBanner.showHttpError(status, statusText);
-                        }
-                    );
-                }
-            }
-
-            MenuItem {
-                id: deleteAction;
-                text: qsTr("delete");
-                onClicked: {
-                    if (is_album) {
-                        Imgur.albumDeletion(imgur_id,
-                            function(data){
-                                //console.log("Album deleted. " + data);
-                                infoBanner.showText(qsTr("Album deleted"));
-                            },
-                            function onFailure(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
-                            }
-                        );
-                    } else {
-                        Imgur.imageDeletion(imgur_id,
-                            function(data){
-                                //console.log("Image deleted. " + data);
-                                infoBanner.showText(qsTr("Image deleted"));
-                            },
-                            function onFailure(status, statusText) {
-                                infoBanner.showHttpError(status, statusText);
-                            }
-                        );
-                    }
-                }
-            }
-        }
-    }
-    */
 }

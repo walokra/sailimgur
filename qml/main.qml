@@ -48,6 +48,8 @@ ApplicationWindow {
 
     UploadPage { id: uploadPage; }
 
+    UploadedPage { id: uploadedPage; }
+
     Rectangle {
         id: infoBanner;
         y: Theme.paddingSmall;

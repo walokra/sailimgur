@@ -28,6 +28,25 @@ Panel {
             }
 
             BackgroundItem {
+                id: mainItem;
+                anchors.left: parent.left; anchors.right: parent.right;
+
+                Label {
+                    anchors { left: parent.left; right: parent.right; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: qsTr("main gallery");
+                    font.pixelSize: constant.fontSizeMedium;
+                    color: mainItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                }
+
+                onClicked: {
+                    settings.mode = constant.mode_main;
+
+                    internal.setCommonValues();
+                }
+            }
+
+            BackgroundItem {
                 id: uploadImagesItem;
                 anchors.left: parent.left; anchors.right: parent.right;
 
@@ -45,21 +64,20 @@ Panel {
             }
 
             BackgroundItem {
-                id: mainItem;
+                id: uploadsItem;
                 anchors.left: parent.left; anchors.right: parent.right;
 
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("main gallery");
+                    text: qsTr("uploaded images");
                     font.pixelSize: constant.fontSizeMedium;
-                    color: mainItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                    color: uploadsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
                 onClicked: {
-                    settings.mode = constant.mode_main;
-
-                    internal.setCommonValues();
+                    pageStack.push(uploadedPage);
+                    uploadedPage.load();
                 }
             }
 

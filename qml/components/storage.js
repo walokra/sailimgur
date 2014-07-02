@@ -22,6 +22,11 @@ function connect() {
     db.transaction(function(tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);");
     });
+    // Create uploads table
+    db.transaction(function(tx) {
+        //tx.executeSql("DROP TABLE uploads;");
+        tx.executeSql("CREATE TABLE IF NOT EXISTS uploads(key TEXT PRIMARY KEY, value TEXT);");
+    });
 
     return db;
 }
@@ -138,4 +143,38 @@ function readToken(key, passphrase) {
     });
 
     return decrypted;
+}
+
+/**
+  Write uploaded image info to database.
+*/
+function writeUploadedImageInfo(key, value) {
+    //console.log("storage.js: writeUploadedImageInfo=" + JSON.stringify(value));
+    var db = connect();
+    db.transaction(function(tx) {
+        //console.log("key=" + key + "; value=" + value + "; enc=" + encrypted);
+        tx.executeSql("INSERT OR REPLACE INTO uploads VALUES (?, ?);", [key, JSON.stringify(value)]);
+        tx.executeSql("COMMIT;");
+    });
+}
+
+/**
+ Read uploaded images info from database.
+*/
+function readUploadedImageInfo() {
+    var db = connect();
+
+    var res = [];
+    db.readTransaction(function(tx) {
+        //var rows = tx.executeSql("SELECT value AS val FROM uploads WHERE key=?;", [key]);
+        var rows = tx.executeSql("SELECT * FROM uploads");
+        //console.log("rows=" + JSON.stringify(rows));
+
+        for (var i=0; i<rows.rows.length; i++) {
+            res[i] = rows.rows.item(i).value;
+            //console.log("key=" + rs.rows.item(i).key + "; value=" + rs.rows.item(i).value);
+        }
+    });
+
+    return res;
 }
