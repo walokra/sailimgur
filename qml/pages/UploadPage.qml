@@ -19,8 +19,6 @@ Page {
         id: uploadFlickable;
 
         anchors.fill: parent;
-        anchors.leftMargin: constant.paddingLarge;
-        anchors.rightMargin: constant.paddingLarge;
         contentHeight: contentArea.height;
 
         PageHeader {
@@ -31,7 +29,9 @@ Page {
         Column {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right }
-            width: uploadPage.width;
+            width: parent.width;
+            anchors.leftMargin: constant.paddingLarge;
+            anchors.rightMargin: constant.paddingLarge;
             height: childrenRect.height + 100;
 
             ListItem {
@@ -60,6 +60,7 @@ Page {
                     }
                 }
 
+                /*
                 BackgroundItem {
                     id: cameraItem;
                     anchors { left: deviceItem.right; right: parent.right; }
@@ -83,6 +84,7 @@ Page {
                         resetUploadState();
                     }
                 }
+                */
             }
 
             Separator {

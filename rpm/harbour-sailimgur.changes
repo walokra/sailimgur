@@ -1,6 +1,8 @@
 * Thu Jul 4 2014 Marko Wallin <mtw@iki.fi> 0.5.0-1
-- Upload feature added for logged in user.
-- Delete image/album from user's image/album view
+- Upload feature added for logged in and anonymous user.
+- Delete image/album from user's image/album view.
+- Storing uploaded image's info to database.
+- Listing uploaded images in page and open them in browser, copy link or delete.
 - Remove fancy scroll as SilicaListView has now one.
 
 * Thu May 29 2014 Marko Wallin <mtw@iki.fi> 0.4.0-1

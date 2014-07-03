@@ -23,6 +23,8 @@ Page {
         PageHeader { id: header; title: qsTr("Uploaded images"); }
 
         anchors.fill: parent;
+        anchors.leftMargin: constant.paddingMedium;
+        anchors.rightMargin: constant.paddingMedium;
 
         SilicaListView {
             id: listView;
@@ -31,8 +33,6 @@ Page {
             model: uploadedModel;
 
             anchors { top: header.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
-            anchors.leftMargin: constant.paddingMedium;
-            anchors.rightMargin: constant.paddingMedium;
 
             delegate: Loader {
                 id: uploadedItemsLoader;
