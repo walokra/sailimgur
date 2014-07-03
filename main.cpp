@@ -4,6 +4,7 @@
 #include <QQmlEngine>
 #include <QGuiApplication>
 #include <QQmlContext>
+#include <QtQml>
 
 #include "src/imageuploader.h"
 
