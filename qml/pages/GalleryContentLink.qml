@@ -4,12 +4,12 @@ import Sailfish.Silica 1.0
 Column {
     id: galleryContentLink;
 
+    property bool showLink: false;
     property string link : "";
     property string deletehash : "";
-    property string title : "";
 
     anchors { left: parent.left; right: parent.right; }
-    visible: is_gallery == false;
+    visible: showLink;
     height: childrenRect.height;
 
     ComboBox {

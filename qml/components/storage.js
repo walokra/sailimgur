@@ -152,8 +152,19 @@ function writeUploadedImageInfo(key, value) {
     //console.log("storage.js: writeUploadedImageInfo=" + JSON.stringify(value));
     var db = connect();
     db.transaction(function(tx) {
-        //console.log("key=" + key + "; value=" + value + "; enc=" + encrypted);
         tx.executeSql("INSERT OR REPLACE INTO uploads VALUES (?, ?);", [key, JSON.stringify(value)]);
+        tx.executeSql("COMMIT;");
+    });
+}
+
+/**
+  Delete uploaded image info from database.
+*/
+function deleteUploadedImageInfo(key) {
+    //console.log("storage.js: deleteUploadedImageInfo=" + key);
+    var db = connect();
+    db.transaction(function(tx) {
+        tx.executeSql("DELETE FROM uploads WHERE key=?;", [key]);
         tx.executeSql("COMMIT;");
     });
 }
@@ -166,7 +177,6 @@ function readUploadedImageInfo() {
 
     var res = [];
     db.readTransaction(function(tx) {
-        //var rows = tx.executeSql("SELECT value AS val FROM uploads WHERE key=?;", [key]);
         var rows = tx.executeSql("SELECT * FROM uploads");
         //console.log("rows=" + JSON.stringify(rows));
 

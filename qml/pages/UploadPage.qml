@@ -10,8 +10,8 @@ Page {
 
     property bool submitToGallery: false;
     property string imagePath: "";
-    property string link: "";
-    property string deletehash: "";
+    property string item_link: "";
+    property string item_deletehash: "";
     property bool uploadDone: false;
     property string previewSectionText: qsTr("Selected image");
 
@@ -172,7 +172,7 @@ Page {
                     enabled: imagePath != '';
                     onClicked: {
                         resetUploadState();
-                        imageUploadData.uploadImage(imagePath, "2izYw", titleTextField.text, descTextField.text);
+                        imageUploadData.uploadImage(imagePath, "", titleTextField.text, descTextField.text);
                         uploadProgress.visible = true;
                     }
                 }
@@ -197,47 +197,11 @@ Page {
                 visible: false;
             }
 
-            Column {
-                id: imageLinkCol;
-                anchors { left: parent.left; right: parent.right; }
-                visible: uploadDone;
-                height: childrenRect.height;
-
-                ComboBox {
-                    id: linkBox;
-                    currentIndex: 0;
-                    width: parent.width;
-                    anchors { left: parent.left; right: parent.right; }
-                    //contentHeight: imageLinkCol.height;
-
-                    menu: ContextMenu {
-                        width: imageLinkCol.width;
-
-                        MenuItem {
-                            id: linkItem;
-                            text: qsTr("Link");
-                            onClicked: {
-                                albumLink.text = link;
-                            }
-                        }
-
-                        MenuItem {
-                            id: delItem;
-                            text: qsTr("Deletion link");
-                            onClicked: {
-                                albumLink.text = "http://imgur.com/delete/" + deletehash;
-                            }
-                        }
-                    }
-                }
-
-                TextField {
-                    id: albumLink;
-                    width: parent.width;
-                    anchors { left: parent.left; right: parent.right; }
-                    font.pixelSize: constant.fontSizeXSmall;
-                    text: link;
-                }
+            GalleryContentLink {
+                id: galleryContentLink;
+                link: item_link;
+                deletehash: item_deletehash;
+                showLink: uploadDone;
             }
         }
 
@@ -249,20 +213,17 @@ Page {
 
         onProgressChanged: {
             uploadProgress.value = progress;
-            //console.log("uploadProgress=" + progress)
             if (progress === 1) {
                 uploadProgress.visible=false;
             }
         }
 
         onSuccess: {
-            //console.log(JSON.stringify(replyData));
             imageUploadData.onSuccess(replyData);
             uploadProgress.visible=false;
         }
 
         onFailure: {
-            //console.log(status, statusText);
             imageUploadData.onFailure(status, statusText)
         }
 
@@ -317,8 +278,8 @@ Page {
             var jsonObject = JSON.parse(replyData);
             var data = jsonObject.data;
 
-            link = data.link;
-            deletehash = data.deletehash;
+            item_link = data.link;
+            item_deletehash = data.deletehash;
             uploadDone = true;
             previewSectionText = qsTr("Uploaded image");
             titleTextField.text = "";
@@ -354,8 +315,8 @@ Page {
 
     function resetUploadState() {
         previewSectionText = qsTr("Selected image");
-        link = "";
-        deletehash = "";
+        item_link = "";
+        item_deletehash = "";
         uploadDone = false;
     }
 

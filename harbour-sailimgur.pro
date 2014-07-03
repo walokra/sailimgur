@@ -50,6 +50,9 @@ OTHER_FILES = \
     qml/pages/WebPage.qml \
     qml/pages/AlbumInfoColumn.qml \
     qml/components/imgur_oauth.js \
-    qml/pages/UploadedPage.qml
+    qml/pages/UploadedPage.qml \
+    qml/pages/UploadedModel.qml \
+    qml/pages/UploadedContextMenu.qml \
+    qml/pages/UploadedDelegate.qml
 
 INCLUDEPATH += $$PWD

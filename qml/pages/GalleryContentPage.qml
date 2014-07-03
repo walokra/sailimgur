@@ -171,8 +171,8 @@ Page {
             GalleryContentLink {
                 id: galleryContentLink;
                 link: galleryContentModel.link;
-                title: galleryContentModel.title;
                 deletehash: galleryContentModel.deletehash;
+                showLink: is_gallery == false;
             }
 
             Label {
