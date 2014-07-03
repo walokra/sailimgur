@@ -38,7 +38,7 @@ ListModel {
     }
 
     function removeItem(imgur_id) {
-        console.log("removeItem="+imgur_id);
+        //console.log("removeItem="+imgur_id);
         Storage.deleteUploadedImageInfo(imgur_id);
         for (var i = 0; i < listModel.count; i++) {
             if (listModel.get(i).imgur_id === imgur_id) {

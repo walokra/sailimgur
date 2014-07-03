@@ -387,7 +387,7 @@ function sendJSONDELETERequest(url, onSuccess, onFailure) {
 
     // Send the proper header information along with the request
     if (OAUTH_ACCESS_TOKEN === "") {
-       onFailure(xhr.status, "You need to be signed in for this action.");
+       xhr.setRequestHeader("Authorization", "Client-ID " + OAUTH_CONSUMER_KEY);
     } else {
         xhr.setRequestHeader("Authorization", "Bearer " + OAUTH_ACCESS_TOKEN);
     }
