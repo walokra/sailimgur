@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import "../components/utils.js" as Utils
 import "../components/storage.js" as Storage
 
 ListModel {
@@ -28,7 +27,7 @@ ListModel {
                     title: data.title,
                     description: data.description,
                     datetime: data.datetime,
-                    link: Utils.replaceURLWithHTMLLinks(data.link),
+                    link: data.link,
                     deletehash: data.deletehash
                 };
 

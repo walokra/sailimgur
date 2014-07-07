@@ -8,12 +8,41 @@ Page {
     id: uploadPage;
     allowedOrientations: Orientation.All;
 
+    //ListModel {
+    //    id: userAlbums;
+    //}
+
+    Connections {
+        target: accountPanel;
+        onClicked: {
+            resetFields();
+            resetUploadState();
+
+            /*
+            if (loggedIn) {
+                Imgur.getAlbums(userAlbums, "", function(status){
+                    console.log("getAlbums=" + status);
+                    },
+                    function(status, statusText){
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            }
+            */
+        }
+    }
+
     property bool submitToGallery: false;
     property string imagePath: "";
-    property string item_link: "";
-    property string item_deletehash: "";
+    property string imageAlbum: "";
     property bool uploadDone: false;
     property string previewSectionText: qsTr("Selected image");
+
+    property string link;
+    property string deletehash;
+    property string id;
+    property string title;
+    property string datetime;
 
     SilicaFlickable {
         id: uploadFlickable;
@@ -115,41 +144,57 @@ Page {
                 label: qsTr("Description");
             }
 
-            ListItem {
-                TextSwitch {
-                    text: qsTr("Add to gallery");
-                    onCheckedChanged: {
-                        checked ? submitToGallery = true : submitToGallery = false;
-                    }
+            TextSwitch {
+                id: galleryItem;
+                text: qsTr("Add to gallery");
+                anchors { left: parent.left; right: parent.right; }
+                onCheckedChanged: {
+                    checked ? submitToGallery = true : submitToGallery = false;
                 }
-
-                /*
-                BackgroundItem {
-                    id: albumItem;
-                    anchors { left: galleryItem.right; right: parent.right; }
-                    width: parent.width / 2;
-                    enabled: false;
-                    opacity: 0.6;
-
-                    Label {
-                        anchors.horizontalCenter: parent.horizontalCenter;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        text: qsTr("Create album");
-                        font.pixelSize: constant.fontSizeMedium;
-                        color: albumItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                    }
-
-                    onClicked: {
-
-                    }
-                }
-                */
             }
+
+            /*
+            ComboBox {
+                id: albumBox;
+                currentIndex: 0;
+                anchors { left: parent.left; right: parent.right; }
+                visible: loggedIn;
+
+                menu: ContextMenu {
+
+                    MenuItem {
+                        text: qsTr("No album selected");
+                        onClicked: {
+                            imageAlbum = "";
+                        }
+                    }
+                    MenuItem {
+                        text: "Test album";
+                        onClicked: {
+                            imageAlbum = "2izYw";
+                        }
+                    }
+
+                    Repeater {
+                        id: menuRepeater;
+                        width: parent.width;
+                        model: userAlbums;
+
+                        delegate: MenuItem {
+                            text: modelData.name
+                            onClicked: {
+                                imageAlbum = modelData.id;
+                            }
+                        }
+                    }
+                }
+            }
+            */
 
             SectionHeader { id: previewSection; text: previewSectionText }
 
             Image {
-                width: 200; height: 200;
+                width: 480; height: 200;
                 visible: source != '';
                 fillMode: Image.PreserveAspectFit;
                 anchors.horizontalCenter: parent.horizontalCenter;
@@ -174,7 +219,7 @@ Page {
                     enabled: imagePath != '';
                     onClicked: {
                         resetUploadState();
-                        imageUploadData.uploadImage(imagePath, "", titleTextField.text, descTextField.text);
+                        imageUploadData.uploadImage(imagePath, imageAlbum, titleTextField.text, descTextField.text);
                         uploadProgress.visible = true;
                     }
                 }
@@ -199,11 +244,17 @@ Page {
                 visible: false;
             }
 
-            GalleryContentLink {
-                id: galleryContentLink;
-                link: item_link;
-                deletehash: item_deletehash;
-                showLink: uploadDone;
+            UploadedDelegate {
+                id: uploadedDelegate;
+                width: parent.width;
+                show_item: true;
+                show_extra: false;
+                item_title: title;
+                item_imgur_id: id;
+                item_link: link;
+                item_deletehash: deletehash;
+                item_datetime: datetime;
+                parent_item: contentArea;
             }
         }
 
@@ -226,7 +277,7 @@ Page {
         }
 
         onFailure: {
-            imageUploadData.onFailure(status, statusText)
+            imageUploadData.onFailure(status, statusText);
         }
 
         function run() {
@@ -236,7 +287,7 @@ Page {
             imageUploader.setAuthorizationHeader(Imgur.getAuthorizationHeader());
             imageUploader.setUserAgent(constant.userAgent);
 
-            imageUploader.upload()
+            imageUploader.upload();
         }
     }
 
@@ -280,8 +331,12 @@ Page {
             var jsonObject = JSON.parse(replyData);
             var data = jsonObject.data;
 
-            item_link = data.link;
-            item_deletehash = data.deletehash;
+            link = data.link;
+            deletehash = data.deletehash;
+            id = data.id;
+            title = data.title;
+            datetime = data.datetime;
+
             uploadDone = true;
             previewSectionText = qsTr("Uploaded image");
             titleTextField.text = "";
@@ -317,13 +372,15 @@ Page {
 
     function resetUploadState() {
         previewSectionText = qsTr("Selected image");
-        item_link = "";
-        item_deletehash = "";
+        link = "";
+        deletehash = "";
+        id = "";
+        title = "";
+        datetime = "";
         uploadDone = false;
     }
 
     Component.onCompleted: {
-        resetFields();
-        resetUploadState();
+
     }
 }

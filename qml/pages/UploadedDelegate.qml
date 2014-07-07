@@ -7,16 +7,24 @@ Item {
     property Item contextMenu;
     property bool menuOpen: contextMenu != null && contextMenu.parent === uploadedDelegate;
 
-    property string item_imgur_id;
-    property string item_link;
-    property string item_deletehash;
+    property bool show_item: false;
+    property bool show_extra: false;
+    property bool item_is_album: false;
+    property string item_title: "";
+    property string item_imgur_id: "";
+    property string item_link: "";
+    property string item_deletehash: "";
+    property string item_datetime: "";
+    property var parent_item;
+
+    visible: show_item;
 
     height: menuOpen ? contextMenu.height + uploadedColumn.height : uploadedColumn.height;
 
     Column {
         id: uploadedColumn;
 
-        width: listView.width;
+        width: parent.width;
         spacing: constant.paddingSmall;
 
         Label {
@@ -25,7 +33,8 @@ Item {
             font.pixelSize: constant.fontSizeSmall;
             textFormat: Text.PlainText;
             wrapMode: Text.Wrap;
-            text: title
+            text: item_title
+            visible: show_extra;
         }
         Label {
             id: linkLbl;
@@ -36,25 +45,22 @@ Item {
             truncationMode: TruncationMode.Fade;
             wrapMode: Text.Wrap;
             onLinkActivated: {
-                item_link = link;
-                item_imgur_id = imgur_id;
-                item_deletehash = deletehash;
-
-                contextMenu = uploadedContextMenu.createObject(listView);
+                contextMenu = uploadedContextMenu.createObject(parent_item);
                 contextMenu.show(uploadedDelegate);
             }
-            text: link;
+            text: Utils.replaceURLWithHTMLLinks(item_link);
         }
 
         Row {
             width: parent.width;
+            visible: show_extra;
 
             Label {
                 id: datetimeLbl
                 font.pixelSize: constant.fontSizeXXSmall;
                 color: constant.colorHighlight;
                 textFormat: Text.PlainText;
-                text: Utils.formatEpochDatetime(datetime);
+                text: Utils.formatEpochDatetime(item_datetime);
             }
         }
     }
@@ -63,6 +69,7 @@ Item {
         id: uploadedContextMenu;
 
         UploadedContextMenu {
+            is_album: item_is_album;
             imgur_id: item_imgur_id;
             link: item_link;
             deletehash: item_deletehash;

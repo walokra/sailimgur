@@ -3,8 +3,9 @@ import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
 ContextMenu {
-    id: contextMenu;
+    id: uploadedContextMenu;
 
+    property bool is_album: false;
     property string imgur_id;
     property string link;
     property string deletehash;
@@ -54,22 +55,35 @@ ContextMenu {
         visible: false;
     }
 
-    function deleteImageAlbum(imgur_id, deletehash) {
-        remorse.execute(qsTr("Deleting image"), function() {
+    function deleteImageAlbum() {
+        remorse.execute(qsTr("Deleting image/album"), function() {
+            if (is_album) {
+                Imgur.albumDeletion(imgur_id,
+                    function(data){
+                        //console.log("Album deleted. " + data);
+                        infoBanner.showText(qsTr("Album deleted"));
+                        removedFromModel(imgur_id);
+                    },
+                    function onFailure(status, statusText) {
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            } else {
                 Imgur.imageDeletion(deletehash,
                     function(data){
                         //console.log("Image deleted. " + data);
                         infoBanner.showText(qsTr("Image deleted"));
-                        uploadedModel.removeItem(imgur_id);
+                        removedFromModel(imgur_id);
                     },
                     function onFailure(status, statusText) {
-                        infoBanner.showHttpError(status, statusText);
+                        infoBanner.showError(status, statusText);
                         if (status === 404) {
-                            uploadedModel.removeItem(imgur_id);
+                            removedFromModel(imgur_id);
                         }
                     }
                 );
+            }
         });
     }
-    RemorsePopup { id: remorse; }
+    RemorsePopup { id: remorse }
 }

@@ -46,7 +46,6 @@ OTHER_FILES = \
     qml/pages/Panel.qml \
     qml/pages/AccountPanel.qml \
     qml/pages/UploadPage.qml \
-    qml/pages/GalleryContentLink.qml \
     qml/pages/WebPage.qml \
     qml/pages/AlbumInfoColumn.qml \
     qml/components/imgur_oauth.js \

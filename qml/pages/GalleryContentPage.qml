@@ -24,6 +24,7 @@ Page {
     }
 
     signal load();
+    signal removedFromModel;
 
     onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
@@ -56,6 +57,13 @@ Page {
         galleryContentFlickable.scrollToTop();
     }
 
+    onRemovedFromModel: {
+        console.log("onRemovedFromModel");
+        galleryModel.remove(currentIndex);
+        galleryContentPage.backNavigation = true;
+        pageStack.pop(PageStackAction.Animated);
+    }
+
     function setPrevButton() {
         if (currentIndex === 0 && page === 0) {
             prevEnabled = false;
@@ -63,39 +71,6 @@ Page {
             prevEnabled = true;
         }
     }
-
-    function deleteImageAlbum() {
-        remorse.execute(qsTr("Deleting image/album"), function() {
-            if (is_album) {
-                Imgur.albumDeletion(imgur_id,
-                    function(data){
-                        //console.log("Album deleted. " + data);
-                        infoBanner.showText(qsTr("Album deleted"));
-                        galleryModel.remove(currentIndex);
-                        galleryContentPage.backNavigation = true;
-                        pageStack.pop(PageStackAction.Animated);
-                    },
-                    function onFailure(status, statusText) {
-                        infoBanner.showHttpError(status, statusText);
-                    }
-                );
-            } else {
-                Imgur.imageDeletion(imgur_id,
-                    function(data){
-                        //console.log("Image deleted. " + data);
-                        infoBanner.showText(qsTr("Image deleted"));
-                        galleryModel.remove(currentIndex);
-                        galleryContentPage.backNavigation = true;
-                        pageStack.pop(PageStackAction.Animated);
-                    },
-                    function onFailure(status, statusText) {
-                        infoBanner.showError(status, statusText);
-                    }
-                );
-            }
-        });
-    }
-    RemorsePopup { id: remorse }
 
     SilicaFlickable {
         id: galleryContentFlickable;
@@ -132,6 +107,7 @@ Page {
                 }
             }
 
+            /*
             MenuItem {
                 id: deleteAction;
                 text: qsTr("Delete image/album");
@@ -139,7 +115,7 @@ Page {
                 onClicked: {
                     deleteImageAlbum();
                 }
-            }
+            }*/
 
             MenuItem {
                 id: aboutMenu;
@@ -168,11 +144,28 @@ Page {
             anchors.rightMargin: constant.paddingSmall;
 
             // Shown if not in gallery, like user's albums/images
-            GalleryContentLink {
-                id: galleryContentLink;
-                link: galleryContentModel.link;
-                deletehash: galleryContentModel.deletehash;
-                showLink: is_gallery == false;
+            UploadedDelegate {
+                id: uploadedDelegate;
+                width: parent.width;
+                show_item: is_gallery == false;
+                show_extra: false;
+                item_is_album: is_album;
+                item_title: galleryContentModel.title;
+                item_imgur_id: galleryContentModel.imgur_id;
+                item_link: galleryContentModel.link;
+                item_deletehash: galleryContentModel.deletehash;
+                item_datetime: galleryContentModel.datetime;
+                parent_item: contentArea;
+            }
+
+            Separator {
+                id: linkSep;
+                anchors { left: parent.left; right: parent.right; }
+                anchors.bottomMargin: constant.paddingLarge;
+                color: constant.colorSecondary;
+                primaryColor: Theme.rgba(color, 0.5)
+                secondaryColor: Theme.rgba(color, 0.5)
+                visible: is_gallery == false;
             }
 
             Label {

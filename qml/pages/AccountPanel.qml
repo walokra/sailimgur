@@ -59,7 +59,9 @@ Panel {
                 }
 
                 onClicked: {
+                    //pageStack.push(Qt.resolvedUrl("UploadPage.qml"));
                     pageStack.push(uploadPage);
+                    //uploadPage.load();
                 }
             }
 

@@ -6,6 +6,7 @@ Page {
     allowedOrientations: Orientation.All;
 
     signal load();
+    signal removedFromModel();
 
     UploadedModel {
         id: uploadedModel;
@@ -13,6 +14,11 @@ Page {
 
     onLoad: {
         uploadedModel.loadUploadedItems();
+    }
+
+    onRemovedFromModel: {
+        console.log("uploadedPage onRemovedFromModel");
+        uploadedModel.removeItem(imgur_id);
     }
 
     SilicaFlickable {
@@ -40,7 +46,16 @@ Page {
 
                 sourceComponent: UploadedDelegate {
                     id: uploadedDelegate;
-                    width: listView.width
+                    width: listView.width;
+                    show_item: true;
+                    show_extra: true;
+                    item_is_album: false;
+                    item_title: title;
+                    item_imgur_id: imgur_id;
+                    item_link: link;
+                    item_deletehash: deletehash;
+                    item_datetime: datetime;
+                    parent_item: listView;
                 }
             }
 
