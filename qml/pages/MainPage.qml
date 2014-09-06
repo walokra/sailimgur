@@ -14,6 +14,12 @@ Page {
     Connections {
         target: settings;
         onSettingsLoaded: {
+            if (settings.installedVersion === "" || settings.installedVersion !== APP_VERSION) {
+                settings.installedVersion = APP_VERSION;
+                settings.saveSetting("installedVersion", settings.installedVersion);
+                pageStack.push(Qt.resolvedUrl("ChangelogDialog.qml"));
+            }
+
             galleryModel.clear();
             signInPage.refreshDone = false;
             loadingRect.visible = false;
@@ -33,6 +39,7 @@ Page {
             }
         }
     }
+
     Connections {
         target: accountPanel;
         onClicked: {

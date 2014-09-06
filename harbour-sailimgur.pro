@@ -52,6 +52,7 @@ OTHER_FILES = \
     qml/pages/UploadedPage.qml \
     qml/pages/UploadedModel.qml \
     qml/pages/UploadedContextMenu.qml \
-    qml/pages/UploadedDelegate.qml
+    qml/pages/UploadedDelegate.qml \
+    qml/pages/ChangelogDialog.qml
 
 INCLUDEPATH += $$PWD

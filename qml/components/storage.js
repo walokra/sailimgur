@@ -4,38 +4,41 @@
 Qt.include("../lib/aes.js");
 
 var identifier = "Sailimgur";
-var version = "1.0";
 var description = "Sailimgur database";
 
-/**
-  Open app's database, create it if not exists.
-*/
-var db = null;
+var QUERY = {
+    CREATE_SETTINGS_TABLE: 'CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);',
+    CREATE_UPLOADS_TABLE: 'CREATE TABLE IF NOT EXISTS uploads(key TEXT PRIMARY KEY, value TEXT);'
+}
 
 /**
   Open app's database, create it if not exists.
 */
-function connect() {
-    var db = LS.LocalStorage.openDatabaseSync(identifier, version, description, 10240);
-
-    // Create settings table (key, value)
-    db.transaction(function(tx) {
-        tx.executeSql("CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);");
+var db = LS.LocalStorage.openDatabaseSync(identifier, "", description, 1000000, function(db) {
+    db.changeVersion(db.version, "1.0", function(tx) {
+        // Create settings table (key, value)
+        tx.executeSql(QUERY.CREATE_SETTINGS_TABLE);
+        // Create uploads table
+        tx.executeSql(QUERY.CREATE_UPLOADS_TABLE);
     });
-    // Create uploads table
-    db.transaction(function(tx) {
-        //tx.executeSql("DROP TABLE uploads;");
-        tx.executeSql("CREATE TABLE IF NOT EXISTS uploads(key TEXT PRIMARY KEY, value TEXT);");
-    });
+});
 
-    return db;
+/**
+    Reset
+*/
+function reset() {
+    db.transaction(function(tx) {
+        tx.executeSql("DROP TABLE IF EXISTS settings;");
+        //tx.executeSql("DROP TABLE IF EXISTS uploads;");
+        tx.executeSql(QUERY.CREATE_SETTINGS_TABLE);
+        tx.executeSql("COMMIT;");
+    });
 }
 
 /**
   Read all settings.
 */
 function readAllSettings() {
-    var db = connect();
     var res = {};
     db.readTransaction(function(tx) {
         var rs = tx.executeSql('SELECT * FROM settings;')
@@ -58,7 +61,6 @@ function readAllSettings() {
   Write setting to database.
 */
 function writeSetting(key, value) {
-    var db = connect();
     //console.log("writeSetting(" + key + "=" + value + ")");
 
     if (value === true) {
@@ -79,7 +81,6 @@ function writeSetting(key, value) {
  Read given setting from database.
 */
 function readSetting(key) {
-    var db = connect();
     //console.log("readSetting(" + key + ")");
 
     var res = "";
@@ -107,7 +108,6 @@ function readSetting(key) {
   Write token to database.
 */
 function writeToken(key, value, passphrase) {
-    var db = connect();
     //console.log("writeToken(" + key + "=" + value + "; " + passphrase + ")");
     db.transaction(function(tx) {
         var wa = CryptoJS.AES.encrypt(value, passphrase);
@@ -122,7 +122,6 @@ function writeToken(key, value, passphrase) {
  Read token from database.
 */
 function readToken(key, passphrase) {
-    var db = connect();
     //console.log("readToken(" + key + "=" + value + "; "+ passphrase + ")");
 
     var res = "";
@@ -150,7 +149,6 @@ function readToken(key, passphrase) {
 */
 function writeUploadedImageInfo(key, value) {
     //console.log("storage.js: writeUploadedImageInfo=" + JSON.stringify(value));
-    var db = connect();
     db.transaction(function(tx) {
         tx.executeSql("INSERT OR REPLACE INTO uploads VALUES (?, ?);", [key, JSON.stringify(value)]);
         tx.executeSql("COMMIT;");
@@ -162,7 +160,6 @@ function writeUploadedImageInfo(key, value) {
 */
 function deleteUploadedImageInfo(key) {
     //console.log("storage.js: deleteUploadedImageInfo=" + key);
-    var db = connect();
     db.transaction(function(tx) {
         tx.executeSql("DELETE FROM uploads WHERE key=?;", [key]);
         tx.executeSql("COMMIT;");
@@ -173,8 +170,6 @@ function deleteUploadedImageInfo(key) {
  Read uploaded images info from database.
 */
 function readUploadedImageInfo() {
-    var db = connect();
-
     var res = [];
     db.readTransaction(function(tx) {
         var rows = tx.executeSql("SELECT * FROM uploads");

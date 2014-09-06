@@ -59,12 +59,27 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 anchors { left: parent.left; right: parent.right; }
                 height: versionText.height;
 
-                Label {
-                    id: versionText;
-                    width: parent.width;
-                    font.pixelSize: constant.fontSizeMedium;
-                    wrapMode: Text.Wrap;
-                    text: APP_VERSION + "-" + APP_RELEASE;
+                ListItem {
+                    Label {
+                        id: versionText;
+                        font.pixelSize: constant.fontSizeMedium;
+                        text: APP_VERSION + "-" + APP_RELEASE;
+                    }
+
+                    Label {
+                        id: changeLog;
+                        anchors { right: parent.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
+                        font.pixelSize: constant.fontSizeMedium;
+                        text: qsTr("Changelog");
+                        color: Theme.highlightColor;
+
+                        MouseArea {
+                            anchors.fill: parent;
+                            onClicked: {
+                                pageStack.push(Qt.resolvedUrl("ChangelogDialog.qml"));
+                            }
+                        }
+                    }
                 }
             }
 

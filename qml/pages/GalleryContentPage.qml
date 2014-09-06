@@ -131,7 +131,7 @@ Page {
         } // Pulldown menu
 
         anchors.fill: parent;
-        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium + 100;
+        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium + 50;
         clip: true;
 
         Column {

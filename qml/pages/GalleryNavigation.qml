@@ -2,13 +2,13 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
-Rectangle {
+Item {
     id: navBg;
     anchors { bottom: parent.bottom; left: parent.left; right: parent.right; }
     height: 80;
     z: 1;
-    color: "black";
-    opacity: 0.7;
+    //color: "black";
+    //opacity: 0.7;
     visible: galleryModel.count > 1 || page > 0;
 
     function previous() {
@@ -51,31 +51,45 @@ Rectangle {
     ListItem {
         id: navigationItem;
 
-        Button {
+        Rectangle {
             id: prevButton;
-            text: qsTr("« Previous");
-
-            height: Theme.itemSizeExtraSmall;
-            anchors.left: parent.left;
-
-            onClicked: {
-                previous();
-            }
-            enabled: prevEnabled;
             visible: prevEnabled;
-        }
-
-        Button {
-            id: nextButton;
-            text: qsTr("Next »");
-
+            enabled: prevEnabled;
+            width: Theme.itemSizeExtraSmall;
             height: Theme.itemSizeExtraSmall;
-            anchors.right: parent.right;
-            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
+            anchors { left: parent.left; leftMargin: constant.paddingMedium; }
 
-            onClicked: {
-                next();
+            radius: 75;
+            color: Theme.highlightBackgroundColor;
+
+            IconButton {
+                anchors.centerIn: parent;
+                icon.source: "image://theme/icon-l-left";
+                onClicked: {
+                    previous();
+                }
             }
         }
+
+        Rectangle {
+            id: nextButton;
+            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
+            enabled: prevEnabled;
+            width: Theme.itemSizeExtraSmall;
+            height: Theme.itemSizeExtraSmall;
+            anchors { right: parent.right; rightMargin: constant.paddingMedium; }
+
+            radius: 75;
+            color: Theme.highlightBackgroundColor;
+
+            IconButton {
+                anchors.centerIn: parent;
+                icon.source: "image://theme/icon-l-right";
+                onClicked: {
+                    next();
+                }
+            }
+        }
+
     } // navigationItem
 }

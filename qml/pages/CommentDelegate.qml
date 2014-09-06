@@ -52,6 +52,35 @@ Item {
                     + ((commentActionButtons.visible) ? commentActionButtons.height : 0)
                     + ((writeCommentField.visible) ? writeCommentField.height: 0);
 
+            Item {
+                id: commentMeta;
+                anchors { left: parent.left; right: parent.right; }
+                height: commentPoints.height
+
+                Label {
+                    id: commentAuthor;
+                    anchors { left: parent.left; }
+                    wrapMode: Text.Wrap;
+                    text: author;
+                    font.pixelSize: constant.fontSizeXXSmall;
+                }
+
+                Label {
+                    id: commentPoints;
+                    anchors { left: commentAuthor.right; }
+                    text: ", " + points + "p";
+                    font.pixelSize: constant.fontSizeXXSmall;
+                }
+
+                Label {
+                    id: commentDatetime;
+                    anchors { left: commentPoints.right; leftMargin: constant.paddingSmall; right: parent.right; }
+                    text: ", " + datetime;
+                    font.pixelSize: constant.fontSizeXXSmall;
+                    elide: Text.ElideRight;
+                }
+            }
+
             Label {
                 id: commentText;
                 anchors { left: parent.left; right: parent.right; }
@@ -68,35 +97,6 @@ Item {
                 }
             }
 
-            Item {
-                id: commentMeta;
-                anchors { left: parent.left; right: parent.right; }
-                height: commentPoints.height
-
-                Label {
-                    id: commentAuthor;
-                    anchors { left: parent.left; }
-                    wrapMode: Text.Wrap;
-                    text: "by " + author;
-                    font.pixelSize: constant.fontSizeXSmall;
-                }
-
-                Label {
-                    id: commentPoints;
-                    anchors { left: commentAuthor.right; }
-                    text: ", " + points + " points";
-                    font.pixelSize: constant.fontSizeXSmall;
-                }
-
-                Label {
-                    id: commentDatetime;
-                    anchors { left: commentPoints.right; leftMargin: constant.paddingSmall; right: parent.right; }
-                    text: ": " + datetime;
-                    font.pixelSize: constant.fontSizeXSmall;
-                    elide: Text.ElideRight;
-                }
-            }
-
             ListItem {
                 id: commentActionButtons;
                 anchors { left: parent.left; right: parent.right; }
@@ -107,6 +107,7 @@ Item {
                 IconButton {
                     id: likeButton;
                     anchors { left: parent.left; }
+                    anchors.leftMargin: constant.paddingMedium;
                     icon.source: (vote === "up") ? constant.iconLiked : constant.iconLike;
                     enabled: loggedIn;
                     icon.height: 31;
@@ -132,6 +133,41 @@ Item {
                     }
                 }
 
+                Label {
+                    id: deleteButton;
+                    anchors { right: replyButton.left; }
+                    anchors.rightMargin: 2 * constant.paddingLarge;
+                    visible: loggedIn && author === settings.user;
+                    text: qsTr("delete");
+                    font.pixelSize: constant.fontSizeXSmall;
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                            commentsModel.commentDelete(id);
+                        }
+                    }
+                }
+
+                Label {
+                    id: replyButton;
+                    anchors { right: parent.right; }
+                    anchors.rightMargin: constant.paddingLarge;
+                    enabled: loggedIn;
+                    text: qsTr("reply");
+                    font.pixelSize: constant.fontSizeXSmall;
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                            if (writeCommentField.visible) {
+                                writeCommentField.visible = false;
+                            } else {
+                                writeCommentField.visible = true;
+                            }
+                        }
+                    }
+                }
+
+                /*
                 IconButton {
                     id: deleteButton;
                     anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; }
@@ -143,7 +179,9 @@ Item {
                         commentsModel.commentDelete(id);
                     }
                 }
+                */
 
+                /*
                 IconButton {
                     id: replyButton;
                     anchors { left: deleteButton.right; right: parent.right; rightMargin: constant.paddingLarge; }
@@ -158,7 +196,7 @@ Item {
                             writeCommentField.visible = true;
                         }
                     }
-                }
+                }*/
             }
 
             TextArea {

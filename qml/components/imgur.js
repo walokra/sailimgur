@@ -39,6 +39,7 @@ var ENDPOINT_ACCOUNT_CURRENT_IMAGES = ENDPOINT_ACCOUNT_CURRENT + "/me/images";
 var ENDPOINT_COMMENT = BASEURL + "/comment";
 
 function init(client_id, client_secret, access_token, refresh_token, user_agent) {
+    //console.debug("imgur.js, init: client_id=" + client_id + "; client_secret=" + client_secret + "; access_token=" + access_token + "; refresh_token=" + refresh_token + "; user_agent=" + user_agent);
     OAUTH_CONSUMER_KEY = client_id;
     OAUTH_CONSUMER_SECRET = client_secret;
     OAUTH_ACCESS_TOKEN = access_token;

@@ -12,6 +12,46 @@ Row {
 
     spacing: Theme.paddingSmall;
 
+    Connections {
+        target: settings;
+
+        onSettingsLoaded: {
+            switch (settings.mode) {
+                case constant.mode_main:
+                    modeBox.currentIndex = 0;
+                    settings.section = "hot";
+                    break;
+                case constant.mode_user:
+                    modeBox.currentIndex = 1;
+                    settings.section = constant.mode_user;
+                    break;
+                case constant.mode_random:
+                    modeBox.currentIndex = 2;
+                    break;
+                case constant.mode_score:
+                    modeBox.currentIndex = 3;
+                    settings.section = "top";
+                    break;
+                case constant.mode_memes:
+                    modeBox.currentIndex = 4;
+                    break;
+                default:
+                    modeBox.currentIndex = 0;
+            }
+
+            switch (settings.sort) {
+                case "viral":
+                    sortBox.currentIndex = 0;
+                    break;
+                case "time":
+                    sortBox.currentIndex = 1;
+                    break;
+                default:
+                    sortBox.currentIndex = 0;
+            }
+        }
+    }
+
     Label {
         id: searchModeLabel;
         width: parent.width / 2;
@@ -145,15 +185,21 @@ Row {
         id: internal;
 
         function setModeCommon() {
+            settings.saveSetting("mode", settings.mode);
             searchTextField.text = "";
             galgrid.scrollToTop();
             galleryModel.processGalleryMode();
         }
 
         function setSortCommon() {
+            settings.saveSetting("sort", settings.sort);
             galgrid.scrollToTop();
             galleryModel.processGalleryMode(searchTextField.text);
         }
+    }
+
+    Component.onCompleted: {
+
     }
 
 }// galleryMode

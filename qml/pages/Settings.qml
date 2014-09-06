@@ -28,21 +28,30 @@ QtObject {
     property bool showViral : false; // true | false
     property bool autoplayAnim: true; // play anim gifs automatically?
 
+    property string installedVersion: ""; // which version user currently has?
+
     function loadSettings() {
-        //console.log("Load settings...");
+        //Storage.reset();
+
         var results = Storage.readAllSettings();
         for (var s in results) {
             if (settings.hasOwnProperty(s)) {
                 settings[s] = results[s];
             }
         }
+
         readTokens();
+
         settingsLoaded();
     }
 
     function saveSettings() {
         Storage.writeSetting("albumImagesLimit", settings.albumImagesLimit);
         Storage.writeSetting("showComments", settings.showComments);
+    }
+
+    function saveSetting(key, value) {
+        Storage.writeSetting(key, value);
     }
 
     function resetTokens() {
