@@ -146,7 +146,7 @@ Page {
 
             TextSwitch {
                 id: galleryItem;
-                text: qsTr("Add to gallery");
+                text: qsTr("Add to usersub");
                 anchors { left: parent.left; right: parent.right; }
                 onCheckedChanged: {
                     checked ? submitToGallery = true : submitToGallery = false;

@@ -10,10 +10,12 @@ QT += svg network
 CONFIG += sailfishapp
 
 HEADERS += \
-    src/imageuploader.h
+    src/imageuploader.h \
+    src/sailimgur.h
 
 SOURCES += main.cpp \
-    src/imageuploader.cpp
+    src/imageuploader.cpp \
+    src/sailimgur.cpp
 
 OTHER_FILES = \
     rpm/harbour-sailimgur.changes \

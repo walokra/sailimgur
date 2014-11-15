@@ -7,6 +7,7 @@ Item {
     property Item contextMenu;
     property bool menuOpen: contextMenu != null && contextMenu.parent === galleryDelegate;
     property string contextLink;
+    property bool savingInProgress: false;
 
     width: albumListView.width;
     height: menuOpen ? contextMenu.height + galleryContent.height : galleryContent.height;
@@ -143,7 +144,7 @@ Item {
                         BusyIndicator {
                             id: loadingImageIndicator;
                             anchors.horizontalCenter: parent.horizontalCenter;
-                            running: image.status != AnimatedImage.Ready;
+                            running: image.status != AnimatedImage.Ready || savingInProgress;
                             size: BusyIndicatorSize.Medium;
                         }
 

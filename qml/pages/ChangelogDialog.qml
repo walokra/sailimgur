@@ -16,7 +16,7 @@ Dialog {
         DialogHeader {
             id: header;
             title: qsTr("Changelog");
-            acceptText: qsTr("Close changelog");
+            acceptText: qsTr("Close");
         }
 
         Column {
@@ -98,13 +98,9 @@ Dialog {
     }
 
     onRejected: {
-        // Not needed as the value isn't read anywhere
-        //settings.saveSetting("changelogShown", true);
     }
 
     onAccepted: {
-        //settings.saveSetting("changelogShown", true);
-
         root.backNavigation = true;
     }
 }

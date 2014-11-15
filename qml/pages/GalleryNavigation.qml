@@ -51,6 +51,7 @@ Item {
     ListItem {
         id: navigationItem;
 
+        /*
         Rectangle {
             id: prevButton;
             visible: prevEnabled;
@@ -60,7 +61,7 @@ Item {
             anchors { left: parent.left; leftMargin: constant.paddingMedium; }
 
             radius: 75;
-            color: Theme.highlightBackgroundColor;
+            //color: Theme.highlightBackgroundColor;
 
             IconButton {
                 anchors.centerIn: parent;
@@ -88,6 +89,35 @@ Item {
                 onClicked: {
                     next();
                 }
+            }
+        }
+        */
+
+        IconButton {
+            id: prevButton;
+            visible: prevEnabled;
+            enabled: prevEnabled;
+            icon.width: Theme.itemSizeSmall;
+            icon.height: Theme.itemSizeSmall;
+            anchors { left: parent.left; leftMargin: constant.paddingMedium; }
+
+            icon.source: "image://theme/icon-l-left";
+            onClicked: {
+                previous();
+            }
+        }
+
+        IconButton {
+            id: nextButton;
+            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
+            enabled: prevEnabled;
+            icon.width: Theme.itemSizeSmall;
+            icon.height: Theme.itemSizeSmall;
+            anchors { right: parent.right; rightMargin: constant.paddingMedium; }
+
+            icon.source: "image://theme/icon-l-right";
+            onClicked: {
+                next();
             }
         }
 

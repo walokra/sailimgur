@@ -36,7 +36,9 @@ QtObject {
         var results = Storage.readAllSettings();
         for (var s in results) {
             if (settings.hasOwnProperty(s)) {
-                settings[s] = results[s];
+                if (results[s] && results[s] !== "") {
+                    settings[s] = results[s];
+                }
             }
         }
 

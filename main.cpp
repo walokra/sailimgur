@@ -7,6 +7,7 @@
 #include <QtQml>
 
 #include "src/imageuploader.h"
+#include "src/sailimgur.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,9 @@ int main(int argc, char *argv[])
 
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
     view->rootContext()->setContextProperty("APP_RELEASE", APP_RELEASE);
+
+    Sailimgur mgr;
+    view->rootContext()->setContextProperty("sailimgurMgr", &mgr);
 
     qmlRegisterType<ImageUploader>("harbour.sailimgur.Uploader", 1, 0, "ImageUploader");
 

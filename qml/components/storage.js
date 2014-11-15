@@ -109,20 +109,22 @@ function readSetting(key) {
 */
 function writeToken(key, value, passphrase) {
     //console.log("writeToken(" + key + "=" + value + "; " + passphrase + ")");
-    db.transaction(function(tx) {
-        var wa = CryptoJS.AES.encrypt(value, passphrase);
-        var encrypted = wa.toString();
-        //console.log("key=" + key + "; value=" + value + "; enc=" + encrypted);
-        tx.executeSql("INSERT OR REPLACE INTO settings VALUES (?, ?);", [key, encrypted]);
-        tx.executeSql("COMMIT;");
-    });
+    if (value !== "" && passphrase !== "") {
+        db.transaction(function(tx) {
+            var wa = CryptoJS.AES.encrypt(value, passphrase);
+            var encrypted = wa.toString();
+            //console.log("key=" + key + "; value=" + value + "; enc=" + encrypted);
+            tx.executeSql("INSERT OR REPLACE INTO settings VALUES (?, ?);", [key, encrypted]);
+            tx.executeSql("COMMIT;");
+        });
+    }
 }
 
 /**
  Read token from database.
 */
 function readToken(key, passphrase) {
-    //console.log("readToken(" + key + "=" + value + "; "+ passphrase + ")");
+    //console.log("readToken(" + key + "; "+ passphrase + ")");
 
     var res = "";
     var decrypted = "";
@@ -133,7 +135,7 @@ function readToken(key, passphrase) {
             res = "";
         } else {
             res = rows.rows.item(0).val;
-            if (res === "") {
+            if (!res || res === "") {
                 return res;
             }
             var wa = CryptoJS.AES.decrypt(res, passphrase);
