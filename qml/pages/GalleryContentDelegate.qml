@@ -37,6 +37,7 @@ Item {
                 anchors.left: parent.left; anchors.right: parent.right;
                 dock: page.isPortrait ? Dock.Top : Dock.Left;
                 height: imageColumn.height;
+                backgroundSize: parent.width / 5;
 
                 background: Item {
                     id: drawerContextMenu;
@@ -148,27 +149,26 @@ Item {
                             size: BusyIndicatorSize.Medium;
                         }
 
-                        Image {
-                            anchors { centerIn: image; }
+                        IconButton {
                             id: playIcon;
-                            source: "../images/icons/play.svg";
+                            anchors { centerIn: image; }
                             visible: animated && !image.playing;
-                            MouseArea{
-                                anchors.fill: parent;
-                                onClicked: {
-                                    if (animated) {
-                                        if (!image.playing) {
-                                            image.playing = true;
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        }
-                                        if (image.paused) {
-                                            image.paused = false;
-                                            playIcon.visible = false;
-                                        } else {
-                                            image.paused = true;
-                                            playIcon.visible = true;
-                                        }
+                            icon.width: Theme.itemSizeSmall;
+                            icon.height: Theme.itemSizeSmall;
+                            icon.source: constant.iconPlay;
+                            onClicked: {
+                                if (animated) {
+                                    if (!image.playing) {
+                                        image.playing = true;
+                                        image.paused = false;
+                                        playIcon.visible = false;
+                                    }
+                                    if (image.paused) {
+                                        image.paused = false;
+                                        playIcon.visible = false;
+                                    } else {
+                                        image.paused = true;
+                                        playIcon.visible = true;
                                     }
                                 }
                             }

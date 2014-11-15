@@ -51,48 +51,6 @@ Item {
     ListItem {
         id: navigationItem;
 
-        /*
-        Rectangle {
-            id: prevButton;
-            visible: prevEnabled;
-            enabled: prevEnabled;
-            width: Theme.itemSizeExtraSmall;
-            height: Theme.itemSizeExtraSmall;
-            anchors { left: parent.left; leftMargin: constant.paddingMedium; }
-
-            radius: 75;
-            //color: Theme.highlightBackgroundColor;
-
-            IconButton {
-                anchors.centerIn: parent;
-                icon.source: "image://theme/icon-l-left";
-                onClicked: {
-                    previous();
-                }
-            }
-        }
-
-        Rectangle {
-            id: nextButton;
-            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
-            enabled: prevEnabled;
-            width: Theme.itemSizeExtraSmall;
-            height: Theme.itemSizeExtraSmall;
-            anchors { right: parent.right; rightMargin: constant.paddingMedium; }
-
-            radius: 75;
-            color: Theme.highlightBackgroundColor;
-
-            IconButton {
-                anchors.centerIn: parent;
-                icon.source: "image://theme/icon-l-right";
-                onClicked: {
-                    next();
-                }
-            }
-        }
-        */
-
         IconButton {
             id: prevButton;
             visible: prevEnabled;
@@ -101,7 +59,7 @@ Item {
             icon.height: Theme.itemSizeSmall;
             anchors { left: parent.left; leftMargin: constant.paddingMedium; }
 
-            icon.source: "image://theme/icon-l-left";
+            icon.source: constant.iconLeft;
             onClicked: {
                 previous();
             }
@@ -115,7 +73,7 @@ Item {
             icon.height: Theme.itemSizeSmall;
             anchors { right: parent.right; rightMargin: constant.paddingMedium; }
 
-            icon.source: "image://theme/icon-l-right";
+            icon.source: constant.iconRight;
             onClicked: {
                 next();
             }

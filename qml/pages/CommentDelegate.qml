@@ -99,96 +99,68 @@ Item {
 
             ListItem {
                 id: commentActionButtons;
-                anchors { left: parent.left; right: parent.right; }
+                anchors { left: parent.left; leftMargin: constant.paddingSmall; }
                 width: parent.width;
-                height: 62;
+                height: 75;
                 visible: false;
 
-                IconButton {
-                    id: likeButton;
-                    anchors { left: parent.left; }
-                    anchors.leftMargin: constant.paddingMedium;
-                    icon.source: (vote === "up") ? constant.iconLiked : constant.iconLike;
-                    enabled: loggedIn;
-                    icon.height: 31;
-                    icon.width: 31;
-                    width: 62;
-                    height: 62;
-                    onClicked: {
-                        commentsModel.commentVote(id, "up");
-                    }
-                }
+                Rectangle {
+                    id: likeRect;
+                    width: 36;
+                    height: 36;
+                    anchors { left: parent.left; leftMargin: constant.paddingLarge; }
+                    anchors.verticalCenter: parent.verticalCenter;
 
-                IconButton {
-                    id: dislikeButton;
-                    anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
-                    icon.source: (vote === "down") ? constant.iconDisliked : constant.iconDislike;
-                    enabled: loggedIn;
-                    icon.height: 31;
-                    icon.width: 31;
-                    width: 62;
-                    height: 62;
-                    onClicked: {
-                        commentsModel.commentVote(id, "down");
-                    }
-                }
+                    radius: 75;
+                    color: (vote === "up") ? "green" : constant.iconDefaultColor;
 
-                Label {
-                    id: deleteButton;
-                    anchors { right: replyButton.left; }
-                    anchors.rightMargin: 2 * constant.paddingLarge;
-                    visible: loggedIn && author === settings.user;
-                    text: qsTr("delete");
-                    font.pixelSize: constant.fontSizeXSmall;
-                    MouseArea {
-                        anchors.fill: parent;
+                    IconButton {
+                        id: likeButton;
+                        anchors.centerIn: parent;
+                        enabled: loggedIn;
+                        icon.width: 42;
+                        icon.height: 42;
+
+                        icon.source: constant.iconLike;
                         onClicked: {
-                            commentsModel.commentDelete(id);
+                            commentsModel.commentVote(id, "up");
                         }
                     }
                 }
 
-                Label {
-                    id: replyButton;
-                    anchors { right: parent.right; }
-                    anchors.rightMargin: constant.paddingLarge;
-                    enabled: loggedIn;
-                    text: qsTr("reply");
-                    font.pixelSize: constant.fontSizeXSmall;
-                    MouseArea {
-                        anchors.fill: parent;
+                Rectangle {
+                    id: dislikeRect;
+                    width: 36;
+                    height: 36;
+                    anchors { left: likeRect.right; leftMargin: constant.paddingLarge; }
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    radius: 75;
+                    color: (vote === "down") ? "red" : constant.iconDefaultColor;
+
+                    IconButton {
+                        id: dislikeButton;
+                        anchors.centerIn: parent;
+                        enabled: loggedIn;
+                        icon.height: 42;
+                        icon.width: 42;
+
+                        icon.source: constant.iconDislike;
                         onClicked: {
-                            if (writeCommentField.visible) {
-                                writeCommentField.visible = false;
-                            } else {
-                                writeCommentField.visible = true;
-                            }
+                            commentsModel.commentVote(id, "down");
                         }
                     }
                 }
 
-                /*
-                IconButton {
-                    id: deleteButton;
-                    anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; }
-                    icon.source: constant.iconDelete;
-                    enabled: loggedIn && author === settings.user;
-                    width: 62;
-                    height: 62;
-                    onClicked: {
-                        commentsModel.commentDelete(id);
-                    }
-                }
-                */
-
-                /*
                 IconButton {
                     id: replyButton;
-                    anchors { left: deleteButton.right; right: parent.right; rightMargin: constant.paddingLarge; }
-                    icon.source: constant.iconReply;
+                    anchors { left: dislikeRect.right; leftMargin: constant.paddingLarge; }
+                    anchors.verticalCenter: parent.verticalCenter;
                     enabled: loggedIn;
-                    width: 62;
-                    height: 62;
+                    icon.height: 42;
+                    icon.width: 42;
+
+                    icon.source: constant.iconComments;
                     onClicked: {
                         if (writeCommentField.visible) {
                             writeCommentField.visible = false;
@@ -196,13 +168,37 @@ Item {
                             writeCommentField.visible = true;
                         }
                     }
-                }*/
+                }
+
+                Rectangle {
+                    id: deleteRect;
+                    width: 38;
+                    height: 38;
+                    anchors { right: parent.right; rightMargin: constant.paddingLarge; }
+                    anchors.verticalCenter: parent.verticalCenter;
+                    visible: loggedIn && author === settings.user;
+
+                    radius: 75;
+                    color: constant.iconDefaultColor;
+
+                    IconButton {
+                        id: deleteButton;
+                        anchors.centerIn: parent;
+                        enabled: loggedIn;
+                        icon.height: 42;
+                        icon.width: 42;
+
+                        icon.source: constant.iconDelete;
+                        onClicked: {
+                            commentsModel.commentDelete(id);
+                        }
+                    }
+                }
             }
 
             TextArea {
                 id: writeCommentField;
                 anchors { left: parent.left; right: parent.right; }
-                anchors.topMargin: constant.paddingMedium;
                 visible: false;
                 placeholderText: qsTr("Reply to comment");
 
@@ -220,12 +216,8 @@ Item {
                 }
             }
         }
-
-        Separator {
-            anchors { left: parent.left; right: parent.right; }
-            color: constant.colorSecondary;
-        }
     }
+    //}
 
     Component {
         id: commentContextMenu;

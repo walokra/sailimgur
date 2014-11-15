@@ -62,55 +62,84 @@ Column {
 
     ListItem {
         id: actionButtons;
-        anchors { left: parent.left; }
-        width: 4 * 62 + 4 * constant.paddingLarge;
+        anchors { left: parent.left; right: parent.right; }
         height: 62;
 
-        IconButton {
-            id: likeButton;
+        Rectangle {
+            id: likeRect;
+            width: 48;
+            height: 48;
             anchors { left: parent.left; }
-            icon.source: (galleryContentModel.vote === "up") ? constant.iconLiked : constant.iconLike;
-            enabled: loggedIn;
-            width: 62;
-            height: 62;
-            onClicked: {
-                internal.galleryVote("up");
+
+            radius: 75;
+            color: (galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor;
+
+            IconButton {
+                id: likeButton;
+                anchors.centerIn: parent;
+                enabled: loggedIn;
+                icon.width: Theme.itemSizeExtraSmall;
+                icon.height: Theme.itemSizeExtraSmall;
+                icon.source: constant.iconLike;
+                onClicked: {
+                    internal.galleryVote("up");
+                }
             }
         }
 
-        IconButton {
-            id: dislikeButton;
-            anchors { left: likeButton.right; leftMargin: constant.paddingLarge; }
-            icon.source: (galleryContentModel.vote === "down") ? constant.iconDisliked : constant.iconDislike;
-            enabled: loggedIn;
-            width: 62;
-            height: 62;
-            onClicked: {
-                internal.galleryVote("down");
+        Rectangle {
+            id: dislikeRect;
+            width: 48;
+            height: 48;
+            anchors { left: likeRect.right; leftMargin: constant.paddingExtraLarge; }
+
+            radius: 75;
+            color: (galleryContentModel.vote === "down") ? "red" : constant.iconDefaultColor;
+
+            IconButton {
+                id: dislikeButton;
+                anchors.centerIn: parent;
+                enabled: loggedIn;
+                icon.width: Theme.itemSizeExtraSmall;
+                icon.height: Theme.itemSizeExtraSmall;
+                icon.source: constant.iconDislike;
+                onClicked: {
+                    internal.galleryVote("down");
+                }
             }
         }
 
-        IconButton {
-            id: favoriteButton;
-            anchors { left: dislikeButton.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
-            icon.source: (galleryContentModel.favorite) ? constant.iconFavorited : constant.iconFavorite;
-            enabled: loggedIn;
-            width: 62;
-            height: 62;
-            onClicked: {
-                internal.galleryFavorite(is_album);
+        Rectangle {
+            id: favRect;
+            width: 52;
+            height: 52;
+            anchors { left: dislikeRect.right; leftMargin: constant.paddingExtraLarge; }
+
+            radius: 75;
+            color: (galleryContentModel.favorite) ? "green" : constant.iconDefaultColor;
+
+            IconButton {
+                id: favoriteButton;
+                anchors.centerIn: parent;
+                enabled: loggedIn;
+                icon.width: Theme.itemSizeExtraSmall;
+                icon.height: Theme.itemSizeExtraSmall;
+                icon.source: constant.iconFavorite;
+                onClicked: {
+                    internal.galleryFavorite(is_album);
+                }
             }
         }
 
         IconButton {
             id: replyButton;
-            anchors { left: favoriteButton.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
-            icon.source: constant.iconMoreComments;
+            anchors { left: favRect.right; leftMargin: constant.paddingExtraLarge; }
             enabled: loggedIn;
-            icon.height: 62;
-            icon.width: 62;
-            width: 62;
-            height: 62;
+            width: 48;
+            height: 48;
+            icon.width: Theme.itemSizeExtraSmall;
+            icon.height: Theme.itemSizeExtraSmall;
+            icon.source: constant.iconComments;
             onClicked: {
                 if (writeCommentField.visible) {
                     writeCommentField.visible = false;
@@ -122,13 +151,13 @@ Column {
 
         Item {
             id: pointColumn;
-            anchors { top: parent.top; right: parent.right; }
-            anchors.leftMargin: constant.paddingMedium;
+            //anchors { top: parent.top; left: replyButton.right; right: parent.right; leftMargin: constant.paddingExtraLarge; }
+            anchors { top: parent.top; right: parent.right; rightMargin: constant.paddingLarge; }
             height: childrenRect.height;
 
             Label {
                 id: scoreText;
-                anchors { left: parent.left; right: parent.right; top: parent.top; }
+                anchors { right: parent.right; top: parent.top; }
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.bottomMargin: constant.paddingSmall;
                 font.pixelSize: constant.fontSizeXXSmall;
@@ -138,12 +167,12 @@ Column {
 
             ListItem {
                 id: scoreBars;
-                anchors { left: parent.left; top: scoreText.bottom; }
+                anchors { right: parent.right; top: scoreText.bottom; }
                 anchors.verticalCenter: parent.verticalCenter;
 
                 Rectangle {
                     id: scoreUps;
-                    anchors { left: parent.left; }
+                    anchors { right: scoreDowns.left; }
                     anchors.verticalCenter: parent.verticalCenter;
                     width: 100 * (galleryContentModel.upsPercent/100);
                     height: 10;
@@ -152,7 +181,7 @@ Column {
 
                 Rectangle {
                     id: scoreDowns;
-                    anchors { left: scoreUps.right; }
+                    anchors { right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     width: 100 * (galleryContentModel.downsPercent/100);
                     height: 10;
@@ -164,7 +193,7 @@ Column {
 
     Label {
         id: infoText;
-        anchors { left: parent.left; right: parent.right; }
+        anchors { left: parent.left; right: parent.right; topMargin: constant.paddingMedium; }
         wrapMode: Text.Wrap;
         font.pixelSize: constant.fontSizeXSmall;
         color: constant.colorHighlight;
