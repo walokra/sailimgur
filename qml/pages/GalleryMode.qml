@@ -188,12 +188,14 @@ Row {
             settings.saveSetting("mode", settings.mode);
             searchTextField.text = "";
             galgrid.scrollToTop();
+            galleryModel.clear();
             galleryModel.processGalleryMode();
         }
 
         function setSortCommon() {
             settings.saveSetting("sort", settings.sort);
             galgrid.scrollToTop();
+            galleryModel.clear();
             galleryModel.processGalleryMode(searchTextField.text);
         }
     }

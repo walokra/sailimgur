@@ -207,7 +207,7 @@ Page {
             Rectangle {
                 anchors { top: parent.top; left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
                 color: Theme.highlightBackgroundColor;
-                opacity: (galleryModel.loaded) ? 0 : 1;
+                visible: (galleryModel.busy) ? 1 : 0;
 
                 Label {
                     id: statusLabel;
@@ -219,6 +219,7 @@ Page {
 
             // Load next/previous page when at the end or at the top
             onMovementEnded: {
+                /*
                 if(atYBeginning) {
                     if (page > 0) {
                         page -= 1;
@@ -228,12 +229,14 @@ Page {
                         galgrid.scrollToBottom();
                     }
                 }
+                */
                 if(atYEnd) {
                     page += 1;
                     //console.log("atYEnd: " + page);
                     statusLabel.text = qsTr("Loading next page");
-                    galleryModel.processGalleryMode(searchTextField.text);
-                    galgrid.scrollToTop();
+                    //galleryModel.processGalleryMode(searchTextField.text);
+                    //galgrid.scrollToTop();
+                    galleryModel.nextPage(searchTextField.text, true);
                 }
             }
 

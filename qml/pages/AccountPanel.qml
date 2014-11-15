@@ -218,6 +218,7 @@ Panel {
         function setCommonValues() {
             currentIndex = 0;
             page = 0;
+            galleryModel.clear();
             galleryModel.processGalleryMode();
             viewer.hidePanel();
             clicked();

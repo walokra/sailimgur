@@ -8,6 +8,11 @@ ListModel {
     property bool busy : false;
 
     property string query : "";
+    property bool addToList : false;
+
+    function nextPage(searchText) {
+        processGalleryMode(searchText);
+    }
 
     function processGalleryMode(searchText) {
         busy = true;
@@ -21,8 +26,6 @@ ListModel {
         }
 
         signInPage.init();
-
-        listModel.clear();
 
        Imgur.processGalleryMode(query, listModel, page, settings,
             onSuccess(),
