@@ -68,7 +68,6 @@ Item {
         IconButton {
             id: nextButton;
             visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
-            enabled: prevEnabled;
             icon.width: Theme.itemSizeSmall;
             icon.height: Theme.itemSizeSmall;
             anchors { right: parent.right; rightMargin: constant.paddingMedium; }
