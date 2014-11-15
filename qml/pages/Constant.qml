@@ -21,11 +21,15 @@ QtObject {
     property color colorPrimary : Theme.primaryColor;
     property color colorSecondary : Theme.secondaryColor;
     property color colorHilightSecondary : Theme.secondaryHighlightColor;
+    property color backgroundColor: Theme.rgba(Theme.secondaryHighlightColor, 0.1);
+
+    property color iconDefaultColor: Theme.rgba(Theme.secondaryColor, 0.4);
 
     // easier access to padding size
     property int paddingSmall : Theme.paddingSmall;
     property int paddingMedium : Theme.paddingMedium;
     property int paddingLarge : Theme.paddingLarge;
+    property int paddingExtraLarge : 2 * Theme.paddingMedium;
 
     // easier access to font size
     property int fontSizeXXSmall : Theme.fontSizeTiny;
@@ -37,15 +41,19 @@ QtObject {
     property int fontSizeXXLarge : Theme.fontSizeHuge;
 
     // icons
-    property string iconDislike : "../images/icons/dislike.svg";
-    property string iconDisliked : "../images/icons/disliked.svg";
-    property string iconLike : "../images/icons/like.svg";
-    property string iconLiked : "../images/icons/liked.svg";
-    property string iconFavorite : "../images/icons/favorite.svg";
-    property string iconFavorited : "../images/icons/favorited.svg";
-    property string iconMoreComments : "../images/icons/more-comments.svg";
-    property string iconReply : "../images/icons/add.svg";
-    property string iconDelete : "../images/icons/delete.svg";
+    property string iconDislike : "image://theme/icon-m-down";
+    property string iconLike : "image://theme/icon-m-up";
+    property string iconFavorite : "image://theme/icon-m-favorite";
+    property string iconComments : "image://theme/icon-m-sms";
+    property string iconReply : "image://theme/icon-m-add";
+    property string iconDelete : "image://theme/icon-m-delete";
+    property string iconRight: "image://theme/icon-m-right";
+    property string iconLeft: "image://theme/icon-m-left";
+    property string iconPlay: "image://theme/icon-m-play";
+    property string iconSave: "image://theme/icon-m-download";
+    property string iconInfo: "image://theme/icon-lock-information";
+    property string iconBrowser: "image://theme/icon-m-region";
+    property string iconClipboard: "image://theme/icon-l-copy";
 
     // modes
     property string mode_main : "main";

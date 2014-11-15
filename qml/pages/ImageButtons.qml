@@ -51,8 +51,8 @@ Column {
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconClipboard;
         onClicked: {
-            textArea.text = link_original; textArea.selectAll(); textArea.copy();
-            infoBanner.showText(qsTr("Image link " + textArea.text + " copied to clipboard."));
+            Clipboard.text = link_original;
+            infoBanner.showText(qsTr("Image link " + Clipboard.text + " copied to clipboard."));
         }
     }
 
@@ -67,11 +67,6 @@ Column {
             infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
                 + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
         }
-    }
-
-    TextArea {
-        id: textArea;
-        visible: false;
     }
 
     QtObject {
