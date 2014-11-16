@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
 Page {
-    id: galleryContentPage;
+    id: root;
 
     allowedOrientations: Orientation.All;
 
@@ -60,7 +60,7 @@ Page {
     onRemovedFromModel: {
         console.log("onRemovedFromModel");
         galleryModel.remove(currentIndex);
-        galleryContentPage.backNavigation = true;
+        root.backNavigation = true;
         pageStack.pop(PageStackAction.Animated);
     }
 
@@ -118,7 +118,7 @@ Page {
             }*/
 
             MenuItem {
-                id: aboutMenu;
+                id: browserMenu;
                 text: qsTr("Open page in browser");
                 onClicked: {
                     var props = {
@@ -344,6 +344,17 @@ Page {
 
     GalleryNavigation {
         id: galleryNavigation;
+    }
+
+    ImageInfoModal {
+        id: imgInfoModal;
+        z: 1;
+        anchors { left: parent.left; right: parent.right; top: contentArea.top; }
+        anchors { leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge;
+            topMargin: constant.paddingLarge; bottomMargin: constant.paddingLarge; }
+
+        width: root.width - 2 * constant.paddingLarge;
+        height: root.height - 2 * constant.paddingLarge;
     }
 
     Component.onCompleted: {

@@ -439,16 +439,22 @@ function fillAlbumImagesModel(output, model) {
         id: output.id,
         title: title,
         description: replaceURLWithHTMLLinks(description),
-        datetime: output.datetime,
+        datetime: (output.datetime) ? formatEpochDatetime(output.datetime) : "",
         animated: output.animated,
-        width: output.width,
-        height: output.height,
-        size: output.size,
+        type: output.type,
+        vWidth: output.width,
+        vHeight: output.height,
+        size: (output.size) ? humanFileSize(output.size) : "",
         views: output.views,
-        bandwidth: output.bandwidth,
+        bandwidth: (output.bandwidth) ? humanFileSize(output.bandwidth) : "",
         link: link,
-        link_original: link_original
+        link_original: link_original,
+        ups: output.ups,
+        downs: output.downs,
+        section: output.section,
+        nsfw: output.nsfw
     };
+
     model.push(imageData);
 }
 

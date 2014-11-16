@@ -197,7 +197,7 @@ Column {
         wrapMode: Text.Wrap;
         font.pixelSize: constant.fontSizeXSmall;
         color: constant.colorHighlight;
-        text: qsTr("by") + " " + galleryContentModel.account_url + ", " + galleryContentModel.views + " " + qsTr("views");
+        text: qsTr("by") + " " + galleryContentModel.account_url + " at " + galleryContentModel.datetime + ". " + galleryContentModel.views + " " + qsTr("views");
     }
 
     TextArea {

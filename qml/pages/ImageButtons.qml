@@ -64,8 +64,22 @@ Column {
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconInfo;
         onClicked: {
-            infoBanner.showText("id=" + id + " width=" + width + "; height=" + height
-                + "; size=" + size + "; views=" + views + "; bandwidth=" + bandwidth);
+            //console.debug(JSON.stringify(galleryContentModel));
+
+            imgInfoModal.image_id = id;
+            imgInfoModal.image_width = vWidth;
+            imgInfoModal.image_height = vHeight;
+            imgInfoModal.type = type;
+            imgInfoModal.size = size;
+            imgInfoModal.views = views;
+            imgInfoModal.bandwith = bandwidth;
+            imgInfoModal.section = section;
+            imgInfoModal.animated = animated;
+            imgInfoModal.nsfw = nsfw;
+            imgInfoModal.ups = ups;
+            imgInfoModal.downs = downs;
+
+            imgInfoModal.visible = true;
         }
     }
 
