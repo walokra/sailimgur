@@ -29,7 +29,7 @@ Dialog {
             anchors.margins: Theme.paddingMedium;
             spacing: Theme.paddingMedium;
 
-            SectionHeader { text: qsTr("Version") + " 0.6 (2014-09-01)" }
+            SectionHeader { text: qsTr("Version") + " 0.6 (2014-11-16)" }
 
             Column {
                 anchors { left: parent.left; right: parent.right; }

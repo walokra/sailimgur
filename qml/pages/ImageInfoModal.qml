@@ -5,7 +5,7 @@ Rectangle {
     id: root;
     anchors { left: parent.left; right: parent.right; top: parent.top; bottom: parent.bottom; }
     color: Theme.highlightBackgroundColor;
-    opacity: 1;
+    opacity: 0.9;
     visible: false;
 
     property string image_id: '';
