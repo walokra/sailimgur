@@ -449,10 +449,10 @@ function fillAlbumImagesModel(output, model) {
         bandwidth: (output.bandwidth) ? humanFileSize(output.bandwidth) : "",
         link: link,
         link_original: link_original,
-        ups: output.ups,
-        downs: output.downs,
-        section: output.section,
-        nsfw: output.nsfw
+        ups: (output.ups) ? output.ups : 0,
+        downs: (output.downs) ? output.downs : 0,
+        section: (output.section) ? output.section : "",
+        nsfw: (output.nsfw) ? output.nsfw : false
     };
 
     model.push(imageData);

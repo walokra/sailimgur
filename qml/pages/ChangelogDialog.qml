@@ -42,13 +42,19 @@ Dialog {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeSmall;
+                    text: qsTr("Save image to Pictures.");
+                }
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeSmall;
                     text: qsTr("Save gallery mode and sort options.");
                 }
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeSmall;
-                    text: qsTr("User Interface adjustments: next/previous links, comment actions.");
+                    text: qsTr("User Interface adjustments: next/previous links, image and comment actions.");
                 }
                 Label {
                     width: parent.width;
