@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import "../components/storage.js" as Storage
 
 Dialog {
-    id: settingsPage;
+    id: root;
     allowedOrientations: Orientation.All;
 
     SilicaFlickable {

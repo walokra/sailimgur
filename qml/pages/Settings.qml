@@ -56,6 +56,10 @@ QtObject {
         Storage.writeSetting(key, value);
     }
 
+    function readSetting(key) {
+        return Storage.readSetting(key);
+    }
+
     function resetTokens() {
         accessToken = "";
         refreshToken = "";

@@ -19,14 +19,8 @@ ApplicationWindow {
         id: mainPage;
 
         MainPage {
-            id: mp;
+        id: mp;
             property bool __isMainPage : true;
-
-            Binding {
-                target: mp.contentItem;
-                property: "parent";
-                value: mp.status === PageStatus.Active ? viewer : mp;
-            }
         }
     }
 
@@ -38,7 +32,7 @@ ApplicationWindow {
 
     AboutPage { id: aboutPage; }
 
-    SettingsPage { id: settingsPage; }
+    SettingsDialog { id: settingsDialog; }
 
     Settings { id: settings; }
 
@@ -49,6 +43,8 @@ ApplicationWindow {
     UploadPage { id: uploadPage; }
 
     UploadedPage { id: uploadedPage; }
+
+    AccountPage { id: accountPage; }
 
     Rectangle {
         id: infoBanner;
@@ -87,16 +83,12 @@ ApplicationWindow {
         }
 
         function showError(errorMessage) {
-            //if (errorMessage.error) {
-            //    infoLabel.text = qsTr("Error") + ": " + errorMessage.error;
-            //} else {
-                infoLabel.text = errorMessage;
-            //}
+            infoLabel.text = errorMessage;
             opacity = 0.9;
         }
 
         function showHttpError(errorCode, errorMessage) {
-            console.log("API error: code=" + errorCode + "; message=" + errorMessage);
+            console.log("API error: code=" + JSON.stringify(errorCode) + "; message=" + errorMessage);
             showError(errorMessage);
             /*
             switch (errorCode) {
@@ -160,39 +152,6 @@ ApplicationWindow {
             running: visible;
             size: BusyIndicatorSize.Large;
             Behavior on opacity { FadeAnimation {} }
-        }
-    }
-
-    PanelView {
-        id: viewer;
-
-        // a workaround to avoid TextAutoScroller picking up PanelView as an "outer"
-        // flickable and doing undesired contentX adjustments (the right side panel
-        // slides partially in) meanwhile typing/scrolling long TextEntry content
-        property bool maximumFlickVelocity: false;
-
-        width: pageStack.currentPage.width;
-        panelWidth: Screen.width / 3 * 2;
-        panelHeight: pageStack.currentPage.height;
-        height: currentPage && currentPage.contentHeight || pageStack.currentPage.height;
-        visible: (!!currentPage && !!currentPage.__isMainPage) || !viewer.closed;
-
-        rotation: pageStack.currentPage.rotation;
-
-        property int ori: pageStack.currentPage.orientation;
-
-        anchors.centerIn: parent;
-        anchors.verticalCenterOffset: ori === Orientation.Portrait ? -(panelHeight - height) / 2 :
-                                                                     ori === Orientation.PortraitInverted ? (panelHeight - height) / 2 : 0;
-        anchors.horizontalCenterOffset: ori === Orientation.Landscape ? (panelHeight - height) / 2 :
-                                                                        ori === Orientation.LandscapeInverted ? -(panelHeight - height) / 2 : 0;
-        Connections {
-            target: pageStack;
-            onCurrentPageChanged: viewer.hidePanel();
-        }
-
-        leftPanel: AccountPanel {
-            id: accountPanel;
         }
     }
 

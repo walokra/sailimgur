@@ -2,13 +2,9 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Row {
-    id: galleryMode;
-    anchors { top: header.bottom; left: parent.left; right: parent.right; }
+    id: root;
+    anchors { left: parent.left; right: parent.right; }
     width: parent.width;
-    //height: childrenRect.height;
-    z: 1;
-    anchors.leftMargin: constant.paddingMedium;
-    anchors.rightMargin: constant.paddingMedium;
 
     spacing: Theme.paddingSmall;
 
@@ -53,18 +49,6 @@ Row {
     }
 
     Label {
-        id: searchModeLabel;
-        width: parent.width / 2;
-        height: Theme.itemSizeSmall;
-        text: searchModeText;
-        font.pixelSize: constant.fontSizeMedium;
-        color: constant.colorHighlight;
-        wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-        visible: searchModeText.trim().length > 1;
-        //anchors.verticalCenter: parent.verticalCenter;
-    }
-
-    Label {
         id: accountModeLabel;
         width: parent.width;
         height: Theme.itemSizeSmall;
@@ -84,11 +68,9 @@ Row {
         id: modeBox;
         currentIndex: 0;
         width: parent.width / 2;
-        visible: searchModeLabel.visible == false && accountModeLabel.visible == false;
+        visible: accountModeLabel.visible == false;
 
         menu: ContextMenu {
-            width: galleryMode.width / 2;
-
             MenuItem {
                 id: mainMode;
                 text: qsTr("most viral");
@@ -157,14 +139,11 @@ Row {
         visible: accountModeLabel.visible == false;
 
         menu: ContextMenu {
-            width: galleryMode.width / 2;
-
             MenuItem {
                 id: viralSort;
                 text: qsTr("popularity");
                 onClicked: {
                     settings.sort = "viral";
-
                     internal.setSortCommon();
                 }
             }
@@ -174,7 +153,6 @@ Row {
                 text: qsTr("newest");
                 onClicked: {
                     settings.sort = "time";
-
                     internal.setSortCommon();
                 }
             }
@@ -186,7 +164,8 @@ Row {
 
         function setModeCommon() {
             settings.saveSetting("mode", settings.mode);
-            searchTextField.text = "";
+            galleryModel.query = "";
+            toolbar.searchVisible = false;
             galgrid.scrollToTop();
             galleryModel.clear();
             galleryModel.processGalleryMode();
@@ -196,12 +175,8 @@ Row {
             settings.saveSetting("sort", settings.sort);
             galgrid.scrollToTop();
             galleryModel.clear();
-            galleryModel.processGalleryMode(searchTextField.text);
+            galleryModel.processGalleryMode(galleryModel.query);
         }
     }
 
-    Component.onCompleted: {
-
-    }
-
-}// galleryMode
+}

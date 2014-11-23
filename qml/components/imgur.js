@@ -146,6 +146,7 @@ page 	optional 	integer - the data paging number
 function getGallerySearch(query, model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_SEARCH;
     url += "/" + settings.sort + "/" + page + "/?q=" + query;
+    //console.debug("getGallerySearch, url=" + url);
 
     sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
@@ -583,6 +584,40 @@ function getComment(id, model, onSuccess, onFailure) {
     var url = ENDPOINT_COMMENT + "/" + id;
 
     sendJSONRequest(url, 5, model, onSuccess, onFailure);
+}
+
+/**
+  Get user info.
+
+Account Base
+Request standard user information. If you need the username for the account that is logged in,
+it is returned in the request for an access token.
+Method	GET
+Route	https://api.imgur.com/3/account/{username}
+Response Model	Account
+*/
+function getAccount(username, onSuccess, onFailure) {
+    var url = ENDPOINT_ACCOUNT + "/" + username;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            //console.log("headers: " + xhr.getAllResponseHeaders());
+            if (xhr.status == 200) {
+                var jsonObject = JSON.parse(xhr.responseText);
+                //console.log("response: " + JSON.stringify(jsonObject));
+                onSuccess(jsonObject.data, xhr.status);
+            } else {
+                //console.log(xhr.status, xhr.statusText, xhr.responseText);
+                jsonObject = JSON.parse(xhr.responseText);
+                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+            }
+        }
+    }
+
+    xhr = createGETHeader(xhr);
+    xhr.send();
 }
 
 function createGETHeader(xhr) {

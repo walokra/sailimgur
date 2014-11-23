@@ -1,10 +1,39 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../components/imgur.js" as Imgur
+import "../components/utils.js" as Utils
 
-Panel {
-    id: accountPanel;
+Page {
+    id: root;
 
-    signal clicked();
+    signal load();
+
+    property int account_id : 0
+    property string  url : "anonymous";
+    property string bio : "";
+    property string created : "";
+    property int reputation : 0;
+    //property var pro_expiration : false;
+
+    onLoad: {
+        internal.getAccount();
+    }
+
+    onStatusChanged: {
+        //console.debug("onStatusChanged");
+        //console.debug("pageStack.depth=" + pageStack.depth);
+        if (status === PageStatus.Inactive) {
+            //console.debug("PageStatus.Inactive, pageStack.depth=" + pageStack.depth);
+            // If going to back to main page, reset the mode
+            if (pageStack.depth == 1) {
+                var mode = settings.mode;
+                settings.mode = settings.readSetting("mode");
+                if (settings.mode !== mode) {
+                    internal.setCommonValues();
+                }
+            }
+        }
+    }
 
     SilicaFlickable {
         pressDelay: 0;
@@ -12,57 +41,60 @@ Panel {
         anchors.fill: parent;
         contentHeight: contentArea.height;
 
+        PageHeader { id: header; title: qsTr("Profile"); }
+
         Column {
             id: contentArea;
             width: parent.width;
             height: childrenRect.height;
 
-            anchors { left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
+            anchors { top: header.bottom; left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
             spacing: constant.paddingLarge;
 
             Label {
                 anchors { left: parent.left; right: parent.right; }
-                text: settings.user;
+                text: url;
                 color: constant.colorHighlight;
                 width: parent.width;
             }
-
-            BackgroundItem {
-                id: mainItem;
-                anchors.left: parent.left; anchors.right: parent.right;
-
-                Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("main gallery");
-                    font.pixelSize: constant.fontSizeMedium;
-                    color: mainItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
-                }
-
-                onClicked: {
-                    settings.mode = constant.mode_main;
-
-                    internal.setCommonValues();
-                }
+            Label {
+                anchors { left: parent.left; right: parent.right; }
+                text: bio;
+                visible: (bio != "") ? true : false;
+                color: constant.colorHighlight;
+                font.pixelSize: constant.fontSizeXSmall;
+                width: parent.width;
             }
 
-            BackgroundItem {
-                id: uploadImagesItem;
-                anchors.left: parent.left; anchors.right: parent.right;
+            Row {
+                anchors { left: parent.left; right: parent.right; }
+                spacing: Theme.paddingMedium;
 
                 Label {
-                    anchors { left: parent.left; right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("upload images");
-                    font.pixelSize: constant.fontSizeMedium;
-                    color: uploadImagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                    text: reputation + qsTr(" reputation");
+                    color: constant.colorHighlight;
+                    font.pixelSize: constant.fontSizeXXSmall;
                 }
 
-                onClicked: {
-                    //pageStack.push(Qt.resolvedUrl("UploadPage.qml"));
-                    pageStack.push(uploadPage);
-                    //uploadPage.load();
+                Label {
+                    text: "|";
+                    color: constant.colorHighlight;
+                    font.pixelSize: constant.fontSizeXXSmall;
                 }
+
+                Label {
+                    text: qsTr("Member since ") + created;
+                    color: constant.colorHighlight;
+                    font.pixelSize: constant.fontSizeXXSmall;
+                }
+
+                /*
+                Label {
+                    text: qsTr("Pro: ") + pro_expiration;
+                    color: constant.colorHighlight;
+                    font.pixelSize: constant.fontSizeXXSmall;
+                }
+                */
             }
 
             BackgroundItem {
@@ -72,7 +104,7 @@ Panel {
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("uploaded images");
+                    text: qsTr("Uploaded images");
                     font.pixelSize: constant.fontSizeMedium;
                     color: uploadsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
@@ -91,7 +123,7 @@ Panel {
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("favorites");
+                    text: qsTr("Favorites");
                     font.pixelSize: constant.fontSizeMedium;
                     color: favoritesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
@@ -100,6 +132,7 @@ Panel {
                     settings.mode = constant.mode_favorites;
 
                     internal.setCommonValues();
+                    pageStack.push(mainPage);
                 }
             }
 
@@ -111,7 +144,7 @@ Panel {
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("albums");
+                    text: qsTr("Albums");
                     font.pixelSize: constant.fontSizeMedium;
                     color: albumsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
@@ -120,6 +153,7 @@ Panel {
                     settings.mode = constant.mode_albums;
 
                     internal.setCommonValues();
+                    pageStack.push(mainPage);
                 }
             }
 
@@ -131,7 +165,7 @@ Panel {
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: qsTr("images");
+                    text: qsTr("Images");
                     font.pixelSize: constant.fontSizeMedium;
                     color: imagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
@@ -140,6 +174,7 @@ Panel {
                     settings.mode = constant.mode_images;
 
                     internal.setCommonValues();
+                    pageStack.push(mainPage);
                 }
             }
 
@@ -182,25 +217,26 @@ Panel {
             */
 
             BackgroundItem {
-                id: signInItem;
+                id: logoutItem;
                 anchors.left: parent.left; anchors.right: parent.right;
+                visible: loggedIn;
 
                 Label {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
-                    text: loggedIn ? qsTr("logout") : qsTr("sign in");
+                    text: qsTr("Logout");
                     font.pixelSize: constant.fontSizeMedium;
-                    color: signInItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
+                    color: imagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
                 onClicked: {
-                    if (loggedIn === false) {
-                        pageStack.push(signInPage);
-                    } else {
-                        loggedIn = false;
-                        settings.resetTokens();
-                        settings.settingsLoaded();
-                    }
+                    mainPage.loggedIn = false;
+                    settings.resetTokens();
+                    settings.settingsLoaded();
+                    internal.setCommonValues();
+
+                    root.backNavigation = true;
+                    pageStack.pop(PageStackAction.Animated);
                 }
             }
         }
@@ -208,20 +244,44 @@ Panel {
         VerticalScrollDecorator { }
     }
 
-    onClicked: {
-        viewer.hidePanel();
-    }
-
     QtObject {
         id: internal;
+
+        function getAccount() {
+            if (loggedIn) {
+                Imgur.getAccount(settings.user,
+                    function(output, status) {
+                        parseAccount(output);
+                    },
+                    function(status, statusText) {
+                        infoBanner.showHttpError(status, statusText);
+                    }
+                );
+            }
+        }
 
         function setCommonValues() {
             currentIndex = 0;
             page = 0;
+            galleryModel.query = "";
             galleryModel.clear();
             galleryModel.processGalleryMode();
-            viewer.hidePanel();
-            clicked();
+        }
+
+        function parseAccount(output) {
+            var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
+            var date = new Date(output.created * 1000);
+            date = monthNames[date.getMonth()]  + " " + date.getFullYear();
+
+            //var pro_expr = (pro_expiration === false) ? pro_expiration : Utils.formatEpochDatetime(output.pro_expiration);
+            account_id = output.id;
+            url = output.url;
+            bio = output.bio;
+            created = date;
+            reputation = output.reputation;
+            //pro_expiration = pro_expr;
         }
     }
 }

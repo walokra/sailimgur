@@ -27,7 +27,6 @@ OTHER_FILES = \
     qml/pages/Settings.qml \
     qml/pages/Constant.qml \
     qml/components/imgur.js \
-    qml/pages/SettingsPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/MainPage.qml \
     qml/pages/CommentDelegate.qml \
@@ -44,9 +43,6 @@ OTHER_FILES = \
     qml/pages/CommentsModel.qml \
     qml/pages/GalleryModel.qml \
     qml/pages/GalleryContentModel.qml \
-    qml/pages/PanelView.qml \
-    qml/pages/Panel.qml \
-    qml/pages/AccountPanel.qml \
     qml/pages/UploadPage.qml \
     qml/pages/WebPage.qml \
     qml/pages/AlbumInfoColumn.qml \
@@ -56,6 +52,11 @@ OTHER_FILES = \
     qml/pages/UploadedContextMenu.qml \
     qml/pages/UploadedDelegate.qml \
     qml/pages/ChangelogDialog.qml \
-    qml/pages/ImageInfoModal.qml
+    qml/pages/ImageInfoModal.qml \
+    qml/pages/Toolbar.qml \
+    qml/pages/AccountPage.qml \
+    qml/pages/SettingsDialog.qml \
+    qml/pages/ActionBar.qml \
+    qml/pages/SearchPanel.qml
 
 INCLUDEPATH += $$PWD

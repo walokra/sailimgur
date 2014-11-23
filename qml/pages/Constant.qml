@@ -54,6 +54,10 @@ QtObject {
     property string iconInfo: "image://theme/icon-lock-information";
     property string iconBrowser: "image://theme/icon-m-region";
     property string iconClipboard: "image://theme/icon-l-copy";
+    property string iconUpload: "image://theme/icon-m-cloud-upload";
+    property string iconPerson: "image://theme/icon-m-person";
+    property string iconSearch: "image://theme/icon-m-search";
+    property string iconLogo: "../images/sailimgur-logo_86x86.svg";
 
     // modes
     property string mode_main : "main";

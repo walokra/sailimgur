@@ -14,10 +14,10 @@ CoverBackground {
     }
 
     onStatusChanged: {
-        if (status == PageStatus.Deactivating) {
+        if (status === PageStatus.Deactivating) {
             start = 0;
         }
-        if (status == PageStatus.Activating) {
+        if (status === PageStatus.Activating) {
             loadingRect.visible = false;
             fillCoverModel();
         }

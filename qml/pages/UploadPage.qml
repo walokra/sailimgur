@@ -5,31 +5,14 @@ import "../components/storage.js" as Storage
 import harbour.sailimgur.Uploader 1.0
 
 Page {
-    id: uploadPage;
+    id: root;
     allowedOrientations: Orientation.All;
 
-    //ListModel {
-    //    id: userAlbums;
-    //}
+    signal load();
 
-    Connections {
-        target: accountPanel;
-        onClicked: {
-            resetFields();
-            resetUploadState();
-
-            /*
-            if (loggedIn) {
-                Imgur.getAlbums(userAlbums, "", function(status){
-                    console.log("getAlbums=" + status);
-                    },
-                    function(status, statusText){
-                        infoBanner.showHttpError(status, statusText);
-                    }
-                );
-            }
-            */
-        }
+    onLoad: {
+        resetFields();
+        resetUploadState();
     }
 
     property bool submitToGallery: false;
