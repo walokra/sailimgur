@@ -9,7 +9,7 @@ Page {
     property bool refreshDone : false;
 
     SilicaFlickable {
-        id: signInFlickable;
+        id: flickable;
 
         anchors.fill: parent;
         contentHeight: contentArea.height;
@@ -94,7 +94,7 @@ Click the button below will launch an external web browser for you to sign in.")
             }
         }
 
-        VerticalScrollDecorator {}
+        VerticalScrollDecorator { flickable: flickable; }
     }
 
     QtObject {

@@ -135,25 +135,11 @@ Page {
 
             // Load next/previous page when at the end or at the top
             onMovementEnded: {
-                /*
-                if(atYBeginning) {
-                    if (page > 0) {
-                        page -= 1;
-                        //console.log("atYBeginning: " + page);
-                        statusLabel.text = qsTr("Loading previous page");
-                        galleryModel.processGalleryMode(searchTextField.text);
-                        galgrid.scrollToBottom();
-                    }
-                }
-                */
-
                 if(atYEnd) {
                     page += 1;
                     //console.log("atYEnd: " + page);
                     statusLabel.text = qsTr("Loading next page");
-                    //galleryModel.processGalleryMode(searchTextField.text);
-                    //galgrid.scrollToTop();
-                    galleryModel.nextPage(searchTextField.text, true);
+                    galleryModel.nextPage(galleryModel.query, true);
                 }
             }
         } // SilicaGridView

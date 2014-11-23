@@ -54,7 +54,7 @@ Page {
         }
 
         setPrevButton();
-        galleryContentFlickable.scrollToTop();
+        flickable.scrollToTop();
     }
 
     onRemovedFromModel: {
@@ -73,7 +73,7 @@ Page {
     }
 
     SilicaFlickable {
-        id: galleryContentFlickable;
+        id: flickable;
         // pressDelay: 0; // can't set this as there's Drawer
 
         PageHeader { id: header; title: galleryContentPageTitle; }
@@ -339,22 +339,11 @@ Page {
                 }
             }
         }
-        VerticalScrollDecorator { flickable: galleryContentFlickable; }
+        VerticalScrollDecorator { flickable: flickable; }
     }
 
     GalleryNavigation {
         id: galleryNavigation;
-    }
-
-    ImageInfoModal {
-        id: imgInfoModal;
-        z: 1;
-        anchors { left: parent.left; right: parent.right; top: contentArea.top; }
-        anchors { leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge;
-            topMargin: constant.paddingLarge; bottomMargin: constant.paddingLarge; }
-
-        width: root.width - 2 * constant.paddingLarge;
-        height: root.height - 2 * constant.paddingLarge;
     }
 
     Component.onCompleted: {

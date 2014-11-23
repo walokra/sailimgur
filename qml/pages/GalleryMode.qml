@@ -68,7 +68,7 @@ Row {
         id: modeBox;
         currentIndex: 0;
         width: parent.width / 2;
-        visible: accountModeLabel.visible == false;
+        visible: accountModeLabel.visible == false && galleryModel.query === "";
 
         menu: ContextMenu {
             MenuItem {

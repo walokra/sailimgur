@@ -3,7 +3,6 @@ import Sailfish.Silica 1.0
 
 Dialog {
     id: root;
-
     allowedOrientations: Orientation.All;
 
     SilicaFlickable {
@@ -24,9 +23,7 @@ Dialog {
             anchors { top: header.bottom; left: parent.left; right: parent.right; }
             height: childrenRect.height;
 
-            anchors.leftMargin: constant.paddingMedium;
-            anchors.rightMargin: constant.paddingMedium;
-            anchors.margins: Theme.paddingMedium;
+            anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
             SectionHeader { text: qsTr("Version") + " 0.7 (2014-11-27)" }
@@ -60,7 +57,7 @@ Dialog {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Minor user interface adjustments like image borders if not voted.");
+                    text: qsTr("Minor user interface adjustments.");
                 }
             }
 
@@ -112,7 +109,7 @@ Dialog {
                     width: parent.width;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
-                    text: qsTr("Upload feature added for logged in and anonymous user.");
+                    text: qsTr("Upload feature for logged in and anonymous user.");
                 }
                 Label {
                     width: parent.width;
@@ -130,7 +127,7 @@ Dialog {
                     width: parent.width;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
-                    text: qsTr("Listing uploaded images in page and open them in browser, copy link or delete.");
+                    text: qsTr("List uploaded images, open in browser, copy link or delete.");
                 }
             }
         }
