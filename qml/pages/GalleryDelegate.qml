@@ -21,6 +21,19 @@ Image {
         }
     }
 
+    /*
+    Rectangle {
+        id: gradient;
+        width: parent.width;
+        height: parent.height / 2;
+        anchors.bottom: parent.bottom;
+        gradient: Gradient {
+            GradientStop { position: 0; color: "#00000000"; }
+            GradientStop { position: 1; color: "#FF000000"; }
+          }
+    }
+    */
+
     Rectangle {
         id: voteIndicator;
         anchors.horizontalCenter: parent.horizontalCenter;
@@ -36,7 +49,9 @@ Image {
                 "transparent";
             }
         }
-        width: 24;
-        height: 6;
+
+        radius: constant.paddingSmall / 2;
+        width: constant.paddingLarge;
+        height: constant.paddingSmall;
     }
 }
