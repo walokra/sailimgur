@@ -1,47 +1,42 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Rectangle {
-    id: galleryDelegate;
+Image {
+    id: image;
+    asynchronous: true;
+    anchors.centerIn: parent;
 
-    color: "transparent";
-    border.color: {
-        if (vote === "up") {
-            "green";
-        } else if (vote === "down") {
-            "red";
-        } else {
-            "transparent";
+    width: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? galgrid.width / 5 : galgrid.width / 3;
+    height: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? galgrid.width / 5 : galgrid.width / 3;
+
+    smooth: false;
+    source: link;
+    MouseArea {
+        anchors.fill: parent;
+        onClicked: {
+            //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
+            currentIndex = index;
+            pageStack.push(galleryContentPage);
+            galleryContentPage.load();
         }
     }
-    border.width: {
-        if (vote === "up" || vote === "down") {
-            3;
-        } else {
-            0;
-        }
-    }
-    width: 166;
-    height: 166;
 
-    Image {
-        id: image;
-        asynchronous: true;
-        anchors.centerIn: parent;
+    Rectangle {
+        id: voteIndicator;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: constant.paddingMedium;
 
-        width: 160;
-        height: 160;
-
-        smooth: false;
-        source: link;
-        MouseArea {
-            anchors.fill: parent;
-            onClicked: {
-                //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
-                currentIndex = index;
-                pageStack.push(galleryContentPage);
-                galleryContentPage.load();
+        color: {
+            if (vote === "up") {
+                "green";
+            } else if (vote === "down") {
+                "red";
+            } else {
+                "transparent";
             }
         }
+        width: 24;
+        height: 6;
     }
 }

@@ -104,15 +104,13 @@ Page {
             id: galgrid;
 
             cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
-            cellHeight: 175;
+            cellHeight: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
             clip: true;
             pressDelay: 0;
 
             model: galleryModel;
 
             anchors { top: actionBar.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
-            anchors.leftMargin: constant.paddingMedium;
-            anchors.rightMargin: constant.paddingMedium;
 
             delegate: Loader {
                 sourceComponent: GalleryDelegate { id: galleryDelegate; }
