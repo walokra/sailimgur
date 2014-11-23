@@ -65,21 +65,22 @@ Column {
         icon.source: constant.iconInfo;
         onClicked: {
             //console.debug(JSON.stringify(galleryContentModel));
+            var props = {
+                "image_id": id,
+                "image_width": vWidth,
+                "image_height": vHeight,
+                "type": type,
+                "size": size,
+                "views": views,
+                "bandwith": bandwidth,
+                "section": section,
+                "animated": animated,
+                "nsfw": nsfw,
+                "ups": ups,
+                "downs": downs
+            }
 
-            imgInfoModal.image_id = id;
-            imgInfoModal.image_width = vWidth;
-            imgInfoModal.image_height = vHeight;
-            imgInfoModal.type = type;
-            imgInfoModal.size = size;
-            imgInfoModal.views = views;
-            imgInfoModal.bandwith = bandwidth;
-            imgInfoModal.section = section;
-            imgInfoModal.animated = animated;
-            imgInfoModal.nsfw = nsfw;
-            imgInfoModal.ups = ups;
-            imgInfoModal.downs = downs;
-
-            imgInfoModal.visible = true;
+            pageStack.push(Qt.resolvedUrl("ImageInfoPage.qml"), props)
         }
     }
 

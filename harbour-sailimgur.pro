@@ -52,11 +52,11 @@ OTHER_FILES = \
     qml/pages/UploadedContextMenu.qml \
     qml/pages/UploadedDelegate.qml \
     qml/pages/ChangelogDialog.qml \
-    qml/pages/ImageInfoModal.qml \
     qml/pages/Toolbar.qml \
     qml/pages/AccountPage.qml \
     qml/pages/SettingsDialog.qml \
     qml/pages/ActionBar.qml \
-    qml/pages/SearchPanel.qml
+    qml/pages/SearchPanel.qml \
+    qml/pages/ImageInfoPage.qml
 
 INCLUDEPATH += $$PWD
