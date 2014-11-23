@@ -4,16 +4,23 @@ import Sailfish.Silica 1.0
 Rectangle {
     id: galleryDelegate;
 
+    color: "transparent";
     border.color: {
         if (vote === "up") {
             "green";
         } else if (vote === "down") {
             "red";
         } else {
-            "grey";
+            "transparent";
         }
     }
-    border.width: 3;
+    border.width: {
+        if (vote === "up" || vote === "down") {
+            3;
+        } else {
+            0;
+        }
+    }
     width: 166;
     height: 166;
 
