@@ -1,4 +1,10 @@
-* Thu Nov 16 2014 Marko Wallin <mtw@iki.fi> 0.6.0-1
+* Sun Nov 23 2014 Marko Wallin <mtw@iki.fi> 0.7.0-1
+Use toolbar for functions
+Account page shows user info and pages
+Image info shown on page
+Minor user interface adjustments like image borders if not voted
+
+* Sun Nov 16 2014 Marko Wallin <mtw@iki.fi> 0.6.0-1
 Save image to Pictures.
 Save gallery mode and sort settings.
 User Interface adjustments: next/previous links, image and comment actions.

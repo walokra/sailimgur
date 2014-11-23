@@ -27,7 +27,42 @@ Dialog {
             anchors.leftMargin: constant.paddingMedium;
             anchors.rightMargin: constant.paddingMedium;
             anchors.margins: Theme.paddingMedium;
-            spacing: Theme.paddingMedium;
+            spacing: Theme.paddingSmall;
+
+            SectionHeader { text: qsTr("Version") + " 0.7 (2014-11-27)" }
+
+            Column {
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: childrenRect.height;
+
+                spacing: constant.paddingSmall;
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Use toolbar instead of sidebar for functions");
+                }
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Account page shows user info and pages.");
+                }
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Image info shown on page.");
+                }
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Minor user interface adjustments like image borders if not voted.");
+                }
+            }
 
             SectionHeader { text: qsTr("Version") + " 0.6 (2014-11-16)" }
 
@@ -41,25 +76,25 @@ Dialog {
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Save image to Pictures.");
                 }
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Save gallery mode and sort options.");
                 }
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("User Interface adjustments: next/previous links, image and comment actions.");
                 }
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Changelog shows in first start after update.");
                 }
             }
@@ -75,25 +110,25 @@ Dialog {
 
                 Label {
                     width: parent.width;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
                     text: qsTr("Upload feature added for logged in and anonymous user.");
                 }
                 Label {
                     width: parent.width;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
                     text: qsTr("Delete image/album from user's image/album view.");
                 }
                 Label {
                     width: parent.width;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
                     text: qsTr("Storing uploaded image's info to database.");
                 }
                 Label {
                     width: parent.width;
-                    font.pixelSize: Theme.fontSizeSmall;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
                     text: qsTr("Listing uploaded images in page and open them in browser, copy link or delete.");
                 }
