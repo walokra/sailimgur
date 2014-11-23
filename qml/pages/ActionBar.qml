@@ -3,9 +3,9 @@ import Sailfish.Silica 1.0
 
 Column {
     id: root;
-    height: toolbar.height + galleryMode.height;
+    //height: childrenRect.height;
     anchors { left: parent.left; right: parent.right; }
-    z: -1;
+    z: 1;
     opacity: 1;
 
     property Flickable flickable;
@@ -13,15 +13,6 @@ Column {
     Toolbar { id: toolbar; }
 
     GalleryMode { id: galleryMode; }
-
-    /*
-    Timer {
-        id: timer;
-        property bool moving: galgrid.moving || galgrid.dragging || galgrid.flicking;
-        onMovingChanged: if (!moving) restart();
-        interval: 300;
-    }
-    */
 
     Behavior on opacity { FadeAnimation { duration: 300; } }
     Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
@@ -31,12 +22,12 @@ Column {
         onFlickingVerticallyChanged: {
             //console.debug("onFlickingVerticallyChanged, velocity=" + flickable.verticalVelocity);
             if (flickable.atYBeginning) {
-                actionBar.height = toolbar.height + galleryMode.height;
+                actionBar.height = actionBar.childrenRect.height;
                 actionBar.opacity = 1;
             }
 
             if (flickable.verticalVelocity < 0) {
-                actionBar.height = toolbar.height + galleryMode.height;
+                actionBar.height = actionBar.childrenRect.height;
                 actionBar.opacity = 1;
             }
             if (flickable.verticalVelocity > 0) {
