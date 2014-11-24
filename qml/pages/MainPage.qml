@@ -110,7 +110,7 @@ Page {
 
             model: galleryModel;
 
-            anchors { top: actionBar.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; }
+            anchors { top: (actionBar.visible ? actionBar.bottom : parent.top); left: parent.left; right: parent.right; bottom: parent.bottom; }
 
             delegate: Loader {
                 sourceComponent: GalleryDelegate { id: galleryDelegate; }
