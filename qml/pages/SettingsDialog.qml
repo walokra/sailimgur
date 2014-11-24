@@ -42,11 +42,12 @@ Dialog {
                 anchors {left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
-
                 text: qsTr("Show comments");
                 checked: settings.showComments;
-                onCheckedChanged: {
+                onClicked: {
+                    //console.log("onClicked=" + checked);
                     checked ? settings.showComments = true : settings.showComments = false;
+                    //console.log("settings.showComments=" + settings.showComments);
                 }
             }
         }

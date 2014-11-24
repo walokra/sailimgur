@@ -127,7 +127,8 @@ Page {
                 id: galleryItem;
                 text: qsTr("Add to usersub");
                 anchors { left: parent.left; right: parent.right; }
-                onCheckedChanged: {
+                checked: submitToGallery;
+                onClicked: {
                     checked ? submitToGallery = true : submitToGallery = false;
                 }
             }

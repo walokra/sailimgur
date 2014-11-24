@@ -39,6 +39,7 @@ Item {
                     settings.saveSetting("mode", settings.mode);
                 }
 
+                galleryModel.query = "";
                 searchPanel.visible = false;
                 galgrid.scrollToTop();
                 galleryModel.clear();
