@@ -133,6 +133,10 @@ Page {
 
             // Load next/previous page when at the end or at the top
             onMovementEnded: {
+                if (atYBeginning) {
+                    actionBar.visible = true;
+                }
+
                 if(atYEnd) {
                     page += 1;
                     //console.log("atYEnd: " + page);
