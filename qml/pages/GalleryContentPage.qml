@@ -24,7 +24,7 @@ Page {
     }
 
     signal load();
-    signal removedFromModel;
+    signal removedFromModel(string imgur_id);
 
     onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
@@ -58,7 +58,6 @@ Page {
     }
 
     onRemovedFromModel: {
-        console.log("onRemovedFromModel");
         galleryModel.remove(currentIndex);
         root.backNavigation = true;
         pageStack.pop(PageStackAction.Animated);
@@ -140,9 +139,6 @@ Page {
             height: childrenRect.height;
             spacing: constant.paddingMedium;
 
-            anchors.leftMargin: constant.paddingSmall;
-            anchors.rightMargin: constant.paddingSmall;
-
             // Shown if not in gallery, like user's albums/images
             UploadedDelegate {
                 id: uploadedDelegate;
@@ -171,6 +167,9 @@ Page {
             Label {
                 id: titleText;
                 anchors { left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingSmall;
+                anchors.rightMargin: constant.paddingSmall;
+
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeMedium;
                 color: constant.colorHighlight;
@@ -179,6 +178,9 @@ Page {
             Label {
                 id: descText;
                 anchors { left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingSmall;
+                anchors.rightMargin: constant.paddingSmall;
+
                 wrapMode: Text.Wrap;
                 font.pixelSize: constant.fontSizeSmall;
                 color: constant.colorHighlight;
@@ -189,6 +191,7 @@ Page {
             Column {
                 id: galleryContentColumn;
                 anchors { left: parent.left; right: parent.right; }
+
                 height: (showMoreItem.visible) ? albumListView.height + showMoreButton.height : albumListView.height;
                 width: parent.width;
 
@@ -232,11 +235,15 @@ Page {
 
             AlbumInfoColumn {
                 id: albumInfoColumn;
+                anchors.leftMargin: constant.paddingSmall;
+                anchors.rightMargin: constant.paddingSmall;
             }
 
             Column {
                 id: commentsColumn;
                 anchors { left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingSmall;
+                anchors.rightMargin: constant.paddingSmall;
                 height: childrenRect.height + showCommentsItem.height + galleryNavigation.height + constant.paddingMedium;
                 width: parent.width;
                 visible: is_gallery == true;
@@ -272,6 +279,9 @@ Page {
                     spacing: constant.paddingSmall;
                     clip: true;
                     visible: commentsModel.count > 0;
+
+                    anchors.leftMargin: constant.paddingSmall;
+                    anchors.rightMargin: constant.paddingSmall;
 
                     pressDelay: 0;
                     interactive: true;

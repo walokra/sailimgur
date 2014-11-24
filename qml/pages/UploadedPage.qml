@@ -6,7 +6,7 @@ Page {
     allowedOrientations: Orientation.All;
 
     signal load();
-    signal removedFromModel();
+    signal removedFromModel(string imgur_id);
 
     UploadedModel {
         id: uploadedModel;
@@ -17,7 +17,6 @@ Page {
     }
 
     onRemovedFromModel: {
-        console.log("uploadedPage onRemovedFromModel");
         uploadedModel.removeItem(imgur_id);
     }
 

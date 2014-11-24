@@ -42,13 +42,10 @@ Page {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right }
             width: parent.width;
-            anchors.leftMargin: constant.paddingLarge;
-            anchors.rightMargin: constant.paddingLarge;
-            height: childrenRect.height + 100;
+            anchors.leftMargin: constant.paddingMedium;
+            anchors.rightMargin: constant.paddingMedium;
 
             ListItem {
-                anchors { left: parent.left; right: parent.right }
-
                 BackgroundItem {
                     id: deviceItem;
                     anchors { left: parent.left; }
@@ -102,14 +99,13 @@ Page {
             Separator {
                 id: drawerSep;
                 anchors { left: parent.left; right: parent.right; }
-                anchors.bottomMargin: constant.paddingLarge;
                 color: constant.colorSecondary;
                 primaryColor: Theme.rgba(color, 0.5)
                 secondaryColor: Theme.rgba(color, 0.5)
             }
 
             Item {
-                height: 50;
+                height: 25;
                 anchors { left: parent.left; right: parent.right; }
             }
 
@@ -193,6 +189,27 @@ Page {
                 color: constant.colorHighlight;
             }
 
+            UploadedDelegate {
+                id: uploadedDelegate;
+                width: parent.width;
+                anchors { left: parent.left; right: parent.right; }
+
+                show_item: true;
+                show_extra: false;
+                item_title: title;
+                item_imgur_id: id;
+                item_link: link;
+                item_deletehash: deletehash;
+                item_datetime: datetime;
+                parent_item: contentArea;
+            }
+
+            Item {
+                height: 25;
+                anchors { left: parent.left; right: parent.right; }
+                visible: uploadDone;
+            }
+
             ListItem {
                 Button {
                     id: uploadButton;
@@ -225,19 +242,6 @@ Page {
                 value: 0;
                 anchors { left: parent.left; right: parent.right; }
                 visible: false;
-            }
-
-            UploadedDelegate {
-                id: uploadedDelegate;
-                width: parent.width;
-                show_item: true;
-                show_extra: false;
-                item_title: title;
-                item_imgur_id: id;
-                item_link: link;
-                item_deletehash: deletehash;
-                item_datetime: datetime;
-                parent_item: contentArea;
             }
         }
 
@@ -321,7 +325,7 @@ Page {
             datetime = data.datetime;
 
             uploadDone = true;
-            previewSectionText = qsTr("Uploaded image");
+            previewSectionText = qsTr("Image uploaded");
             titleTextField.text = "";
             descTextField.text = "";
 

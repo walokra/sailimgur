@@ -59,6 +59,8 @@ Item {
 
                     Label {
                         id: imageTitleText;
+                        anchors.leftMargin: constant.paddingSmall;
+                        anchors.rightMargin: constant.paddingSmall;
                         wrapMode: Text.Wrap;
                         text: title;
                         font.pixelSize: constant.fontSizeXSmall;
@@ -184,6 +186,8 @@ Item {
                 text: description;
                 font.pixelSize: constant.fontSizeXSmall;
                 anchors { left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingSmall;
+                anchors.rightMargin: constant.paddingSmall;
                 visible: (description) ? true : false;
                 elide: Text.ElideRight;
                 textFormat: Text.StyledText;
