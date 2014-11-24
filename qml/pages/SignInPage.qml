@@ -23,6 +23,8 @@ Page {
         Column {
             id: contentArea;
             anchors { top: header.bottom; left: parent.left; right: parent.right; }
+            anchors.leftMargin: constant.paddingSmall;
+            anchors.rightMargin: constant.paddingSmall;
             height: childrenRect.height;
             spacing: constant.paddingMedium;
 

@@ -230,7 +230,7 @@ Page {
                 }
 
                 onClicked: {
-                    mainPage.loggedIn = false;
+                    loggedIn = false;
                     settings.resetTokens();
                     settings.settingsLoaded();
                     internal.setCommonValues();
