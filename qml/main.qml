@@ -55,6 +55,7 @@ ApplicationWindow {
         height: infoLabel.height + 2 * Theme.paddingMedium;
         color: Theme.highlightBackgroundColor;
         opacity: 0;
+        visible: false;
 
         Label {
             id: infoLabel;
@@ -71,6 +72,7 @@ ApplicationWindow {
                 anchors.fill: parent;
                 onClicked: {
                     infoBanner.opacity = 0.0;
+                    infoBanner.visible = false;
                 }
             }
         }
@@ -78,6 +80,7 @@ ApplicationWindow {
         function showText(text) {
             infoLabel.text = text;
             opacity = 0.9;
+            infoBanner.visible = true;
             //console.log("infoBanner: " + text);
             closeTimer.restart();
         }
@@ -85,6 +88,7 @@ ApplicationWindow {
         function showError(errorMessage) {
             infoLabel.text = errorMessage;
             opacity = 0.9;
+            infoBanner.visible = true;
         }
 
         function showHttpError(errorCode, errorMessage) {
@@ -130,7 +134,10 @@ ApplicationWindow {
         Timer {
             id: closeTimer;
             interval: 3000;
-            onTriggered: infoBanner.opacity = 0.0;
+            onTriggered: {
+                infoBanner.opacity = 0.0;
+                infoBanner.visible = true;
+            }
         }
     }
 
