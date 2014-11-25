@@ -165,6 +165,7 @@ Row {
 
         function setModeCommon() {
             settings.saveSetting("mode", settings.mode);
+            page = 0;
             galleryModel.query = "";
             toolbar.searchVisible = false;
             galgrid.scrollToTop();

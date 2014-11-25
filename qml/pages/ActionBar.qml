@@ -87,8 +87,8 @@ Item {
         }
     }
 
-    Behavior on opacity { FadeAnimation { duration: 10000; } }
-    Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
+    //Behavior on opacity { FadeAnimation { duration: 10000; } }
+    //Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
 
     Connections {
         target: flickable
