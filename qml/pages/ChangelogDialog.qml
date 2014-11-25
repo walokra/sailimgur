@@ -26,7 +26,7 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
-            SectionHeader { text: qsTr("Version") + " 0.7 (2014-11-27)" }
+            SectionHeader { text: qsTr("Version") + " 0.7.1 (2014-11-25)" }
 
             Column {
                 anchors { left: parent.left; right: parent.right; }
@@ -39,7 +39,13 @@ Dialog {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Use toolbar instead of sidebar for functions");
+                    text: qsTr("Use toolbar instead of sidebar for functions.");
+                }
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Option to select toolbar position top/bottom.");
                 }
                 Label {
                     width: parent.width;
@@ -52,12 +58,6 @@ Dialog {
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Image info shown on page.");
-                }
-                Label {
-                    width: parent.width;
-                    wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Minor user interface adjustments.");
                 }
             }
 
