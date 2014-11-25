@@ -5,7 +5,7 @@ Item {
     id: root;
 
     anchors { left: parent.left; right: parent.right }
-    height: childrenRect.height
+    height: searchTextField.height
 
     SearchField {
         id: searchTextField;

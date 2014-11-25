@@ -4,6 +4,8 @@ import Sailfish.Silica 1.0
 Item {
     id: root;
 
+    signal searchChanged();
+
     signal uploadClicked();
 
     property alias searchVisible: searchPanel.visible;
@@ -72,8 +74,10 @@ Item {
                 //console.debug("search button clicked!");
                 if (searchPanel.visible === true) {
                     searchPanel.visible = false;
+                    searchChanged();
                 } else {
                     searchPanel.visible = true;
+                    searchChanged();
                 }
             }
         }

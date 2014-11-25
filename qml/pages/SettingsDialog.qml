@@ -50,6 +50,19 @@ Dialog {
                     //console.log("settings.showComments=" + settings.showComments);
                 }
             }
+
+            /*
+            TextSwitch {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingMedium;
+                anchors.rightMargin: constant.paddingMedium;
+                text: qsTr("Toolbar on bottom");
+                checked: settings.toolbarBottom;
+                onClicked: {
+                    checked ? settings.toolbarBottom = true : settings.toolbarBottom = false;
+                }
+            }
+            */
         }
 
         VerticalScrollDecorator { flickable: settingsFlickable; }

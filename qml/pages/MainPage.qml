@@ -95,22 +95,27 @@ Page {
             }
         }
 
-        ActionBar {
-            id: actionBar;
-            flickable: galgrid;
-        }
-
         SilicaGridView {
             id: galgrid;
 
             cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
-            cellHeight: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
+            cellHeight: cellWidth;
             clip: true;
             pressDelay: 0;
 
             model: galleryModel;
 
-            anchors { top: (actionBar.visible ? actionBar.bottom : parent.top); left: parent.left; right: parent.right; bottom: parent.bottom; }
+            anchors { left: parent.left; right: parent.right; }
+            anchors { top: (actionBar.visible ? actionBar.bottom : parent.top); bottom: parent.bottom; }
+            //anchors.top: (settings.toolbarBottom) ? parent.top : actionBar.bottom;
+            //anchors.bottom: (settings.toolbarBottom) ? actionBar.top : parent.bottom;
+            //anchors.top: parent.top;
+            //anchors.bottom: actionBar.top;
+
+            transitions: Transition {
+                // smoothly reanchor galgrid and move into new position
+                AnchorAnimation { duration: 1000 }
+            }
 
             delegate: Loader {
                 sourceComponent: GalleryDelegate { id: galleryDelegate; }
@@ -134,7 +139,7 @@ Page {
             // Load next/previous page when at the end or at the top
             onMovementEnded: {
                 if (atYBeginning) {
-                    actionBar.visible = true;
+                    actionBar.shown = true;
                 }
 
                 if(atYEnd) {
@@ -145,6 +150,16 @@ Page {
                 }
             }
         } // SilicaGridView
+
+        ActionBar {
+            id: actionBar;
+            flickable: galgrid;
+            anchors.top: parent.top;
+            /*anchors {
+                top: (settings.toolbarBottom) ? undefined : parent.top;
+                bottom: (settings.toolbarBottom) ? parent.bottom : undefined;
+            }*/
+        }
     }
 
     Component.onCompleted: {
