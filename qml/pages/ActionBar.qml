@@ -1,13 +1,25 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Column {
+Item {
     id: root;
     anchors { left: parent.left; right: parent.right; }
     z: 1;
     visible: true;
+    height: toolbar.height  + galleryMode.height;
 
     property bool shown: true;
+    property alias toolbar: toolbar;
+    property alias galleryMode: galleryMode;
+
+    Connections {
+        target: settingsDialog;
+        onToolbarPositionChanged: {
+            //console.debug("actionBar.onToolbarPositionChanged");
+            toolbar.state = "reanchored";
+            galleryMode.state = "reanchored";
+        }
+    }
 
     onShownChanged: {
         if (shown) {
@@ -27,29 +39,58 @@ Column {
 
     Toolbar {
         id: toolbar;
-        //anchors.top: (settings.toolbarBottom) ? undefined : parent.top;
-        //anchors.bottom: (settings.toolbarBottom) ? parent.bottom : undefined;
+
+        states:
+            State {
+                name: "reanchored"
+
+                AnchorChanges {
+                    target: toolbar;
+                    anchors.top: (settings.toolbarBottom) ? undefined : parent.top;
+                    anchors.bottom: (settings.toolbarBottom) ? parent.bottom : undefined;
+                }
+            }
+
+        function setAnchors() {
+            console.debug("toolbar.setAnchors");
+            if (settings.toolbarBottom) {
+                anchors.top = undefined;
+                anchors.bottom = parent.bottom;
+            } else {
+                anchors.bottom = undefined;
+                anchors.top = parent.top;
+            }
+        }
     }
 
     GalleryMode {
         id: galleryMode;
-        //anchors.top: (settings.toolbarBottom) ? undefined : toolbar.bottom;
-        //anchors.bottom: (settings.toolbarBottom) ? toolbar.top : undefined;
-    }
 
-    Behavior on opacity { FadeAnimation { duration: 30000; } }
-    Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
+        states:
+            State {
+                name: "reanchored"
 
-    /*
-    Connections {
-        target: toolbar;
+                AnchorChanges {
+                    target: galleryMode;
+                    anchors.top: (settings.toolbarBottom) ? undefined : toolbar.bottom;
+                    anchors.bottom: (settings.toolbarBottom) ? toolbar.top : undefined;
+                }
+            }
 
-        onSearchChanged: {
-            //console.debug("onSearchChanged");
-            actionBar.height = childrenRect.height;
+        function setAnchors() {
+            console.debug("toolbar.setAnchors");
+            if (settings.toolbarBottom) {
+                anchors.top = undefined;
+                anchors.bottom = toolbar.bottom;
+            } else {
+                anchors.bottom = undefined;
+                anchors.top = toolbar.bottom;
+            }
         }
     }
-    */
+
+    Behavior on opacity { FadeAnimation { duration: 10000; } }
+    Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
 
     Connections {
         target: flickable
@@ -66,5 +107,10 @@ Column {
                 actionBar.shown = false;
             }
         }
+    }
+
+    Component.onCompleted: {
+        toolbar.setAnchors();
+        galleryMode.setAnchors();
     }
 }

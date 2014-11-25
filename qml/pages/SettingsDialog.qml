@@ -6,6 +6,8 @@ Dialog {
     id: root;
     allowedOrientations: Orientation.All;
 
+    signal toolbarPositionChanged;
+
     SilicaFlickable {
         id: settingsFlickable;
 
@@ -50,8 +52,14 @@ Dialog {
                     //console.log("settings.showComments=" + settings.showComments);
                 }
             }
+            Label {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingExtraLarge;
+                anchors.rightMargin: constant.paddingMedium;
+                font.pixelSize: constant.fontSizeXSmall;
+                text: qsTr("Load comments automatically.");
+            }
 
-            /*
             TextSwitch {
                 anchors {left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
@@ -60,9 +68,16 @@ Dialog {
                 checked: settings.toolbarBottom;
                 onClicked: {
                     checked ? settings.toolbarBottom = true : settings.toolbarBottom = false;
+                    toolbarPositionChanged();
                 }
             }
-            */
+            Label {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingExtraLarge;
+                anchors.rightMargin: constant.paddingMedium;
+                font.pixelSize: constant.fontSizeXSmall;
+                text: qsTr("Might need to restart the app to work correctly.");
+            }
         }
 
         VerticalScrollDecorator { flickable: settingsFlickable; }

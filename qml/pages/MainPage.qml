@@ -35,6 +35,13 @@ Page {
         }
     }
 
+    Connections {
+        target: settingsDialog;
+        onToolbarPositionChanged: {
+            galgrid.state = "reanchored";
+        }
+    }
+
     QtObject {
         id: internal;
 
@@ -106,15 +113,12 @@ Page {
             model: galleryModel;
 
             anchors { left: parent.left; right: parent.right; }
-            anchors { top: (actionBar.visible ? actionBar.bottom : parent.top); bottom: parent.bottom; }
-            //anchors.top: (settings.toolbarBottom) ? parent.top : actionBar.bottom;
-            //anchors.bottom: (settings.toolbarBottom) ? actionBar.top : parent.bottom;
-            //anchors.top: parent.top;
-            //anchors.bottom: actionBar.top;
+            //anchors.top: (settings.toolbarBottom) ? parent.top : (actionBar.visible ? actionBar.bottom : parent.top);
+            //anchors.bottom: (settings.toolbarBottom) ? (actionBar.visible ? actionBar.top : parent.bottom) : parent.bottom;
 
             transitions: Transition {
                 // smoothly reanchor galgrid and move into new position
-                AnchorAnimation { duration: 1000 }
+                AnchorAnimation { duration: 500 }
             }
 
             delegate: Loader {
@@ -149,20 +153,33 @@ Page {
                     galleryModel.nextPage(galleryModel.query, true);
                 }
             }
+
+            states:
+                State {
+                    name: "reanchored"
+
+                    AnchorChanges {
+                        target: actionBar;
+                        anchors.top: (settings.toolbarBottom) ? undefined : parent.top;
+                        anchors.bottom: (settings.toolbarBottom) ? parent.bottom : undefined;
+                    }
+
+                    AnchorChanges {
+                        target: galgrid;
+                        anchors.top: (settings.toolbarBottom) ? parent.top : (actionBar.visible ? actionBar.bottom : parent.top);
+                        anchors.bottom: (settings.toolbarBottom) ? (actionBar.visible ? actionBar.top : parent.bottom) : parent.bottom;
+                    }
+                }
         } // SilicaGridView
 
         ActionBar {
             id: actionBar;
             flickable: galgrid;
-            anchors.top: parent.top;
-            /*anchors {
-                top: (settings.toolbarBottom) ? undefined : parent.top;
-                bottom: (settings.toolbarBottom) ? parent.bottom : undefined;
-            }*/
         }
     }
 
     Component.onCompleted: {
+        galgrid.state = "reanchored";
         galleryModel.clear();
     }
 

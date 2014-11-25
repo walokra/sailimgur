@@ -5,6 +5,7 @@ Row {
     id: root;
     anchors { left: parent.left; right: parent.right; }
     width: parent.width;
+    height: childrenRect.height;
 
     spacing: Theme.paddingSmall;
 
