@@ -6,7 +6,21 @@ Column {
     //height: childrenRect.height;
     anchors { left: parent.left; right: parent.right; }
     z: 1;
-    visible: true;
+    property bool shown: true;
+    onShownChanged: {
+        if (shown) {
+//            z = 1;
+//            opacity = 1;
+            height = childrenRect.height
+
+        } else {
+//            opacity = 0;
+//            z = -3;
+            height = 0
+        }
+    }
+
+//    visible: shown;
     //opacity: 1;
 
     property Flickable flickable;
@@ -15,8 +29,9 @@ Column {
 
     GalleryMode { id: galleryMode; }
 
-    Behavior on visible { FadeAnimation { duration: 300; } }
-    //Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
+    Behavior on opacity { FadeAnimation { duration: 30000; } }
+//    Behavior on z {FadeAnimation {duration : 3000}}
+    Behavior on height { NumberAnimation { easing.type: Easing.Linear; } }
 
     Connections {
         target: flickable
@@ -25,18 +40,18 @@ Column {
             if (flickable.atYBeginning) {
                 //actionBar.height = actionBar.childrenRect.height;
                 //actionBar.opacity = 1;
-                actionBar.visible = true;
+                actionBar.shown = true;
             }
 
             if (flickable.verticalVelocity < 0) {
                 //actionBar.height = actionBar.childrenRect.height;
                 //actionBar.opacity = 1;
-                actionBar.visible = true;
+                actionBar.shown = true;
             }
             if (flickable.verticalVelocity > 0) {
                 //actionBar.height = 0;
                 //actionBar.opacity = 0;
-                actionBar.visible = false;
+                actionBar.shown = false;
             }
         }
     }

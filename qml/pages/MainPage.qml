@@ -6,6 +6,17 @@ Page {
     id: root;
     allowedOrientations: Orientation.All;
 
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            if (loggedIn === false) {
+                pageStack.pushAttached(signInPage);
+            } else {
+                pageStack.pushAttached(accountPage);
+                accountPage.load();
+            }
+        }
+    }
+
     Connections {
         target: settings;
         onSettingsLoaded: {
@@ -66,13 +77,8 @@ Page {
         }
     }
 
-    SilicaFlickable {
-        id: flickable;
-        pressDelay: 0;
-        z: -2;
-
-        anchors.fill: parent;
-        contentHeight: parent.height; contentWidth: parent.width;
+    SilicaGridView {
+        id: galgrid;
 
         PullDownMenu {
             id: pullDownMenu;
@@ -95,56 +101,58 @@ Page {
             }
         }
 
-        ActionBar {
-            id: actionBar;
-            flickable: galgrid;
+        cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
+        cellHeight: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
+        clip: true;
+        pressDelay: 0;
+
+        model: galleryModel;
+
+        anchors { top: parent.top; left: parent.left; right: parent.right; bottom: actionBar.top; }
+
+        transitions: Transition {
+                // smoothly reanchor galgrid and move into new position
+                AnchorAnimation { duration: 1000 }
+            }
+
+        delegate: Loader {
+            sourceComponent: GalleryDelegate { id: galleryDelegate; }
         }
 
-        SilicaGridView {
-            id: galgrid;
+        VerticalScrollDecorator { flickable: galgrid; }
 
-            cellWidth: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
-            cellHeight: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? width / 5 : width / 3;
-            clip: true;
-            pressDelay: 0;
+        Rectangle {
+            anchors { top: parent.top; left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
+            color: Theme.highlightBackgroundColor;
+            visible: (galleryModel.busy) ? 1 : 0;
 
-            model: galleryModel;
+            Label {
+                id: statusLabel;
+                anchors { left: parent.left; right: parent.right; centerIn: parent; }
+                text: "Loading...";
+                color: constant.colorHighlight;
+            }
+        }
 
-            anchors { top: (actionBar.visible ? actionBar.bottom : parent.top); left: parent.left; right: parent.right; bottom: parent.bottom; }
-
-            delegate: Loader {
-                sourceComponent: GalleryDelegate { id: galleryDelegate; }
+        // Load next/previous page when at the end or at the top
+        onMovementEnded: {
+            if (atYBeginning) {
+                actionBar.shown = true;
             }
 
-            VerticalScrollDecorator { flickable: galgrid; }
-
-            Rectangle {
-                anchors { top: parent.top; left: parent.left; right: parent.right; margins: Theme.paddingLarge; }
-                color: Theme.highlightBackgroundColor;
-                visible: (galleryModel.busy) ? 1 : 0;
-
-                Label {
-                    id: statusLabel;
-                    anchors { left: parent.left; right: parent.right; centerIn: parent; }
-                    text: "Loading...";
-                    color: constant.colorHighlight;
-                }
+            if(atYEnd) {
+                page += 1;
+                //console.log("atYEnd: " + page);
+                statusLabel.text = qsTr("Loading next page");
+                galleryModel.nextPage(galleryModel.query, true);
             }
+        }
+    } // SilicaGridView
 
-            // Load next/previous page when at the end or at the top
-            onMovementEnded: {
-                if (atYBeginning) {
-                    actionBar.visible = true;
-                }
-
-                if(atYEnd) {
-                    page += 1;
-                    //console.log("atYEnd: " + page);
-                    statusLabel.text = qsTr("Loading next page");
-                    galleryModel.nextPage(galleryModel.query, true);
-                }
-            }
-        } // SilicaGridView
+    ActionBar {
+        id: actionBar;
+        flickable: galgrid;
+        anchors.bottom: parent.bottom;
     }
 
     Component.onCompleted: {
