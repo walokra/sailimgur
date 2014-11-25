@@ -13,6 +13,7 @@ QtObject {
     property int albumImagesLimit: 3;
     property bool showComments: false;
     property bool toolbarBottom: false;
+    property bool toolbarHidden: true;
 
     // user
     property string user: "anonymous";

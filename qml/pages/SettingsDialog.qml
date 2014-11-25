@@ -64,6 +64,17 @@ Dialog {
                 anchors {left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
+                text: qsTr("Hide toolbar when scrolling");
+                checked: settings.toolbarHidden;
+                onClicked: {
+                    checked ? settings.toolbarHidden = true : settings.toolbarHidden = false;
+                }
+            }
+
+            TextSwitch {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingMedium;
+                anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Toolbar on bottom");
                 checked: settings.toolbarBottom;
                 onClicked: {

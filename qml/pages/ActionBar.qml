@@ -23,12 +23,10 @@ Item {
 
     onShownChanged: {
         if (shown) {
-            // z = 1;
             opacity = 1;
             //height = childrenRect.height
             visible = true;
         } else {
-            // z = -3;
             opacity = 0;
             //height = 0;
             visible = false;
@@ -78,7 +76,7 @@ Item {
             }
 
         function setAnchors() {
-            console.debug("toolbar.setAnchors");
+            //console.debug("toolbar.setAnchors");
             if (settings.toolbarBottom) {
                 anchors.top = undefined;
                 anchors.bottom = toolbar.bottom;
@@ -104,7 +102,9 @@ Item {
                 actionBar.shown = true;
             }
             if (flickable.verticalVelocity > 0) {
-                actionBar.shown = false;
+                if (settings.toolbarHidden) {
+                    actionBar.shown = false;
+                }
             }
         }
     }
