@@ -26,6 +26,23 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.8.0 (2014-12-20)" }
+
+            Column {
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: childrenRect.height;
+
+                spacing: constant.paddingSmall;
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Added support for gifv videos.");
+                }
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.7.1 (2014-11-25)" }
 
             Column {
@@ -80,19 +97,7 @@ Dialog {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Save gallery mode and sort options.");
-                }
-                Label {
-                    width: parent.width;
-                    wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("User Interface adjustments: next/previous links, image and comment actions.");
-                }
-                Label {
-                    width: parent.width;
-                    wrapMode: Text.Wrap;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Changelog shows in first start after update.");
                 }
             }
 
@@ -110,18 +115,6 @@ Dialog {
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     wrapMode: Text.Wrap;
                     text: qsTr("Upload feature for logged in and anonymous user.");
-                }
-                Label {
-                    width: parent.width;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    wrapMode: Text.Wrap;
-                    text: qsTr("Delete image/album from user's image/album view.");
-                }
-                Label {
-                    width: parent.width;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    wrapMode: Text.Wrap;
-                    text: qsTr("Storing uploaded image's info to database.");
                 }
                 Label {
                     width: parent.width;
