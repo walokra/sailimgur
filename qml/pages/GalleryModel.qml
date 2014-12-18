@@ -38,7 +38,6 @@ ListModel {
             if(currentIndex === -1) {
                 currentIndex = listModel.count - 1;
             }
-            galleryContentPage.load();
             loadingRect.visible = false;
             loaded = true;
             busy = false;

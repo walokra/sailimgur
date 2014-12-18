@@ -28,7 +28,7 @@ ApplicationWindow {
 
     GalleryModel { id: galleryModel; }
 
-    GalleryContentPage{ id: galleryContentPage; }
+    //GalleryContentPage{ id: galleryContentPage; }
 
     AboutPage { id: aboutPage; }
 

@@ -56,7 +56,6 @@ BackgroundItem {
     onClicked: {
         //console.log("galgrid: details for id=" + id + "; title=" + title + "; index=" + index);
         currentIndex = index;
-        pageStack.push(galleryContentPage);
-        galleryContentPage.load();
+        pageStack.push(Qt.resolvedUrl("GalleryContentPage.qml"));
     }
 }

@@ -357,9 +357,7 @@ Page {
     }
 
     Component.onCompleted: {
-        galleryContentModel.clear();
-        commentsModel.clear();
-        commentsModel.allComments = [];
+        load();
     }
 
 }

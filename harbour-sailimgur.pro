@@ -5,7 +5,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_RELEASE=\\\"$$RELEASE\\\"
 
 # Qt Library
-QT += svg network
+QT += svg network multimedia
 
 CONFIG += sailfishapp
 

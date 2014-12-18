@@ -396,6 +396,7 @@ function handleGalleryAlbumJSON(response, model, albumModel) {
 
     var data = jsonObject.data;
     for (var i in jsonObject.data.images) {
+        //console.debug(JSON.stringify(jsonObject.data.images[i]))
         fillAlbumImagesModel(jsonObject.data.images[i], model);
     }
 
@@ -420,6 +421,7 @@ function fillAlbumImagesModel(output, model) {
     var link_original;
 
     if (output.link) {
+        //console.debug("link=" + output.link);
         link = IMGUR_IMG_URL;
         link_original = output.link;
         if (parseInt(output.width) > 640) {
@@ -453,7 +455,11 @@ function fillAlbumImagesModel(output, model) {
         ups: (output.ups) ? output.ups : 0,
         downs: (output.downs) ? output.downs : 0,
         section: (output.section) ? output.section : "",
-        nsfw: (output.nsfw) ? output.nsfw : false
+        nsfw: (output.nsfw) ? output.nsfw : false,
+        gifv: (output.gifv) ? output.gifv : "",
+        mp4: (output.mp4) ? output.mp4 : "",
+        webm: (output.webm) ? output.webm : "",
+        looping: (output.looping) ? output.looping : false
     };
 
     model.push(imageData);
