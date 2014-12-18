@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import QtMultimedia 5.0
 
 Item {
     id: galleryContentDelegate;
@@ -86,9 +85,10 @@ Item {
                     Loader {
                         id: videoLoader;
 
-                        width: Math.min(vWidth, parent.width);
-                        height: (active) ? vHeight : 0;
                         anchors.horizontalCenter: parent.horizontalCenter;
+
+                        width: Math.min(vWidth, parent.width);
+                        height: (active) ? videoComponent.height : 0;
 
                         active: false;
                         visible: active;
@@ -99,13 +99,15 @@ Item {
                     Loader {
                         id: imageLoader;
 
-                        width: Math.min(vWidth, parent.width);
-                        height: (active) ? vHeight : 0;
-                        anchors.horizontalCenter: parent.horizontalCenter;
-
                         active: false;
                         visible: active;
                         asynchronous: true;
+
+                        width: Math.min(vWidth, parent.width);
+                        height: (active) ? imageComponent.height : 0;
+
+                        anchors.horizontalCenter: parent.horizontalCenter;
+
                         sourceComponent: imageComponent;
                     }
                 }
@@ -141,187 +143,6 @@ Item {
         }
     }
 
-    Component {
-        id: imageComponent
-
-        BackgroundItem {
-            id: imageItem
-            anchors { left: parent.left; right: parent.right; }
-
-            property int start_x;
-            property int start_y;
-
-            AnimatedImage {
-                id: image;
-                anchors { left: parent.left; right: parent.right; }
-                asynchronous: true;
-
-                fillMode: Image.PreserveAspectFit;
-                source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? link_original : link;
-                width: parent.width;
-                playing: settings.autoplayAnim;
-                paused: false;
-                onStatusChanged: playing;
-                smooth: false;
-
-                PinchArea {
-                    anchors.fill: parent;
-                    pinch.target: parent;
-                    pinch.minimumScale: 1;
-                    pinch.maximumScale: 4;
-                }
-            }
-
-            BusyIndicator {
-                id: loadingImageIndicator;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                running: image.status != AnimatedImage.Ready || savingInProgress;
-                size: BusyIndicatorSize.Medium;
-            }
-
-            Image {
-                id: playIcon;
-                anchors { centerIn: image; }
-                visible: animated && !image.playing;
-                width: Theme.itemSizeSmall;
-                height: Theme.itemSizeSmall;
-                source: constant.iconPlay;
-            }
-
-            onClicked: {
-                //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +";
-                //playing=" + image.playing + "; paused=" + image.paused);
-                if (animated) {
-                    if (!image.playing) {
-                        image.playing = true;
-                        image.paused = false;
-                        playIcon.visible = false;
-                    }
-                    if (image.paused) {
-                        image.paused = false;
-                        playIcon.visible = false;
-                    } else {
-                        image.paused = true;
-                        playIcon.visible = true;
-                    }
-                    //console.log("playing=" + image.playing + "; paused=" + image.paused);
-                }
-            }
-
-            onPressAndHold: {
-                imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-                drawer.open = true;
-            }
-
-            onPressed: {
-                start_x = mouseX;
-                start_y = mouseY;
-            }
-
-            onPositionChanged: {
-                var x_diff = mouseX - start_x;
-                var y_diff = mouseY - start_y;
-
-                var abs_x_diff = Math.abs(x_diff);
-                var abs_y_diff = Math.abs(y_diff);
-
-                if (abs_x_diff != abs_y_diff) {
-                    if (abs_x_diff > abs_y_diff) {
-                        if (abs_x_diff > 50) {
-                            if (x_diff > 0) {
-                                if (prevEnabled) { galleryNavigation.previous(); }
-                            } else if (x_diff < 0) {
-                                galleryNavigation.next();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Component {
-        id: videoComponent
-
-        BackgroundItem {
-            id: videoItem
-            anchors { left: parent.left; right: parent.right; }
-
-            property int start_x;
-            property int start_y;
-
-            MediaPlayer {
-                id: mediaPlayer
-                source: mp4
-                autoPlay: true
-            }
-
-            VideoOutput {
-                id: video
-                width: parent.width
-                height: parent.height
-                source: mediaPlayer
-                fillMode: VideoOutput.PreserveAspectFit
-            }
-
-            BusyIndicator {
-                id: loadingVideoIndicator;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                running: mediaPlayer.status === MediaPlayer.Loading;
-                size: BusyIndicatorSize.Medium;
-            }
-
-            Image {
-                id: playIcon;
-                anchors { centerIn: video; }
-                visible: false;
-                width: Theme.itemSizeSmall;
-                height: Theme.itemSizeSmall;
-                source: constant.iconPlay;
-            }
-
-            onClicked: {
-                //console.debug("playbackState=" + mediaPlayer.playbackState + "; status=" + status);
-                if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
-                    mediaPlayer.pause();
-                    playIcon.visible = true;
-                } else if (mediaPlayer.playbackState === MediaPlayer.PausedState) {
-                    mediaPlayer.play();
-                    playIcon.visible = false;
-                } else if (mediaPlayer.playbackState === MediaPlayer.StoppedState) {
-                    mediaPlayer.play();
-                    playIcon.visible = false;
-                }
-            }
-            onPressAndHold: {
-                imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-                drawer.open = true;
-            }
-
-            onPressed: {
-                start_x = mouseX;
-                start_y = mouseY;
-            }
-
-            onPositionChanged: {
-                var x_diff = mouseX - start_x;
-                var y_diff = mouseY - start_y;
-
-                var abs_x_diff = Math.abs(x_diff);
-                var abs_y_diff = Math.abs(y_diff);
-
-                if (abs_x_diff != abs_y_diff) {
-                    if (abs_x_diff > abs_y_diff) {
-                        if (abs_x_diff > 50) {
-                            if (x_diff > 0) {
-                                if (prevEnabled) { galleryNavigation.previous(); }
-                            } else if (x_diff < 0) {
-                                galleryNavigation.next();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    ImageComponent { id: imageComponent; }
+    VideoComponent { id: videoComponent; }
 }
