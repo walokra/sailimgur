@@ -50,7 +50,7 @@ Item {
             }
 
         function setAnchors() {
-            console.debug("toolbar.setAnchors");
+            //console.debug("toolbar.setAnchors");
             if (settings.toolbarBottom) {
                 anchors.top = undefined;
                 anchors.bottom = parent.bottom;
@@ -79,7 +79,7 @@ Item {
             //console.debug("toolbar.setAnchors");
             if (settings.toolbarBottom) {
                 anchors.top = undefined;
-                anchors.bottom = toolbar.bottom;
+                anchors.bottom = toolbar.top;
             } else {
                 anchors.bottom = undefined;
                 anchors.top = toolbar.bottom;
