@@ -28,8 +28,8 @@ ContextMenu {
         font.pixelSize: constant.fontSizeXSmall;
         text: qsTr("Copy link to clipboard");
         onClicked: {
-            textArea.text = link; textArea.selectAll(); textArea.copy();
-            infoBanner.showText(qsTr("Link " + textArea.text + " copied to clipboard."));
+            Clipboard.text = link;
+            infoBanner.showText(qsTr("Link " + Clipboard.text + " copied to clipboard."));
         }
     }
     MenuItem {
@@ -37,8 +37,8 @@ ContextMenu {
         font.pixelSize: constant.fontSizeXSmall;
         text: qsTr("Copy delete link to clipboard");
         onClicked: {
-            textArea.text = "http://imgur.com/delete/" + deletehash; textArea.selectAll(); textArea.copy();
-            infoBanner.showText(qsTr("Delete link " + textArea.text + " copied to clipboard."));
+            Clipboard.text = "http://imgur.com/delete/" + deletehash;
+            infoBanner.showText(qsTr("Delete link " + Clipboard.text + " copied to clipboard."));
         }
     }
     MenuItem {
@@ -48,11 +48,6 @@ ContextMenu {
         onClicked: {
             deleteImageAlbum(imgur_id, deletehash);
         }
-    }
-
-    TextArea {
-        id: textArea;
-        visible: false;
     }
 
     function deleteImageAlbum() {
