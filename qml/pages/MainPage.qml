@@ -116,11 +116,6 @@ Page {
             //anchors.top: (settings.toolbarBottom) ? parent.top : (actionBar.visible ? actionBar.bottom : parent.top);
             //anchors.bottom: (settings.toolbarBottom) ? (actionBar.visible ? actionBar.top : parent.bottom) : parent.bottom;
 
-            transitions: Transition {
-                // smoothly reanchor galgrid and move into new position
-                AnchorAnimation { duration: 500 }
-            }
-
             delegate: Loader {
                 sourceComponent: GalleryDelegate { id: galleryDelegate; }
             }
@@ -152,6 +147,11 @@ Page {
                     statusLabel.text = qsTr("Loading next page");
                     galleryModel.nextPage(galleryModel.query, true);
                 }
+            }
+
+            transitions: Transition {
+                // smoothly reanchor galgrid and move into new position
+                AnchorAnimation { duration: 1000; easing.type: Easing.Linear; }
             }
 
             states:

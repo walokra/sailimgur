@@ -12,8 +12,10 @@ QtObject {
     // Settings page
     property int albumImagesLimit: 3;
     property bool showComments: false;
+    property bool playImages: false;
     property bool toolbarBottom: false;
     property bool toolbarHidden: true;
+    property bool useGalleryPage: false;
 
     // user
     property string user: "anonymous";
@@ -52,6 +54,8 @@ QtObject {
     function saveSettings() {
         Storage.writeSetting("albumImagesLimit", settings.albumImagesLimit);
         Storage.writeSetting("showComments", settings.showComments);
+        Storage.writeSetting("playImages", settings.playImages);
+        Storage.writeSetting("useGalleryPage", settings.useGalleryPage);
         Storage.writeSetting("toolbarBottom", settings.toolbarBottom);
     }
 

@@ -34,38 +34,23 @@ Component {
 
         BusyIndicator {
             id: loadingImageIndicator;
-            anchors.horizontalCenter: parent.horizontalCenter;
+            anchors { centerIn: parent; }
             running: image.status != AnimatedImage.Ready || savingInProgress;
             size: BusyIndicatorSize.Medium;
         }
 
-        Image {
+        IconButton {
             id: playIcon;
-            anchors { centerIn: image; }
+            anchors { centerIn: parent; }
             visible: animated && !image.playing;
-            width: Theme.itemSizeSmall;
-            height: Theme.itemSizeSmall;
-            source: constant.iconPlay;
+            icon.width: Theme.itemSizeSmall;
+            icon.height: Theme.itemSizeSmall;
+            icon.source: constant.iconPlay;
+            onClicked: internal.clickPlay();
         }
 
         onClicked: {
-            //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +";
-            //playing=" + image.playing + "; paused=" + image.paused);
-            if (animated) {
-                if (!image.playing) {
-                    image.playing = true;
-                    image.paused = false;
-                    playIcon.visible = false;
-                }
-                if (image.paused) {
-                    image.paused = false;
-                    playIcon.visible = false;
-                } else {
-                    image.paused = true;
-                    playIcon.visible = true;
-                }
-                //console.log("playing=" + image.playing + "; paused=" + image.paused);
-            }
+            internal.clickPlay();
         }
 
         onPressAndHold: {
@@ -79,21 +64,47 @@ Component {
         }
 
         onPositionChanged: {
-            var x_diff = mouseX - start_x;
-            var y_diff = mouseY - start_y;
+            if (!isSlideshow) {
+                var x_diff = mouseX - start_x;
+                var y_diff = mouseY - start_y;
 
-            var abs_x_diff = Math.abs(x_diff);
-            var abs_y_diff = Math.abs(y_diff);
+                var abs_x_diff = Math.abs(x_diff);
+                var abs_y_diff = Math.abs(y_diff);
 
-            if (abs_x_diff != abs_y_diff) {
-                if (abs_x_diff > abs_y_diff) {
-                    if (abs_x_diff > 50) {
-                        if (x_diff > 0) {
-                            if (prevEnabled) { galleryNavigation.previous(); }
-                        } else if (x_diff < 0) {
-                            galleryNavigation.next();
+                if (abs_x_diff != abs_y_diff) {
+                    if (abs_x_diff > abs_y_diff) {
+                        if (abs_x_diff > 50) {
+                            if (x_diff > 0) {
+                                if (prevEnabled) { galleryNavigation.previous(); }
+                            } else if (x_diff < 0) {
+                                galleryNavigation.next();
+                            }
                         }
                     }
+                }
+            }
+        }
+
+        QtObject {
+            id: internal;
+
+            function clickPlay() {
+                //console.log("ready=" + AnimatedImage.Ready + "; frames=" + image.frameCount +";
+                //playing=" + image.playing + "; paused=" + image.paused);
+                if (animated) {
+                    if (!image.playing) {
+                        image.playing = true;
+                        image.paused = false;
+                        playIcon.visible = false;
+                    }
+                    if (image.paused) {
+                        image.paused = false;
+                        playIcon.visible = false;
+                    } else {
+                        image.paused = true;
+                        playIcon.visible = true;
+                    }
+                    //console.log("playing=" + image.playing + "; paused=" + image.paused);
                 }
             }
         }

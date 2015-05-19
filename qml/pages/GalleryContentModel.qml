@@ -34,6 +34,8 @@ ListModel {
 
     property bool loaded: false;
 
+    property bool isSlideshow: false;
+
     function resetVariables() {
         // Album props
         account_url = "";
@@ -91,6 +93,7 @@ ListModel {
     }
 
     function getAlbum(id, is_gallery) {
+        //console.debug("getAlbum(" + id + ", " + is_gallery + ")");
         signInPage.init();
         callImgur("album", id, is_gallery);
 
@@ -104,11 +107,13 @@ ListModel {
     }
 
     function getNextImages(initialLimit) {
-        var start = (initialLimit) ? 0 : listModel.count;
-        index += 1;
-        var end = (initialLimit) ? initialLimit : listModel.count + settings.albumImagesSlice;
-        //start = (start >= allComments.length) ? allComments.length : start;
-        //end = (end > allComments.length) ? allComments.length : end;
+        var start = 0;
+        var end = allImages.length;
+        if (!isSlideshow) {
+            start = (initialLimit) ? 0 : listModel.count;
+            index += 1;
+            end = (initialLimit) ? initialLimit : listModel.count + settings.albumImagesSlice;
+        }
         //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length);
         listModel.append(allImages.slice(start, end));
 

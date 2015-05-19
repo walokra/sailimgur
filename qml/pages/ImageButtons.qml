@@ -1,12 +1,11 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Column {
+ListItem {
     id: container;
 
-    spacing: constant.paddingSmall;
-    anchors.left: parent.left; anchors.right: parent.right;
-    height: childrenRect.height;
+    height: childrenRect.height + constant.paddingMedium;
+    anchors.horizontalCenter: parent.horizontalCenter;
 
     Component.onCompleted: {
         sailimgurMgr.saveImageSucceeded.connect(internal.saveImageSucceeded);
@@ -16,7 +15,8 @@ Column {
     IconButton {
         id: saveButton;
         anchors { left: parent.left; }
-        anchors.horizontalCenter: parent.horizontalCenter;
+        //anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.rightMargin: Theme.paddingLarge;
         icon.width: Theme.itemSizeExtraSmall;
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconSave;
@@ -28,8 +28,10 @@ Column {
 
     IconButton {
         id: browserButton;
-        anchors { left: parent.left; }
-        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors { left: saveButton.right; }
+        //anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.leftMargin: Theme.paddingLarge;
+        anchors.rightMargin: Theme.paddingLarge;
         icon.width: Theme.itemSizeExtraSmall;
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconBrowser;
@@ -45,8 +47,10 @@ Column {
 
     IconButton {
         id: clipboardButton;
-        anchors { left: parent.left; }
-        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors { left: browserButton.right; }
+        //anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.leftMargin: Theme.paddingLarge;
+        anchors.rightMargin: Theme.paddingLarge;
         icon.width: Theme.itemSizeExtraSmall;
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconClipboard;
@@ -58,8 +62,10 @@ Column {
 
     IconButton {
         id: infoButton;
-        anchors { left: parent.left; }
-        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors { left: clipboardButton.right; }
+        //anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.leftMargin: Theme.paddingLarge;
+        anchors.rightMargin: Theme.paddingLarge;
         icon.width: Theme.itemSizeExtraSmall;
         icon.height: Theme.itemSizeExtraSmall;
         icon.source: constant.iconInfo;

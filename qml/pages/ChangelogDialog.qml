@@ -26,7 +26,7 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
-            SectionHeader { text: qsTr("Version") + " 0.8.0 (2014-12-20)" }
+            SectionHeader { text: qsTr("Version") + " 0.8.0 (2015-05-20)" }
 
             Column {
                 anchors { left: parent.left; right: parent.right; }
@@ -40,6 +40,29 @@ Dialog {
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Added support for gifv videos.");
+                }
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Option for autoplaying gif and gifv.");
+                }
+
+                /*
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Option for showing album in own page if over certain user given limit.");
+                }
+                */
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Fix Qt 5.2 WebView chokes on caches from older Qt versions.");
                 }
             }
 
@@ -98,29 +121,6 @@ Dialog {
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("User Interface adjustments: next/previous links, image and comment actions.");
-                }
-            }
-
-            SectionHeader { text: qsTr("Version") + " 0.5.0 (2014-07-04)" }
-
-            Column {
-                anchors { left: parent.left; right: parent.right; }
-                width: parent.width;
-                height: childrenRect.height;
-
-                spacing: constant.paddingSmall;
-
-                Label {
-                    width: parent.width;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    wrapMode: Text.Wrap;
-                    text: qsTr("Upload feature for logged in and anonymous user.");
-                }
-                Label {
-                    width: parent.width;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
-                    wrapMode: Text.Wrap;
-                    text: qsTr("List uploaded images, open in browser, copy link or delete.");
                 }
             }
         }

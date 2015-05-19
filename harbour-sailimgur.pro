@@ -59,6 +59,7 @@ OTHER_FILES = \
     qml/pages/SearchPanel.qml \
     qml/pages/ImageInfoPage.qml \
     qml/pages/VideoComponent.qml \
-    qml/pages/ImageComponent.qml
+    qml/pages/ImageComponent.qml \
+    qml/pages/GalleryItemPage.qml
 
 INCLUDEPATH += $$PWD

@@ -159,8 +159,6 @@ Page {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.bottomMargin: constant.paddingLarge;
                 color: constant.colorSecondary;
-                primaryColor: Theme.rgba(color, 0.5)
-                secondaryColor: Theme.rgba(color, 0.5)
                 visible: is_gallery == false;
             }
 
@@ -202,6 +200,7 @@ Page {
                     clip: true;
 
                     Repeater {
+                        id: repeater;
                         model: galleryContentModel;
 
                         delegate: Loader {
@@ -209,6 +208,7 @@ Page {
 
                             sourceComponent: GalleryContentDelegate {
                                 id: galleryContentDelegate;
+                                itemIndex: index;
                             }
                         }
                     }
@@ -226,7 +226,11 @@ Page {
                         enabled: galleryContentModel.count < galleryContentModel.total;
                         text: qsTr("show more (" + galleryContentModel.total + " total, " + galleryContentModel.left + " remaining)");
                         onClicked: {
-                            galleryContentModel.getNextImages();
+                            if (settings.useGalleryPage) {
+                                pageStack.push(Qt.resolvedUrl("GalleryItemPage.qml"));
+                            } else {
+                                galleryContentModel.getNextImages();
+                            }
                         }
                     }
                 }
