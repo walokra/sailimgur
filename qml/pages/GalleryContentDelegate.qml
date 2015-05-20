@@ -16,12 +16,13 @@ Item {
     //height: menuOpen ? contextMenu.height + galleryContainer.height + indexLabel.paintedHeight : galleryContainer.height + indexLabel.paintedHeight;
     height: menuOpen ? contextMenu.height + galleryContainer.height : galleryContainer.height;
 
+    // video/x-vp8, video/x-h264
     Component.onCompleted: {
         //console.debug("type=" + type + "; mp4=" + mp4 +"; gifv=" + gifv + "; webm="+webm);
         //console.debug("vWidth=" + vWidth + "; vHeight="+vHeight)
         if (animated === false) {
             imageLoader.active = true;
-        } else if (type === "image/gif" && mp4 !== "") {
+        } else if (type === "image/gif" && (mp4 !== "" || webm != "")) {
             videoLoader.active = true;
         } else {
             imageLoader.active = true;
@@ -126,7 +127,7 @@ Item {
             onLinkActivated: {
                 //console.log("Link clicked! " + link);
                 contextLink = link;
-                contextMenu = commentContextMenu.createObject(galleryContent);
+                contextMenu = commentContextMenu.createObject(galleryContainer);
                 contextMenu.show(galleryContentDelegate);
             }
         }

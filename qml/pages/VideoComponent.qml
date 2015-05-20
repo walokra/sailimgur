@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import Sailfish.Silica 1.0
 import QtMultimedia 5.0
 
@@ -12,19 +12,27 @@ Component {
 
         property int start_x;
         property int start_y;
+        property string videoUrl;
 
-        MediaPlayer {
-            id: mediaPlayer
-            source: mp4
-            autoPlay: settings.playImages;
-            loops: (looping) ? Animation.Infinite : 1;
+        Component.onCompleted: {
+            if (mp4 !== "") {
+                videoUrl = mp4;
+            } else if (webm != "") {
+                videoUrl = webm;
+            }
         }
 
         VideoOutput {
             id: video;
-            width: parent.width;
-            source: mediaPlayer;
+            width: parent.orientation === Orientation.Portrait ? Screen.width : Screen.height;
             fillMode: VideoOutput.PreserveAspectFit;
+
+            source: MediaPlayer {
+                id: mediaPlayer;
+                source: videoUrl;
+                autoPlay: settings.playImages;
+                loops: (looping) ? Animation.Infinite : 1;
+            }
         }
 
         BusyIndicator {
