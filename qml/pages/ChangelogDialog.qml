@@ -26,7 +26,7 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
-            SectionHeader { text: qsTr("Version") + " 0.8.0 (2015-05-20)" }
+            SectionHeader { text: qsTr("Version") + " 0.7.2 (2015-05-20)" }
 
             Column {
                 anchors { left: parent.left; right: parent.right; }
@@ -35,18 +35,20 @@ Dialog {
 
                 spacing: constant.paddingSmall;
 
+                /*
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
                     text: qsTr("Added support for gifv videos.");
                 }
+                */
 
                 Label {
                     width: parent.width;
                     wrapMode: Text.Wrap;
                     font.pixelSize: Theme.fontSizeExtraSmall;
-                    text: qsTr("Option for autoplaying gif and gifv.");
+                    text: qsTr("Option for autoplaying gif.");
                 }
 
                 /*

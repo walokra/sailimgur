@@ -1,5 +1,5 @@
-* Wed May 19 2015 Marko Wallin <mtw@iki.fi> 0.8.0-1
-Add support for gifv videos (mp4).
+* Wed May 19 2015 Marko Wallin <mtw@iki.fi> 0.7.2-1
+Add preliminary support for gifv videos (mp4).
 Option for autoplaying gif and gifv.
 Option for showing album in own page if over certain user given limit..
 Fix Qt 5.2 WebView chokes on caches from older Qt versions.

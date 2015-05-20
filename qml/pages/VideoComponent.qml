@@ -29,7 +29,7 @@ Component {
 
             source: MediaPlayer {
                 id: mediaPlayer;
-                source: videoUrl;
+                source: webm;
                 autoPlay: settings.playImages;
                 loops: (looping) ? Animation.Infinite : 1;
             }

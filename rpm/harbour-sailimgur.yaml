@@ -1,6 +1,6 @@
 Name: harbour-sailimgur
 Summary: Sailimgur is an Imgur app for Sailfish OS, powered by Qt and QML
-Version: 0.8.0
+Version: 0.7.2
 Release: 1
 Group: Applications/Internet
 URL: http://ruleoftech.com/lab/sailimgur
@@ -28,10 +28,10 @@ Requires:
 - qt5-plugin-imageformat-gif
 - qt5-qtsvg
 - qt5-qtmultimedia
-- qt5-qtdeclarative-import-multimedia
-- qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
-- gst-plugins-good
-- gst-plugins-bad
+#- qt5-qtdeclarative-import-multimedia
+#- qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer
+#- gst-plugins-good
+#- gst-plugins-bad
 #- gst-plugins-ugly
 Files:
 - '%defattr(0644,root,root,755)'
