@@ -35,6 +35,13 @@ Dialog {
 
                 spacing: constant.paddingSmall;
 
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Gifv videos still unplayable due missing decoders. To view them, open album with browser (pulldown menu).");
+                }
+				
                 /*
                 Label {
                     width: parent.width;
