@@ -1,5 +1,5 @@
 * Wed Jun 25 2015 Marko Wallin <mtw@iki.fi> 0.7.3-1
-Add support for prev/next navigation with TOHKBD arrows.
+Support for actions with TOHKBD keys. Navigation with arrow keys, backspace, M to load more, C to load comments, gallery mode changed with 1-5.
 Revert to showing plain animated images instead of gifv videos which aren't yet supported by Sailfish OS.
 Add setting to use video player for gifv (webm) for future use.
 

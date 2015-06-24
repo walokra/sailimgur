@@ -30,7 +30,7 @@ Dialog {
                 width: parent.width;
                 wrapMode: Text.Wrap;
                 font.pixelSize: Theme.fontSizeExtraSmall;
-                text: qsTr("Support for prev/next with TOHKBD arrow keys.");
+                text: qsTr("Support for actions with TOHKBD keys. Navigation with arrow keys, backspace, M to load more, C to load comments, gallery mode changed with 1-5.");
             }
             Label {
                 width: parent.width;
