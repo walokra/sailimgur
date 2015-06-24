@@ -4,12 +4,22 @@ import "../components/imgur.js" as Imgur
 
 Item {
     id: navBg;
-    anchors { bottom: parent.bottom; left: parent.left; right: parent.right; }
+    width: parent.width;
+    anchors { bottom: parent.bottom; }
     height: 80;
-    z: 1;
-    //color: "black";
-    //opacity: 0.7;
+    z: 2;
     visible: galleryModel.count > 1 || page > 0;
+
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Left) {
+            previous();
+            event.accepted = true;
+        }
+        if (event.key === Qt.Key_Right) {
+            next();
+            event.accepted = true;
+        }
+    }
 
     function previous() {
         //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);

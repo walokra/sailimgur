@@ -2,12 +2,12 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
-Column {
+Item {
     id: albumInfoColumn;
-    anchors { left: parent.left; right: parent.right; }
-    height: actionButtons.height + infoText.height + constant.paddingSmall + ((writeCommentField.visible) ? writeCommentField.height : 0);
-    spacing: constant.paddingSmall;
+    anchors { left: parent.left; right: parent.right; bottom: parent.bottom; bottomMargin: constant.paddingMedium; }
+    height: actionButtons.height + constant.paddingSmall;
     visible: is_gallery == true;
+    z: 1;
 
     QtObject {
         id: internal;
@@ -60,38 +60,17 @@ Column {
         }
     }
 
-    ListItem {
+    Row {
         id: actionButtons;
-        anchors { left: parent.left; right: parent.right; }
-        height: 62;
-
-        Rectangle {
-            id: likeRect;
-            width: 48;
-            height: 48;
-            anchors { left: parent.left; }
-
-            radius: 75;
-            color: (galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor;
-
-            IconButton {
-                id: likeButton;
-                anchors.centerIn: parent;
-                enabled: loggedIn;
-                icon.width: Theme.itemSizeExtraSmall;
-                icon.height: Theme.itemSizeExtraSmall;
-                icon.source: constant.iconLike;
-                onClicked: {
-                    internal.galleryVote("up");
-                }
-            }
-        }
+        anchors.horizontalCenter: parent.horizontalCenter;
+        width: childrenRect.width;
+        height: 64;
+        spacing: Theme.paddingLarge * 2;
 
         Rectangle {
             id: dislikeRect;
             width: 48;
             height: 48;
-            anchors { left: likeRect.right; leftMargin: constant.paddingExtraLarge; }
 
             radius: 75;
             color: (galleryContentModel.vote === "down") ? "red" : constant.iconDefaultColor;
@@ -110,10 +89,30 @@ Column {
         }
 
         Rectangle {
+            id: likeRect;
+            width: 64;
+            height: 64;
+
+            radius: 75;
+            color: (galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor;
+
+            IconButton {
+                id: likeButton;
+                anchors.centerIn: parent;
+                enabled: loggedIn;
+                icon.width: Theme.itemSizeMedium;
+                icon.height: Theme.itemSizeMedium;
+                icon.source: constant.iconLike;
+                onClicked: {
+                    internal.galleryVote("up");
+                }
+            }
+        }
+
+        Rectangle {
             id: favRect;
             width: 52;
             height: 52;
-            anchors { left: dislikeRect.right; leftMargin: constant.paddingExtraLarge; }
 
             radius: 75;
             color: (galleryContentModel.favorite) ? "green" : constant.iconDefaultColor;
@@ -129,102 +128,6 @@ Column {
                     internal.galleryFavorite(is_album);
                 }
             }
-        }
-
-        IconButton {
-            id: replyButton;
-            anchors { left: favRect.right; leftMargin: constant.paddingExtraLarge; }
-            enabled: loggedIn;
-            width: 48;
-            height: 48;
-            icon.width: Theme.itemSizeExtraSmall;
-            icon.height: Theme.itemSizeExtraSmall;
-            icon.source: constant.iconComments;
-            onClicked: {
-                if (writeCommentField.visible) {
-                    writeCommentField.visible = false;
-                } else {
-                    writeCommentField.visible = true;
-                }
-            }
-        }
-
-        Item {
-            id: pointColumn;
-            //anchors { top: parent.top; left: replyButton.right; right: parent.right; leftMargin: constant.paddingExtraLarge; }
-            anchors { top: parent.top; right: parent.right; rightMargin: constant.paddingLarge; }
-            height: childrenRect.height;
-
-            Label {
-                id: scoreText;
-                anchors { right: parent.right; top: parent.top; }
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.bottomMargin: constant.paddingSmall;
-                font.pixelSize: constant.fontSizeXXSmall;
-                text: galleryContentModel.score + " points";
-                color: constant.colorHighlight;
-            }
-
-            ListItem {
-                id: scoreBars;
-                anchors { right: parent.right; top: scoreText.bottom; }
-                anchors.verticalCenter: parent.verticalCenter;
-
-                Rectangle {
-                    id: scoreUps;
-                    anchors { right: scoreDowns.left; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    width: 100 * (galleryContentModel.upsPercent/100);
-                    height: 10;
-                    color: "green";
-                }
-
-                Rectangle {
-                    id: scoreDowns;
-                    anchors { right: parent.right; }
-                    anchors.verticalCenter: parent.verticalCenter;
-                    width: 100 * (galleryContentModel.downsPercent/100);
-                    height: 10;
-                    color: "red";
-                }
-            }
-        }
-    }
-
-    Label {
-        id: infoText;
-        anchors { left: parent.left; right: parent.right; topMargin: constant.paddingMedium; }
-        wrapMode: Text.Wrap;
-        font.pixelSize: constant.fontSizeXSmall;
-        color: constant.colorHighlight;
-        text: qsTr("by") + " " + galleryContentModel.account_url + " at " + galleryContentModel.datetime + ". " + galleryContentModel.views + " " + qsTr("views");
-    }
-
-    TextArea {
-        id: writeCommentField;
-        anchors { left: parent.left; right: parent.right; }
-        anchors.topMargin: constant.paddingMedium;
-        visible: false;
-        placeholderText: qsTr("Write comment");
-
-        EnterKey.enabled: text.trim().length > 0;
-        EnterKey.iconSource: "image://theme/icon-m-enter-accept";
-        EnterKey.onClicked: {
-            //console.log("Comment: " + text);
-            Imgur.commentCreation(imgur_id, text, null,
-                  function (data) {
-                      //console.log("data: " + JSON.stringify(data));
-                      infoBanner.showText(qsTr("Comment sent!"));
-                      visible = false;
-                      text = "";
-                      writeCommentField.focus = false;
-
-                      commentsModel.getComments(imgur_id);
-                  },
-                  function(status, statusText) {
-                      infoBanner.showHttpError(status, statusText);
-                  }
-            );
         }
     }
 

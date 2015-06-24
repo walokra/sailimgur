@@ -130,7 +130,7 @@ Page {
         } // Pulldown menu
 
         anchors.fill: parent;
-        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium + 50;
+        contentHeight: contentArea.height + galleryNavigation.height + albumMetaRow.height + 2 * constant.paddingMedium;
         clip: true;
 
         Column {
@@ -234,13 +234,101 @@ Page {
                         }
                     }
                 }
-
             } // galleryContentColumn
 
-            AlbumInfoColumn {
-                id: albumInfoColumn;
-                anchors.leftMargin: constant.paddingSmall;
-                anchors.rightMargin: constant.paddingSmall;
+            Item {
+                id: pointColumn;
+                anchors.topMargin: constant.paddingMedium;
+                anchors { left: parent.left; right: parent.right; leftMargin: constant.paddingMedium; }
+                height: scoreText.height + scoreBars.height + infoText.height + ((writeCommentField.visible) ? writeCommentField.height : 0);
+
+                Label {
+                    id: scoreText;
+                    anchors { left: parent.left; }
+                    font.pixelSize: constant.fontSizeXXSmall;
+                    text: galleryContentModel.score + " points";
+                    color: constant.colorHighlight;
+                }
+
+                ListItem {
+                    id: scoreBars;
+                    anchors { left: parent.left; }
+                    height: childrenRect.height;
+
+                    Rectangle {
+                        id: scoreUps;
+                        anchors { left: parent.left; }
+                        anchors.verticalCenter: parent.verticalCenter;
+                        width: 100 * (galleryContentModel.upsPercent/100);
+                        height: 10;
+                        color: "green";
+                    }
+
+                    Rectangle {
+                        id: scoreDowns;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        anchors { left: scoreUps.right; }
+                        width: 100 * (galleryContentModel.downsPercent/100);
+                        height: 10;
+                        color: "red";
+                    }
+
+                    IconButton {
+                        id: replyButton;
+                        anchors { right: parent.right; rightMargin: constant.paddingMedium; }
+                        anchors.verticalCenter: parent.verticalCenter;
+                        enabled: loggedIn;
+                        //width: 48;
+                        //height: 48;
+                        icon.width: Theme.itemSizeExtraSmall;
+                        icon.height: Theme.itemSizeExtraSmall;
+                        icon.source: constant.iconComments;
+                        onClicked: {
+                            if (writeCommentField.visible) {
+                                writeCommentField.visible = false;
+                            } else {
+                                writeCommentField.visible = true;
+                            }
+                        }
+                    }
+                }
+
+                Label {
+                    id: infoText;
+                    anchors { top: scoreBars.bottom; left: parent.left; leftMargin: constant.paddingMedium; }
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: constant.fontSizeXSmall;
+                    color: constant.colorHighlight;
+                    text: qsTr("by") + " " + galleryContentModel.account_url + " at " + galleryContentModel.datetime + ". " + galleryContentModel.views + " " + qsTr("views");
+                }
+
+                TextArea {
+                    id: writeCommentField;
+                    anchors { top: infoText.bottom; left: parent.left; right: parent.right; }
+                    anchors.topMargin: constant.paddingMedium;
+                    visible: false;
+                    placeholderText: qsTr("Write comment");
+
+                    EnterKey.enabled: text.trim().length > 0;
+                    EnterKey.iconSource: "image://theme/icon-m-enter-accept";
+                    EnterKey.onClicked: {
+                        //console.log("Comment: " + text);
+                        Imgur.commentCreation(imgur_id, text, null,
+                              function (data) {
+                                  //console.log("data: " + JSON.stringify(data));
+                                  infoBanner.showText(qsTr("Comment sent!"));
+                                  visible = false;
+                                  text = "";
+                                  writeCommentField.focus = false;
+
+                                  commentsModel.getComments(imgur_id);
+                              },
+                              function(status, statusText) {
+                                  infoBanner.showHttpError(status, statusText);
+                              }
+                        );
+                    }
+                }
             }
 
             Column {
@@ -255,7 +343,8 @@ Page {
                 Item {
                     id: showCommentsItem;
                     width: parent.width
-                    height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
+                    //height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
+                    height: visible ? showCommentsButton.height : 0;
                     visible: commentsModel.count == 0;
 
                     Button {
@@ -354,6 +443,10 @@ Page {
             }
         }
         VerticalScrollDecorator { flickable: flickable; }
+    }
+
+    AlbumInfoColumn {
+        id: albumInfoColumn;
     }
 
     GalleryNavigation {
