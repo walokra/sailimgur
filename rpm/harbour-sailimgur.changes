@@ -1,3 +1,8 @@
+* Wed Jun 25 2015 Marko Wallin <mtw@iki.fi> 0.7.3-1
+Add support for prev/next navigation with TOHKBD arrows.
+Revert to showing plain animated images instead of gifv videos which aren't yet supported by Sailfish OS.
+Add setting to use video player for gifv (webm) for future use.
+
 * Wed May 19 2015 Marko Wallin <mtw@iki.fi> 0.7.2-1
 Add preliminary support for gifv videos (mp4).
 Option for autoplaying gif and gifv.

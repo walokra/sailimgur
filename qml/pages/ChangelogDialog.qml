@@ -26,6 +26,38 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.7.3 (2015-06-25)" }
+
+            Column {
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: childrenRect.height;
+
+                spacing: constant.paddingSmall;
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Support for prev/next with TOHKBD arrow keys.");
+                }
+            }
+
+            Column {
+                anchors { left: parent.left; right: parent.right; }
+                width: parent.width;
+                height: childrenRect.height;
+
+                spacing: constant.paddingSmall;
+
+                Label {
+                    width: parent.width;
+                    wrapMode: Text.Wrap;
+                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    text: qsTr("Revert to showing plain animated images instead of gifv videos which aren't yet supported by Sailfish OS.");
+                }
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.7.2 (2015-05-20)" }
 
             Column {
