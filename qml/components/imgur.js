@@ -123,8 +123,12 @@ function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
                 onSuccess(xhr.status);
             } else {
                 //console.log("error: " + xhr.status+"; "+ xhr.responseText);
-                var jsonObject = JSON.parse(xhr.responseText);
-                onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+                try {
+                    var jsonObject = JSON.parse(xhr.responseText);
+                    onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
+                } catch (err) {
+                    onFailure(500, "Error getting data from imgur: " + err );
+                }
             }
         }
     }
