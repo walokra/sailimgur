@@ -73,20 +73,20 @@ Page {
         }
     }
 
-//    Item {
-//        anchors.fill: parent
-//        focus: true
-//        Keys.onPressed: {
-//            if (event.key === Qt.Key_Down) {
-//                flickable.flick(0, 100);
-//                event.accepted = true;
-//            }
-//            if (event.key === Qt.Key_Up) {
-//                flickable.flick(0, -100);
-//                event.accepted = true;
-//            }
-//        }
-//    }
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Down) {
+                galgrid.flick(0, -750);
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_Up) {
+                galgrid.flick(0, 750);
+                event.accepted = true;
+            }
+        }
+    }
 
     SilicaFlickable {
         id: flickable;

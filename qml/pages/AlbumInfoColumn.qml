@@ -36,6 +36,24 @@ Item {
                 galleryNavigation.next();
                 event.accepted = true;
             }
+            if (event.key === Qt.Key_Down) {
+                flickable.flick(0, -1200);
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_Up) {
+                flickable.flick(0, 1200);
+                event.accepted = true;
+            }
+
+            // More and comments
+            if (event.key === Qt.Key_M) {
+                galleryContentModel.getNextImages();
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_C) {
+                commentsModel.getComments(imgur_id);
+                commentsColumn.visible = true;
+            }
         }
     }
 
