@@ -6,6 +6,8 @@ Page {
     id: root;
     allowedOrientations: Orientation.All;
 
+    signal modeChanged(string mode);
+
     Connections {
         target: settings;
         onSettingsLoaded: {
@@ -77,12 +79,35 @@ Page {
         anchors.fill: parent
         focus: true
         Keys.onPressed: {
+            // Main page grid scroll
             if (event.key === Qt.Key_Down) {
                 galgrid.flick(0, -750);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_Up) {
                 galgrid.flick(0, 750);
+                event.accepted = true;
+            }
+
+            // Changing gallery
+            if (event.key === Qt.Key_1) {
+                modeChanged("main");
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_2) {
+                modeChanged("user");
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_3) {
+                modeChanged("random");
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_4) {
+                modeChanged("top");
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_5) {
+                modeChanged("memes");
                 event.accepted = true;
             }
         }

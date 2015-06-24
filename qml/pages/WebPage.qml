@@ -23,6 +23,21 @@ Page {
         sourceComponent: parent.status === PageStatus.Active ? webComponent : undefined
     }
 
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: {
+            //console.log("Keys.onPressed=" + event.key);
+
+            // Back to main page
+            if (event.key === Qt.Key_Backspace) {
+                root.backNavigation = true;
+                pageStack.pop(PageStackAction.Animated);
+                event.accepted = true;
+            }
+        }
+    }
+
     Component {
         id: webComponent
 

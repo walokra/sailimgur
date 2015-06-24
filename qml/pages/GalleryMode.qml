@@ -7,6 +7,13 @@ Row {
     width: parent.width;
     height: childrenRect.height;
 
+    Connections {
+        target: mp;
+        onModeChanged: {
+            internal.setMode(mode);
+        }
+    }
+
     spacing: Theme.paddingSmall;
 
     Connections {
@@ -76,11 +83,7 @@ Row {
                 id: mainMode;
                 text: qsTr("most viral");
                 onClicked: {
-                    sortBox.visible = true;
-                    settings.mode = constant.mode_main;
-                    settings.section = "hot";
-
-                    internal.setModeCommon();
+                    internal.setMode("main");
                 }
             }
 
@@ -88,11 +91,7 @@ Row {
                 id: userMode;
                 text: qsTr("user submitted");
                 onClicked: {
-                    sortBox.visible = true;
-                    settings.mode = constant.mode_user;
-                    settings.section = constant.mode_user;
-
-                    internal.setModeCommon();
+                    internal.setMode("user");
                 }
             }
 
@@ -100,10 +99,7 @@ Row {
                 id: randomMode;
                 text: qsTr("random");
                 onClicked: {
-                    sortBox.visible = false;
-                    settings.mode = constant.mode_random;
-
-                    internal.setModeCommon();
+                    internal.setMode("random");
                 }
             }
 
@@ -111,11 +107,7 @@ Row {
                 id: scoreMode;
                 text: qsTr("highest scoring");
                 onClicked: {
-                    sortBox.visible = false;
-                    settings.mode = constant.mode_score;
-                    settings.section = "top";
-
-                    internal.setModeCommon();
+                    internal.setMode("top");
                 }
             }
 
@@ -123,10 +115,7 @@ Row {
                 id: memesMode;
                 text: qsTr("memes");
                 onClicked: {
-                    sortBox.visible = true;
-                    settings.mode = constant.mode_memes;
-
-                    internal.setModeCommon();
+                    internal.setMode("memes");
                 }
             }
         }
@@ -162,6 +151,39 @@ Row {
 
     QtObject {
         id: internal;
+
+        function setMode(mode) {
+            if (mode === "main") {
+                modeBox.currentIndex = 0;
+                sortBox.visible = true;
+                settings.mode = constant.mode_main;
+                settings.section = "hot";
+            } else if (mode === "user") {
+                modeBox.currentIndex = 1;
+                sortBox.visible = true;
+                settings.mode = constant.mode_user;
+                settings.section = constant.mode_user;
+            } else if (mode === "random") {
+                modeBox.currentIndex = 2;
+                sortBox.visible = false;
+                settings.mode = constant.mode_random;
+            } else if (mode === "top") {
+                modeBox.currentIndex = 3;
+                sortBox.visible = false;
+                settings.mode = constant.mode_score;
+                settings.section = "top";
+            } else if (mode === "memes") {
+                modeBox.currentIndex = 4;
+                sortBox.visible = true;
+                settings.mode = constant.mode_memes;
+            } else {
+                modeBox.currentIndex = 0;
+                sortBox.visible = true;
+                settings.mode = constant.mode_main;
+                settings.section = "hot";
+            }
+            internal.setModeCommon();
+        }
 
         function setModeCommon() {
             settings.saveSetting("mode", settings.mode);

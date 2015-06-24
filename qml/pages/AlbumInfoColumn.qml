@@ -53,6 +53,13 @@ Item {
             if (event.key === Qt.Key_C) {
                 commentsModel.getComments(imgur_id);
                 commentsColumn.visible = true;
+                event.accepted = true;
+            }
+
+            // Back to main page
+            if (event.key === Qt.Key_Backspace) {
+                pageStack.pop();
+                event.accepted = true;
             }
         }
     }
