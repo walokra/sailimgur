@@ -9,6 +9,21 @@ Item {
     visible: is_gallery == true;
     z: 1;
 
+    Keys.onPressed: {
+        if (event.key === Qt.Key_0) {
+            internal.galleryFavorite(is_album);
+            event.accepted = true;
+        }
+        if (event.key === Qt.Key_Equal) {
+            internal.galleryVote("up");
+            event.accepted = true;
+        }
+        if (event.key === Qt.Key_Minus) {
+            internal.galleryVote("down");
+            event.accepted = true;
+        }
+    }
+
     QtObject {
         id: internal;
 
