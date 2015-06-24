@@ -16,6 +16,7 @@ QtObject {
     property bool toolbarBottom: false;
     property bool toolbarHidden: true;
     property bool useGalleryPage: false;
+    property bool useVideoLoader: false;
 
     // user
     property string user: "anonymous";
@@ -57,6 +58,7 @@ QtObject {
         Storage.writeSetting("playImages", settings.playImages);
         Storage.writeSetting("useGalleryPage", settings.useGalleryPage);
         Storage.writeSetting("toolbarBottom", settings.toolbarBottom);
+        Storage.writeSetting("useVideoLoader", settings.useVideoLoader);
     }
 
     function saveSetting(key, value) {

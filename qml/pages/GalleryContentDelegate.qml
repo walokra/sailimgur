@@ -22,7 +22,7 @@ Item {
         //console.debug("vWidth=" + vWidth + "; vHeight="+vHeight)
         if (animated === false) {
             imageLoader.active = true;
-        } else if (type === "image/gif" && (mp4 !== "" || webm != "")) {
+        } else if (type === "image/gif" && (mp4 !== "" || webm != "") && settings.useVideoLoader === true) {
             videoLoader.active = true;
         } else {
             imageLoader.active = true;
