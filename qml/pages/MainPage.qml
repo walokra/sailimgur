@@ -73,6 +73,21 @@ Page {
         }
     }
 
+//    Item {
+//        anchors.fill: parent
+//        focus: true
+//        Keys.onPressed: {
+//            if (event.key === Qt.Key_Down) {
+//                flickable.flick(0, 100);
+//                event.accepted = true;
+//            }
+//            if (event.key === Qt.Key_Up) {
+//                flickable.flick(0, -100);
+//                event.accepted = true;
+//            }
+//        }
+//    }
+
     SilicaFlickable {
         id: flickable;
         pressDelay: 0;

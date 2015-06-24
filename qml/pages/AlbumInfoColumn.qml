@@ -7,20 +7,35 @@ Item {
     anchors { left: parent.left; right: parent.right; bottom: parent.bottom; bottomMargin: constant.paddingMedium; }
     height: actionButtons.height + constant.paddingSmall;
     visible: is_gallery == true;
-    z: 1;
+    z: 9;
 
-    Keys.onPressed: {
-        if (event.key === Qt.Key_0) {
-            internal.galleryFavorite(is_album);
-            event.accepted = true;
-        }
-        if (event.key === Qt.Key_Equal) {
-            internal.galleryVote("up");
-            event.accepted = true;
-        }
-        if (event.key === Qt.Key_Minus) {
-            internal.galleryVote("down");
-            event.accepted = true;
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: {
+            //console.log("Keys.onPressed=" + event.key);
+            if (event.key === Qt.Key_0) {
+                internal.galleryFavorite(is_album);
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_Equal) {
+                internal.galleryVote("up");
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_Minus) {
+                internal.galleryVote("down");
+                event.accepted = true;
+            }
+
+            // Navigation
+            if (event.key === Qt.Key_Left) {
+                galleryNavigation.previous();
+                event.accepted = true;
+            }
+            if (event.key === Qt.Key_Right) {
+                galleryNavigation.next();
+                event.accepted = true;
+            }
         }
     }
 
