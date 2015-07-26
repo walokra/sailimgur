@@ -94,6 +94,7 @@ Item {
                     contextLink = link;
                     contextMenu = commentContextMenu.createObject(commentListView);
                     contextMenu.show(commentDelegate);
+                    contextMenu.anchors.left = depthRow.right
                 }
             }
 
@@ -217,7 +218,6 @@ Item {
             }
         }
     }
-    //}
 
     Component {
         id: commentContextMenu;
