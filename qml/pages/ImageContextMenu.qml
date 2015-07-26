@@ -7,7 +7,10 @@ ContextMenu {
 
     Label {
         id: linkLabel;
-        anchors { left: parent.left; right: parent.right; leftMargin: constant.paddingSmall; rightMargin: constant.paddingSmall; }
+        anchors { left: parent.left; right: parent.right;
+            leftMargin: constant.paddingSmall;
+            rightMargin: constant.paddingSmall;
+        }
         font.pixelSize: constant.fontSizeXSmall;
         color: constant.colorHighlight;
         wrapMode: Text.Wrap;
@@ -30,6 +33,14 @@ ContextMenu {
             pageStack.push(Qt.resolvedUrl("WebPage.qml"), props);
             //Qt.openUrlExternally(url);
             //infoBanner.showText(qsTr("Launching browser."));
+        }
+    }
+    MenuItem {
+        anchors { left: parent.left; right: parent.right; }
+        font.pixelSize: constant.fontSizeXSmall;
+        text: qsTr("Open in external browser");
+        onClicked: {
+            Qt.openUrlExternally(url);
         }
     }
     MenuItem {

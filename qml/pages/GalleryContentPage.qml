@@ -117,7 +117,22 @@ Page {
             }*/
 
             MenuItem {
-                id: browserMenu;
+                text: qsTr("Open in external browser");
+                onClicked: {
+                    Qt.openUrlExternally(galleryContentModel.gallery_page_link);
+                }
+            }
+
+            MenuItem {
+                anchors { left: parent.left; right: parent.right; }
+                text: qsTr("Copy link to clipboard");
+                onClicked: {
+                    Clipboard.text = galleryContentModel.gallery_page_link;
+                    infoBanner.showText(qsTr("Link " + Clipboard.text + " copied to clipboard."));
+                }
+            }
+
+            MenuItem {
                 text: qsTr("Open page in browser");
                 onClicked: {
                     var props = {
@@ -297,9 +312,9 @@ Page {
                     id: infoText;
                     anchors { top: scoreBars.bottom; left: parent.left; leftMargin: constant.paddingMedium; }
                     wrapMode: Text.Wrap;
-                    font.pixelSize: constant.fontSizeXSmall;
+                    font.pixelSize: constant.fontSizeXXSmall;
                     color: constant.colorHighlight;
-                    text: qsTr("by") + " " + galleryContentModel.account_url + " at " + galleryContentModel.datetime + ". " + galleryContentModel.views + " " + qsTr("views");
+                    text: galleryContentModel.info;
                 }
 
                 TextArea {

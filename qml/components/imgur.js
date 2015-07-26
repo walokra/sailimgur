@@ -502,6 +502,13 @@ function fillAlbumVariables(output, model) {
         model.downsPercent = 0;
     }
 
+
+    model.info = "";
+    if (model.account_url !== "") {
+        model.info += qsTr("by") + " " + model.account_url + " at ";
+    }
+    model.info += model.datetime + ". " + model.views + " " + qsTr("views");
+
     //console.log("score=" + score + "; total=" + total + "; ups=" + ups + "; downs=" + downs + " upsPercent=" + upsPercent + "; downsPercent="  + downsPercent);
 }
 

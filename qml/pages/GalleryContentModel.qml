@@ -13,6 +13,7 @@ ListModel {
     property string link : "";
     property string deletehash : "";
     property string imgur_id: "";
+    property string info: "";
 
     // Gallery props
     property string ups : "0";
@@ -45,6 +46,7 @@ ListModel {
         datetime = "";
         link = "";
         deletehash = "";
+        info = "";
 
         // Gallery props
         ups = "0";
