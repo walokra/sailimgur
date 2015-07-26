@@ -24,6 +24,15 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.7.4 (2015-07-26)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("New pulley actions for gallery page: open in external browser, copy link.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.7.3 (2015-06-25)" }
 
             Label {
