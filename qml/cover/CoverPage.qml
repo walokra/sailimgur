@@ -6,6 +6,8 @@ CoverBackground {
 
     anchors.fill: parent;
 
+    signal coverStatusChanged(int coverStatus);
+
     property int start : 0;
 
     ListModel {
@@ -21,6 +23,8 @@ CoverBackground {
             loadingRect.visible = false;
             fillCoverModel();
         }
+
+        coverStatusChanged(status);
     }
 
     function fillCoverModel() {

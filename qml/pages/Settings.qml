@@ -18,7 +18,7 @@ QtObject {
     property bool toolbarBottom: false;
     property bool toolbarHidden: true;
     property bool useGalleryPage: false;
-    property bool useVideoLoader: false;
+    property bool useVideoLoader: true;
 
     // user
     property string user: "anonymous";
@@ -36,6 +36,8 @@ QtObject {
     property bool autoplayAnim: true; // play anim gifs automatically?
 
     property string installedVersion: ""; // which version user currently has?
+
+    property int maxGifSize: 5;
 
     function loadSettings() {
         //Storage.reset();

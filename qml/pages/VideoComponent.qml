@@ -8,28 +8,55 @@ Component {
         id: root;
         anchors { left: parent.left; right: parent.right; }
 
-        height: video.height;
+        height: (video) ? video.height : 0;
 
         property int start_x;
         property int start_y;
-        property string videoUrl;
 
-        Component.onCompleted: {
-            if (mp4 !== "") {
-                videoUrl = mp4;
-            } else if (webm != "") {
-                videoUrl = webm;
+        Connections {
+            target: galleryContentPage;
+            onGgpStatusChanged: {
+                // When gallery page is changed, destroy video
+                if (ggpStatus === PageStatus.Deactivating) {
+                    mediaPlayer.stop();
+                    video.destroy();
+                }
             }
+        }
+
+        Connections {
+            target: coverPage;
+            onCoverStatusChanged: {
+                // When cover is activated, pause video and vice versa
+                if (coverStatus === PageStatus.Activating) {
+                    mediaPlayer.pause();
+                }
+                if (coverStatus === PageStatus.Deactivating) {
+                    mediaPlayer.play();
+                }
+            }
+        }
+
+        Image {
+            id: image;
+            anchors { left: parent.left; right: parent.right; }
+            asynchronous: true;
+
+            fillMode: Image.PreserveAspectFit;
+            source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? link_original : link;
+            width: parent.width;
+            visible: (mediaPlayer) ? mediaPlayer.playbackState == MediaPlayer.StoppedState : true;
         }
 
         VideoOutput {
             id: video;
+            anchors { left: parent.left; right: parent.right; }
             width: parent.orientation === Orientation.Portrait ? Screen.width : Screen.height;
             fillMode: VideoOutput.PreserveAspectFit;
 
             source: MediaPlayer {
                 id: mediaPlayer;
-                source: webm;
+                source: mp4;
                 autoPlay: settings.playImages;
                 loops: (looping) ? Animation.Infinite : 1;
             }
@@ -38,14 +65,14 @@ Component {
         BusyIndicator {
             id: loadingVideoIndicator;
             anchors { centerIn: parent; }
-            running: mediaPlayer.status === MediaPlayer.Loading;
+            running: (mediaPlayer) ? mediaPlayer.status === MediaPlayer.Loading : false;
             size: BusyIndicatorSize.Medium;
         }
 
         IconButton {
             id: playIcon;
             anchors { centerIn: parent; }
-            visible: mediaPlayer.playbackState == MediaPlayer.StoppedState || mediaPlayer.playbackState === MediaPlayer.PausedState;
+            visible: (mediaPlayer) ? mediaPlayer.playbackState == MediaPlayer.StoppedState || mediaPlayer.playbackState === MediaPlayer.PausedState : false;
             icon.width: Theme.itemSizeSmall;
             icon.height: Theme.itemSizeSmall;
             icon.source: constant.iconPlay;

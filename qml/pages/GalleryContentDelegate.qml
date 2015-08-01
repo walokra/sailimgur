@@ -13,18 +13,28 @@ Item {
     property int totalImages: 0;
 
     width: albumListView.width;
-    //height: menuOpen ? contextMenu.height + galleryContainer.height + indexLabel.paintedHeight : galleryContainer.height + indexLabel.paintedHeight;
     height: menuOpen ? contextMenu.height + galleryContainer.height : galleryContainer.height;
 
     // video/x-vp8, video/x-h264
+    // "No decoder available for type 'video/x-vp8'
     Component.onCompleted: {
-        //console.debug("type=" + type + "; mp4=" + mp4 +"; gifv=" + gifv + "; webm="+webm);
+        //console.debug("link=", link, "; size=",size, "type=",type, "; mp4=",mp4, "; gifv=",gifv, "; webm=",webm);
         //console.debug("vWidth=" + vWidth + "; vHeight="+vHeight)
+        imageLoader.active = false;
+        videoLoader.active = false;
+
         if (animated === false) {
             imageLoader.active = true;
-        } else if (type === "image/gif" && (mp4 !== "" || webm != "") && settings.useVideoLoader === true) {
-            videoLoader.active = true;
-        } else {
+        } else if (type === "image/gif" && (mp4 !== "") && settings.useVideoLoader === true) {
+            // If gifv video is under maxGifSize, use animatedImage (smoother)
+            if (size && size.indexOf("MiB") > -1) {
+                var sizeNo = size.replace(" MiB", "");
+                if (parseInt(sizeNo) > settings.maxGifSize) {
+                    videoLoader.active = true;
+                }
+            }
+        }
+        if (imageLoader.active == false && videoLoader.active == false) {
             imageLoader.active = true;
         }
     }
@@ -84,14 +94,15 @@ Item {
                 Loader {
                     id: videoLoader;
 
-                    anchors.horizontalCenter: parent.horizontalCenter;
+                    active: false;
+                    visible: active;
+                    asynchronous: true;
 
                     width: Math.min(vWidth, parent.width);
                     height: (active) ? vHeight : 0;
 
-                    active: false;
-                    visible: active;
-                    asynchronous: true;
+                    anchors.horizontalCenter: parent.horizontalCenter;
+
                     sourceComponent: videoComponent;
                 }
 

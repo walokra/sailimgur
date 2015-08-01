@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import "../components/imgur.js" as Imgur
 
 Page {
-    id: root;
+    id: galleryContentPage;
 
     allowedOrientations: Orientation.All;
 
@@ -25,8 +25,16 @@ Page {
 
     signal load();
     signal removedFromModel(string imgur_id);
+    signal ggpStatusChanged(int ggpStatus);
 
-    onLoad: {
+    onStatusChanged: {
+        if (status === PageStatus.Deactivating) {
+            // VideoComponent is listening, stopping player and destroying video on deactivation
+            ggpStatusChanged(status);
+        }
+    }
+
+    onLoad: {     
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
         galleryContentModel.resetVariables();
         galleryContentModel.clear();
@@ -55,11 +63,13 @@ Page {
 
         setPrevButton();
         flickable.scrollToTop();
+
+
     }
 
     onRemovedFromModel: {
         galleryModel.remove(currentIndex);
-        root.backNavigation = true;
+        galleryContentPage.backNavigation = true;
         pageStack.pop(PageStackAction.Animated);
     }
 
