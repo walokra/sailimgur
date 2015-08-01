@@ -16,7 +16,13 @@ Item {
         EnterKey.enabled: text.trim().length > 0;
         EnterKey.iconSource: "image://theme/icon-m-search";
         EnterKey.onClicked: {
-            internal.search(searchTextField.text);
+            var searchText = searchTextField.text;
+
+            if (searchText.indexOf("http://imgur.com") > -1) {
+                searchText = searchText.substr(searchText.lastIndexOf('/') + 1);
+            }
+
+            internal.search(searchText);
             focus = false;
         }
 
