@@ -22,7 +22,16 @@ ListItem {
         icon.source: constant.iconSave;
         onClicked: {
             savingInProgress = true;
-            sailimgurMgr.saveImage(image.source);
+            if (type === "image/gif" && size && size.indexOf("MiB") > -1) {
+                var sizeNo = size.replace(" MiB", "");
+                if (parseInt(sizeNo) > settings.maxGifSize) {
+                    sailimgurMgr.saveImage(mp4);
+                } else {
+                    sailimgurMgr.saveImage(link_original);
+                }
+            } else {
+                sailimgurMgr.saveImage(link_original);
+            }
         }
     }
 
