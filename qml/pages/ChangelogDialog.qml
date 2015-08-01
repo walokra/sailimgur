@@ -24,6 +24,22 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.7.5 (2015-08-02)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Added setting to filter mature content. Showing mature content is off by default, 'safe for work'.");
+            }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("To open imgur link with app, paste link to search field.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.7.4 (2015-07-26)" }
 
             Label {
