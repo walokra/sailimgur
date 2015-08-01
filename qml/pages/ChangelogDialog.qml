@@ -24,7 +24,14 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
-            SectionHeader { text: qsTr("Version") + " 0.7.5 (2015-08-02)" }
+            SectionHeader { text: qsTr("Version") + " 0.8.0 (2015-08-02)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Enable playing mp4 videos by default, enhancements regarding playing videos.");
+            }
 
             Label {
                 width: parent.width;
