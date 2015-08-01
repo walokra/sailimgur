@@ -5,6 +5,7 @@ QtObject {
     id: settings;
 
     signal settingsLoaded;
+    signal settingsSaved;
 
     property string accessToken : "";
     property string refreshToken : "";
@@ -12,6 +13,7 @@ QtObject {
     // Settings page
     property int albumImagesLimit: 3;
     property bool showComments: false;
+    property bool showNsfw: false;
     property bool playImages: false;
     property bool toolbarBottom: false;
     property bool toolbarHidden: true;
@@ -55,10 +57,13 @@ QtObject {
     function saveSettings() {
         Storage.writeSetting("albumImagesLimit", settings.albumImagesLimit);
         Storage.writeSetting("showComments", settings.showComments);
+        Storage.writeSetting("showNsfw", settings.showNsfw);
         Storage.writeSetting("playImages", settings.playImages);
         Storage.writeSetting("useGalleryPage", settings.useGalleryPage);
         Storage.writeSetting("toolbarBottom", settings.toolbarBottom);
         Storage.writeSetting("useVideoLoader", settings.useVideoLoader);
+
+        settingsSaved();
     }
 
     function saveSetting(key, value) {

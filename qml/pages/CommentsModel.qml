@@ -8,6 +8,7 @@ ListModel {
     property var allComments : [];
     property int total : 0;
     property bool loaded: false;
+    property bool showNsfw: settings.showNsfw;
 
     function resetVariables() {
         index = 0;

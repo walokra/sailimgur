@@ -17,6 +17,7 @@ Page {
                 pageStack.push(Qt.resolvedUrl("ChangelogDialog.qml"));
             }
 
+            galleryModel.showNsfw = settings.showNsfw;
             galleryModel.clear();
             signInPage.refreshDone = false;
             loadingRect.visible = false;
@@ -34,6 +35,10 @@ Page {
                     internal.accountCurrentOnFailure()
                 );
             }
+        }
+
+        onSettingsSaved: {
+            galleryModel.showNsfw = settings.showNsfw;
         }
     }
 

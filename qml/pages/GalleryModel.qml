@@ -10,6 +10,8 @@ ListModel {
     property string query : "";
     property bool addToList : false;
 
+    property bool showNsfw: false;
+
     function nextPage(searchText) {
         processGalleryMode(searchText);
     }

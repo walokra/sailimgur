@@ -318,14 +318,16 @@ function handleGalleryJSON(response, model) {
             vote = output.vote;
         }
 
-        model.append({
-                         id: output.id,
-                         title: title,
-                         link: link,
-                         is_album: output.is_album,
-                         vote: vote,
-                         is_gallery: true
-                     });
+        if (output.nsfw !== true || model.showNsfw === true) {
+            model.append({
+                     id: output.id,
+                     title: title,
+                     link: link,
+                     is_album: output.is_album,
+                     vote: vote,
+                     is_gallery: true
+                 });
+        }
     }
 }
 
@@ -530,22 +532,11 @@ function handleCommentJSON(response, model) {
 }
 
 function parseComments(output, depth, model) {
-    var date = formatEpochDatetime(output.datetime);
-
-    var vote = (output.vote) ? output.vote : "veto";
     var childrens = parseInt(output.children.length);
-    model.push({
-                   id: output.id,
-                   comment: replaceURLWithHTMLLinks(output.comment),
-                   author: output.author,
-                   ups: output.ups,
-                   downs: output.downs,
-                   points: output.points,
-                   datetime: date,
-                   //children: output.children,
-                   depth: depth,
-                   vote: vote
-    });
+
+    if (output.nsfw !== true || model.showNsfw === true) {
+        addCommentToModel(output, depth, model)
+    }
 
     //console.log("childrens: " + JSON.stringify(output.children));
 
@@ -560,19 +551,26 @@ function parseComments(output, depth, model) {
     }
 }
 
-function parseComment(output, model) {
+function addCommentToModel(output, depth, model) {
     var date = formatEpochDatetime(output.datetime);
 
+    var vote = (output.vote) ? output.vote : "vote";
     model.push({
-       id: output.id,
-       comment: replaceURLWithHTMLLinks(output.comment),
-       author: output.author,
-       ups: output.ups,
-       downs: output.downs,
-       points: output.points,
-       datetime: date,
-       vote: output.vote
+                   id: output.id,
+                   comment: replaceURLWithHTMLLinks(output.comment),
+                   author: output.author,
+                   ups: output.ups,
+                   downs: output.downs,
+                   points: output.points,
+                   datetime: date,
+                   //children: output.children,
+                   depth: depth,
+                   vote: vote
     });
+}
+
+function parseComment(output, model) {
+    addCommentToModel(output, 0, model);
 }
 
 

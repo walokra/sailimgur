@@ -47,9 +47,7 @@ Dialog {
                 text: qsTr("Show comments");
                 checked: settings.showComments;
                 onClicked: {
-                    //console.log("onClicked=" + checked);
                     checked ? settings.showComments = true : settings.showComments = false;
-                    //console.log("settings.showComments=" + settings.showComments);
                 }
             }
             Label {
@@ -58,6 +56,25 @@ Dialog {
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
                 text: qsTr("Load comments automatically.");
+            }
+
+            TextSwitch {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingMedium;
+                anchors.rightMargin: constant.paddingMedium;
+                text: qsTr("Show mature content");
+                checked: settings.showNsfw;
+                onClicked: {
+                    checked ? settings.showNsfw = true : settings.showNsfw = false;
+                }
+            }
+            Label {
+                anchors {left: parent.left; right: parent.right; }
+                anchors.leftMargin: constant.paddingExtraLarge;
+                anchors.rightMargin: constant.paddingMedium;
+                font.pixelSize: constant.fontSizeXSmall;
+                wrapMode: Text.Wrap;
+                text: qsTr("Mature posts and comments may include sexually suggestive or adult-oriented content.");
             }
 
             TextSwitch {
