@@ -13,7 +13,7 @@ Dialog {
 
         anchors.fill: parent;
 
-        contentHeight: contentArea.height;
+        contentHeight: contentArea.height + 300;
 
         DialogHeader {
             id: header;
@@ -41,7 +41,7 @@ Dialog {
             }
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Show comments");
@@ -51,7 +51,7 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
@@ -59,7 +59,7 @@ Dialog {
             }
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Show mature content");
@@ -69,7 +69,7 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
@@ -78,7 +78,7 @@ Dialog {
             }
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Autoplay videos / images");
@@ -88,7 +88,7 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
@@ -98,7 +98,7 @@ Dialog {
 
             /*
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Show album images in own page");
@@ -108,7 +108,7 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
@@ -118,7 +118,7 @@ Dialog {
             */
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Use video player");
@@ -128,16 +128,16 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
                 wrapMode: Text.Wrap;
-                text: qsTr("Use video player to play gifv videos (webm). Needs qstreamer support and decoders.");
+                text: qsTr("Use video player to play gifv videos (mp4).");
             }
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Hide toolbar when scrolling");
@@ -148,7 +148,7 @@ Dialog {
             }
 
             TextSwitch {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingMedium;
                 anchors.rightMargin: constant.paddingMedium;
                 text: qsTr("Toolbar on bottom");
@@ -159,7 +159,7 @@ Dialog {
                 }
             }
             Label {
-                anchors {left: parent.left; right: parent.right; }
+                anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
                 font.pixelSize: constant.fontSizeXSmall;
