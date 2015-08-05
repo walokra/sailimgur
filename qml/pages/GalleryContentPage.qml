@@ -215,8 +215,25 @@ Page {
                 id: galleryContentColumn;
                 anchors { left: parent.left; right: parent.right; }
 
-                height: (showMoreItem.visible) ? albumListView.height + showMoreButton.height : albumListView.height;
+                height: (showMoreItem.visible || showPrevItem.visible ) ? albumListView.height + showMoreButton.height + showPrevButton.height : albumListView.height;
                 width: parent.width;
+
+                Item {
+                    id: showPrevItem;
+                    width: parent.width;
+                    height: visible ? showPrevButton.height + 2 * constant.paddingSmall : 0;
+                    visible: galleryContentModel.prev > 0;
+
+                    Button {
+                        id: showPrevButton;
+                        anchors.centerIn: parent;
+                        enabled: galleryContentModel.prev > 0;
+                        text: qsTr("show previous (" + galleryContentModel.prev + " remaining)");
+                        onClicked: {
+                            galleryContentModel.getPrevImages();
+                        }
+                    }
+                }
 
                 Flow {
                     id: albumListView;
@@ -243,12 +260,12 @@ Page {
                     id: showMoreItem;
                     width: parent.width;
                     height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
-                    visible: galleryContentModel.count < galleryContentModel.total;
+                    visible: galleryContentModel.left > 0;
 
                     Button {
                         id: showMoreButton;
                         anchors.centerIn: parent;
-                        enabled: galleryContentModel.count < galleryContentModel.total;
+                        enabled: galleryContentModel.left > 0;
                         text: qsTr("show more (" + galleryContentModel.total + " total, " + galleryContentModel.left + " remaining)");
                         onClicked: {
                             if (settings.useGalleryPage) {
@@ -368,7 +385,6 @@ Page {
                 Item {
                     id: showCommentsItem;
                     width: parent.width
-                    //height: visible ? showCommentsButton.height + 2 * constant.paddingSmall : 0;
                     height: visible ? showCommentsButton.height : 0;
                     visible: commentsModel.count == 0;
 

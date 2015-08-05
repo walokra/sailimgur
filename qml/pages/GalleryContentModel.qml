@@ -32,6 +32,7 @@ ListModel {
     property var allImages : [];
     property int total : 0;
     property int left : 0;
+    property int prev : 0;
 
     property bool loaded: false;
 
@@ -64,13 +65,14 @@ ListModel {
         left = 0;
         allImages = [];
         loaded = false;
+        prev = 0;
     }
 
     function callImgur(mode, id, is_gallery) {
         if (is_gallery) {
             if (mode === "album") {
                 Imgur.getGalleryAlbum(id, allImages, listModel,
-                                      onSuccess(settings.albumImagesLimit),
+                                      onSuccess(),
                                       onFailure(mode, id, is_gallery)
                                       );
             } else if (mode === "image") {
@@ -82,7 +84,7 @@ ListModel {
         } else {
             if (mode === "album") {
                 Imgur.getAlbum(id, allImages, listModel,
-                               onSuccess(settings.albumImagesLimit),
+                               onSuccess(),
                                onFailure(mode, id, is_gallery)
                                );
             } else if (mode === "image") {
@@ -108,19 +110,42 @@ ListModel {
         callImgur("image", id, is_gallery);
     }
 
-    function getNextImages(initialLimit) {
+    function getPrevImages() {
+        index -= 1;
+        var limit = settings.albumImagesLimit;
+        var start = index * limit - limit;
+        if (start < 0) {
+            start = 0;
+        }
+        var end = index * limit;
+        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index);
+        listModel.clear();
+        listModel.append(allImages.slice(start, end));
+
+        prev = start;
+        left = allImages.length - end;
+    }
+
+    function getNextImages() {
+        var limit = settings.albumImagesLimit;
         var start = 0;
         var end = allImages.length;
         if (!isSlideshow) {
-            start = (initialLimit) ? 0 : listModel.count;
+            start = index * limit;
             index += 1;
-            end = (initialLimit) ? initialLimit : listModel.count + settings.albumImagesSlice;
+            end = start + limit;
         }
-        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length);
+        if (end > allImages.length) { end = allImages.length; }
+        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index);
+        listModel.clear();
         listModel.append(allImages.slice(start, end));
 
         total = allImages.length;
-        left = total - listModel.count;
+        left = total - end;
+        prev = end - limit;
+        if (prev < 0) {
+            prev = 0;
+        }
     }
 
     function onSuccess(albumImagesLimit) {
