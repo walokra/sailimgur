@@ -24,6 +24,15 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.8.1 (2015-08-09)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Theme.fontSizeExtraSmall;
+                text: qsTr("Add 'previous images' to limit showed images and to fix issues with large albums.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.8.0 (2015-08-02)" }
 
             Label {
