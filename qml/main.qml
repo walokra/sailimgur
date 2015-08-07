@@ -93,7 +93,17 @@ ApplicationWindow {
 
         function showHttpError(errorCode, errorMessage) {
             console.log("API error: code=" + JSON.stringify(errorCode) + "; message=" + errorMessage);
-            showError(errorMessage);
+            if (errorMessage.indexOf('{"data":{"error":') > -1) {
+                try {
+                    var jsonObject = JSON.parse(errorMessage);
+                    showError(jsonObject.data.error);
+                } catch (err) {
+                    showError(errorMessage);
+                }
+            } else {
+                showError(errorMessage);
+            }
+
             /*
             switch (errorCode) {
                 case 0:
