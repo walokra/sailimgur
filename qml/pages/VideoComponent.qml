@@ -31,9 +31,6 @@ Component {
                 if (coverStatus === PageStatus.Activating) {
                     mediaPlayer.pause();
                 }
-                if (coverStatus === PageStatus.Deactivating) {
-                    mediaPlayer.play();
-                }
             }
         }
 
