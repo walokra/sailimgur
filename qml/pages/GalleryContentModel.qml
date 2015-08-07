@@ -113,37 +113,57 @@ ListModel {
     function getPrevImages() {
         index -= 1;
         var limit = settings.albumImagesLimit;
-        var start = index * limit - limit;
-        if (start < 0) {
-            start = 0;
-        }
         var end = index * limit;
-        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index);
+        total = allImages.length;
+        var start = (end - limit) < 0 ? 0 : (end - limit);
+
+        if (listModel.count > limit) {
+            end = total - listModel.count;
+            start = (end - limit) < 0 ? 0 : (end - limit);
+        }
+        prev = start;
+
+        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index
+        //            + "; prev=" + prev + "; left=" + left + "; limit=" + limit);
+
         listModel.clear();
         listModel.append(allImages.slice(start, end));
-
-        prev = start;
-        left = allImages.length - end;
+        left = total - end;
     }
 
     function getNextImages() {
         var limit = settings.albumImagesLimit;
         var start = 0;
         var end = allImages.length;
+        total = allImages.length;
         if (!isSlideshow) {
             start = index * limit;
             index += 1;
-            end = start + limit;
+            end = (start + limit) > total ? total : start + limit;
         }
-        if (end > allImages.length) { end = allImages.length; }
-        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index);
-        listModel.clear();
-        listModel.append(allImages.slice(start, end));
+        prev = (end - limit) < 0 ? 0 : (end - limit);
 
-        total = allImages.length;
-        left = total - end;
-        prev = end - limit;
-        if (prev < 0) {
+        //console.log("start=" + start + "; end=" + end + "; total=" + allImages.length + "; index=" + index
+        //            + "; prev=" + prev + "; left=" + left + "; limit=" + limit);
+
+        if (left >= limit) {
+            listModel.clear();
+            listModel.append(allImages.slice(start, end));
+            left = total - end;
+        } else {
+            listModel.append(allImages.slice(start, end));
+            if (listModel.count > limit) {
+                prev = total - listModel.count;
+                left = 0;
+                index -= 1;
+            } else {
+                left = total - end;
+            }
+        }
+        //console.log("prev=" + prev + "; left=" + left);
+
+        if (listModel.count === total) {
+            left = 0;
             prev = 0;
         }
     }
