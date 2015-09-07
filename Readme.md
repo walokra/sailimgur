@@ -18,7 +18,7 @@ ToDo
 Build for testing
 -----------------
 
-If you wanna build Sailimgur from source, fill in the API client_id for imgur service in src/qml/pages/Settings.qml.
+If you wanna build Sailimgur from source, fill in the API client_id and clientSecret for imgur service in src/qml/pages/Constant.qml.
 
 Downloads
 ---------

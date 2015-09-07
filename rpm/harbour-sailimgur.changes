@@ -1,6 +1,5 @@
 * Sun Aug 9 2015 Marko Wallin <mtw@iki.fi> 0.8.1-1
-Limit showing only limited amount of images in album.
-Add previous button to accompany more button.
+Show only limited amount of images in album at a time.
 
 * Sun Aug 2 2015 Marko Wallin <mtw@iki.fi> 0.8.0-1
 Enable playing mp4 videos as SailfishOS 1.1.7.25 update got GStreamer 1.0 update.
