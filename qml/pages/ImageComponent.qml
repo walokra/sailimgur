@@ -25,10 +25,41 @@ Component {
             smooth: false;
 
             PinchArea {
-                anchors.fill: parent;
-                pinch.target: parent;
-                pinch.minimumScale: 1;
-                pinch.maximumScale: 4;
+                id: pinchArea
+
+                property real minScale: 1.0
+                property real maxScale: 3.0
+
+                anchors.fill: parent
+                enabled: image.status === Image.Ready
+                pinch.target: image
+                pinch.minimumScale: minScale * 0.5 // This is to create "bounce back effect"
+                pinch.maximumScale: maxScale * 1.5 // when over zoomed
+
+                onPinchFinished: {
+                    if (image.scale < pinchArea.minScale) {
+                        bounceBackAnimation.to = pinchArea.minScale
+                        bounceBackAnimation.start()
+                    }
+                    else if (image.scale > pinchArea.maxScale) {
+                        bounceBackAnimation.to = pinchArea.maxScale
+                        bounceBackAnimation.start()
+                    }
+                }
+
+                NumberAnimation {
+                    id: bounceBackAnimation
+                    target: image
+                    duration: 250
+                    property: "scale"
+                    from: image.scale
+                }
+                // workaround to qt5.2 bug
+                // otherwise pincharea is ignored
+                Rectangle {
+                    opacity: 0.0
+                    anchors.fill: parent
+                }
             }
         }
 
