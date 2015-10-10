@@ -1,3 +1,7 @@
+* Sat Oct 10 2015 Marko Wallin <mtw@iki.fi> 0.8.2-1
+Fix zoom on image.
+Adjust UI elements for tablet.
+
 * Sun Aug 9 2015 Marko Wallin <mtw@iki.fi> 0.8.1-1
 Show only limited amount of images in album at a time.
 
