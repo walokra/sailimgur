@@ -114,13 +114,13 @@ CoverBackground {
             }
         }
 
-        CoverAction {
-            iconSource: "image://theme/icon-cover-next";
-            onTriggered: {
-                start = start + 9;
-                fillCoverModel();
-            }
-        }
+//        CoverAction {
+//            iconSource: "image://theme/icon-cover-next";
+//            onTriggered: {
+//                start = start + 9;
+//                fillCoverModel();
+//            }
+//        }
     }
 
 }
