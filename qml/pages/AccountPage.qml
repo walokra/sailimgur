@@ -62,7 +62,8 @@ Page {
                 text: bio;
                 visible: (bio != "") ? true : false;
                 color: constant.colorHighlight;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 width: parent.width;
             }
 
@@ -73,26 +74,30 @@ Page {
                 Label {
                     text: reputation + qsTr(" reputation");
                     color: constant.colorHighlight;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall
                 }
 
                 Label {
                     text: "|";
                     color: constant.colorHighlight;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall
                 }
 
                 Label {
                     text: qsTr("Member since ") + created;
                     color: constant.colorHighlight;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall
                 }
 
                 /*
                 Label {
                     text: qsTr("Pro: ") + pro_expiration;
                     color: constant.colorHighlight;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 }
                 */
             }
@@ -105,7 +110,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Uploaded images");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: uploadsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -124,7 +130,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Favorites");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: favoritesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -145,7 +152,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Albums");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: albumsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -166,7 +174,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Images");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: imagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -188,7 +197,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("messages");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                            ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: messagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -206,7 +216,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("account settings");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                            ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: accountSettingsItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 
@@ -225,7 +236,8 @@ Page {
                     anchors { left: parent.left; right: parent.right; }
                     anchors.verticalCenter: parent.verticalCenter;
                     text: qsTr("Logout");
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     color: imagesItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                 }
 

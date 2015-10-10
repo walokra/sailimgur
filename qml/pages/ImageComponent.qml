@@ -11,13 +11,15 @@ Component {
         property int start_x;
         property int start_y;
 
+        property bool isTablet: Screen.sizeCategory >= Screen.Large;
+
         AnimatedImage {
             id: image;
             anchors { left: parent.left; right: parent.right; }
             asynchronous: true;
 
             fillMode: Image.PreserveAspectFit;
-            source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? link_original : link;
+            source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted || isTablet) ? link_original : link;
             width: parent.width;
             playing: settings.autoplayAnim;
             paused: false;
@@ -74,8 +76,8 @@ Component {
             id: playIcon;
             anchors { centerIn: parent; }
             visible: animated && !image.playing;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeMedium;
+            icon.height: icon.width;
             icon.source: constant.iconPlay;
             onClicked: internal.clickPlay();
         }

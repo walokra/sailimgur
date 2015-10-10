@@ -55,7 +55,8 @@ Page {
                         anchors.horizontalCenter: parent.horizontalCenter;
                         anchors.verticalCenter: parent.verticalCenter;
                         text: qsTr("Gallery");
-                        font.pixelSize: constant.fontSizeMedium;
+                        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                            ? constant.fontSizeLarge : constant.fontSizeMedium;
                         color: deviceItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                     }
 
@@ -80,7 +81,8 @@ Page {
                         anchors.horizontalCenter: parent.horizontalCenter;
                         anchors.verticalCenter: parent.verticalCenter;
                         text: qsTr("Camera");
-                        font.pixelSize: constant.fontSizeMedium;
+                        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeLarge : constant.fontSizeMedium;
                         color: cameraItem.highlighted ? constant.colorHighlight : constant.colorPrimary;
                     }
 

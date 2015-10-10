@@ -30,7 +30,8 @@ Item {
         Label {
             id: titleLbl;
             width: parent.width;
-            font.pixelSize: constant.fontSizeSmall;
+            font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                ? constant.fontSizeMedium : constant.fontSizeSmall;
             textFormat: Text.PlainText;
             wrapMode: Text.Wrap;
             text: item_title
@@ -39,7 +40,8 @@ Item {
         Label {
             id: linkLbl;
             width: parent.width;
-            font.pixelSize: constant.fontSizeSmall;
+            font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                ? constant.fontSizeMedium : constant.fontSizeSmall;
             textFormat: Text.StyledText;
             linkColor: Theme.highlightColor;
             truncationMode: TruncationMode.Fade;
@@ -57,7 +59,8 @@ Item {
 
             Label {
                 id: datetimeLbl
-                font.pixelSize: constant.fontSizeXXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                 color: constant.colorHighlight;
                 textFormat: Text.PlainText;
                 text: Utils.formatEpochDatetime(item_datetime);

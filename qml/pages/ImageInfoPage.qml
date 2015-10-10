@@ -43,50 +43,58 @@ Page {
             Row {
                 Label {
                     text: qsTr('Id: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.image_id;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
             }
 
             Row {
                 Label {
                     text: qsTr('Width: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
 
                 Label {
                     text: root.image_width;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
             }
 
             Row {
                 Label {
                     text: qsTr('Height: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
 
                 Label {
                     text: root.image_height;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
             }
 
             Row {
                 Label {
                     text: qsTr('Type: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.type;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -94,37 +102,43 @@ Page {
             Row {
                 Label {
                     text: qsTr('Size: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
 
                 Label {
                     text: root.size;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
             }
 
             Row {
                 Label {
                     text: qsTr('Views: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
 
                 Label {
                     text: root.views;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                 }
             }
 
             Row {
                 Label {
                     text: qsTr('Bandwidth: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.bandwith;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -132,13 +146,15 @@ Page {
             Row {
                 Label {
                     text: qsTr('Section: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.section;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -146,13 +162,15 @@ Page {
             Row {
                 Label {
                     text: qsTr('Animated: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.animated;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -160,13 +178,15 @@ Page {
             Row {
                 Label {
                     text: qsTr('NSFW: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.nsfw;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -174,13 +194,15 @@ Page {
             Row {
                 Label {
                     text: qsTr('Upvotes: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.ups;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }
@@ -188,13 +210,15 @@ Page {
             Row {
                 Label {
                     text: qsTr('Downvotes: ');
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
 
                 Label {
                     text: root.downs;
-                    font.pixelSize: Theme.fontSizeExtraSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
                     wrapMode: Text.WrapAnywhere;
                 }
             }

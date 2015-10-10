@@ -93,7 +93,8 @@ Item {
                     anchors.rightMargin: constant.paddingSmall;
                     wrapMode: Text.Wrap;
                     text: title;
-                    font.pixelSize: constant.fontSizeXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
                     color: constant.colorHighlight;
                     anchors { left: parent.left; right: parent.right; }
                     visible: (title && is_album) ? true : false;
@@ -135,7 +136,8 @@ Item {
             id: imageDescText;
             wrapMode: Text.Wrap;
             text: description;
-            font.pixelSize: constant.fontSizeXSmall;
+            font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                ? constant.fontSizeSmall : constant.fontSizeXSmall;
             anchors { left: parent.left; right: parent.right; }
             anchors.leftMargin: constant.paddingSmall;
             anchors.rightMargin: constant.paddingSmall;
@@ -156,7 +158,8 @@ Item {
     Label {
         id: indexLabel;
         text: "image " + (index + 1) + " of " + (galleryContentModel.total);
-        font.pixelSize: constant.fontSizeMedium;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                         ? constant.fontSizeLarge : constant.fontSizeMedium;
         color: constant.colorHighlight;
         anchors { top: galleryContainer.bottom; right: parent.right; }
         anchors.leftMargin: constant.paddingSmall;

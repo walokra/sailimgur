@@ -11,7 +11,8 @@ ContextMenu {
             leftMargin: constant.paddingSmall;
             rightMargin: constant.paddingSmall;
         }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         color: constant.colorHighlight;
         wrapMode: Text.Wrap;
         elide: Text.ElideRight;
@@ -24,7 +25,8 @@ ContextMenu {
 
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Open link in browser");
         onClicked: {
             var props = {
@@ -37,7 +39,8 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Open in external browser");
         onClicked: {
             Qt.openUrlExternally(url);
@@ -45,7 +48,8 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Copy link to clipboard");
         onClicked: {
             Clipboard.text = url;

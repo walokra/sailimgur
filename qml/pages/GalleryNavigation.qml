@@ -6,7 +6,8 @@ Item {
     id: navBg;
     width: parent.width;
     anchors { bottom: parent.bottom; }
-    height: 80;
+    anchors.bottomMargin: constant.paddingSmall
+    height: constant.iconSizeMedium + constant.paddingSmall
     z: 2;
     visible: galleryModel.count > 1 || page > 0;
 
@@ -54,8 +55,8 @@ Item {
             id: prevButton;
             visible: prevEnabled;
             enabled: prevEnabled;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeMedium;
+            icon.height: icon.width;
             anchors { left: parent.left; leftMargin: constant.paddingMedium; }
 
             icon.source: constant.iconLeft;
@@ -67,8 +68,8 @@ Item {
         IconButton {
             id: nextButton;
             visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeMedium;
+            icon.height: icon.width;
             anchors { right: parent.right; rightMargin: constant.paddingMedium; }
 
             icon.source: constant.iconRight;

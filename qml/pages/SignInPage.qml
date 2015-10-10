@@ -31,7 +31,8 @@ Page {
             Label {
                 id: helpLabel;
                 anchors { left: parent.left; right: parent.right }
-                font.pixelSize: constant.fontSizeMedium;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeLarge : constant.fontSizeMedium;
                 wrapMode: Text.Wrap;
                 text: qsTr("To use Sailimgur, you must sign in to your imgur account first. \
 Click the button below will launch an external web browser for you to sign in.");
@@ -59,7 +60,8 @@ Click the button below will launch an external web browser for you to sign in.")
             Label {
                 id: afterLabel;
                 anchors { left: parent.left; right: parent.right; }
-                font.pixelSize: constant.fontSizeMedium;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeLarge : constant.fontSizeMedium;
                 wrapMode: Text.Wrap;
                 text: qsTr("After sign in, a PIN code will display. Enter the PIN code in the text field below and click done.");
             }

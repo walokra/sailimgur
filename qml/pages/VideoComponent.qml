@@ -70,8 +70,8 @@ Component {
             id: playIcon;
             anchors { centerIn: parent; }
             visible: (mediaPlayer) ? mediaPlayer.playbackState == MediaPlayer.StoppedState || mediaPlayer.playbackState === MediaPlayer.PausedState : false;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeMedium;
+            icon.height: icon.width;
             icon.source: constant.iconPlay;
             onClicked: internal.clickPlay();
         }

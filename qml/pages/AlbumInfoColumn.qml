@@ -119,13 +119,25 @@ Item {
         id: actionButtons;
         anchors.horizontalCenter: parent.horizontalCenter;
         width: childrenRect.width;
-        height: 64;
+        height: constant.iconSizelarge
         spacing: Theme.paddingLarge * 2;
+
+//        IconButton {
+//            id: dislikeButton;
+//            enabled: loggedIn;
+//            icon.width: constant.iconSizeSmall;
+//            icon.height: icon.width;
+//            icon.source: constant.iconDislike + "?" + ((galleryContentModel.vote === "down") ? "red" : constant.iconDefaultColor)
+//            onClicked: {
+//                internal.galleryVote("down");
+//            }
+//        }
 
         Rectangle {
             id: dislikeRect;
-            width: 48;
-            height: 48;
+            width: constant.iconSizeMedium
+            height: width
+            anchors.verticalCenter: parent.verticalCenter
 
             radius: 75;
             color: (galleryContentModel.vote === "down") ? "red" : constant.iconDefaultColor;
@@ -134,8 +146,8 @@ Item {
                 id: dislikeButton;
                 anchors.centerIn: parent;
                 enabled: loggedIn;
-                icon.width: Theme.itemSizeExtraSmall;
-                icon.height: Theme.itemSizeExtraSmall;
+                icon.width: constant.iconSizeMedium;
+                icon.height: icon.width
                 icon.source: constant.iconDislike;
                 onClicked: {
                     internal.galleryVote("down");
@@ -143,10 +155,22 @@ Item {
             }
         }
 
+//        IconButton {
+//            id: likeButton;
+//            enabled: loggedIn;
+//            icon.width: constant.iconSizeMedium;
+//            icon.height: icon.width;
+//            icon.source: constant.iconLike + "?" + ((galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor)
+//            onClicked: {
+//                internal.galleryVote("up");
+//            }
+//        }
+
         Rectangle {
             id: likeRect;
-            width: 64;
-            height: 64;
+            width: constant.iconSizeLarge
+            height: width
+            anchors.verticalCenter: parent.verticalCenter
 
             radius: 75;
             color: (galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor;
@@ -155,8 +179,8 @@ Item {
                 id: likeButton;
                 anchors.centerIn: parent;
                 enabled: loggedIn;
-                icon.width: Theme.itemSizeMedium;
-                icon.height: Theme.itemSizeMedium;
+                icon.width: constant.iconSizeLarge
+                icon.height: icon.width
                 icon.source: constant.iconLike;
                 onClicked: {
                     internal.galleryVote("up");
@@ -164,10 +188,22 @@ Item {
             }
         }
 
+//        IconButton {
+//            id: favoriteButton;
+//            enabled: loggedIn;
+//            icon.width: constant.iconSizeSmall;
+//            icon.height: icon.width;
+//            icon.source: constant.iconFavorite + "?" + ((galleryContentModel.favorite) ? "green" : constant.iconDefaultColor)
+//            onClicked: {
+//                internal.galleryFavorite(is_album);
+//            }
+//        }
+
         Rectangle {
             id: favRect;
-            width: 52;
-            height: 52;
+            width: constant.iconSizeMedium
+            height: width
+            anchors.verticalCenter: parent.verticalCenter
 
             radius: 75;
             color: (galleryContentModel.favorite) ? "green" : constant.iconDefaultColor;
@@ -176,8 +212,8 @@ Item {
                 id: favoriteButton;
                 anchors.centerIn: parent;
                 enabled: loggedIn;
-                icon.width: Theme.itemSizeExtraSmall;
-                icon.height: Theme.itemSizeExtraSmall;
+                icon.width: constant.iconSizeMedium;
+                icon.height: icon.width
                 icon.source: constant.iconFavorite;
                 onClicked: {
                     internal.galleryFavorite(is_album);

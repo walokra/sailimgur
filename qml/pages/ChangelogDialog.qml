@@ -29,7 +29,8 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Add 'previous images' to limit showed images and to fix issues with large albums.");
             }
 
@@ -38,21 +39,24 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Enable playing mp4 videos by default, enhancements regarding playing videos.");
             }
 
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Added setting to filter mature content. Showing mature content is off by default, 'safe for work'.");
             }
 
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("To open imgur link with app, paste link to search field.");
             }
 
@@ -61,7 +65,8 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("New pulley actions for gallery page: open in external browser, copy link.");
             }
 
@@ -70,13 +75,15 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Support for actions with TOHKBD keys. Navigation with arrow keys, backspace, M to load more, C to load comments, gallery mode changed with 1-5.");
             }
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Revert to showing plain animated images instead of gifv videos which aren't yet supported by Sailfish OS.");
             }
 
@@ -85,21 +92,24 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Gifv videos still unplayable due missing decoders. To view them, open album with browser (pulldown menu).");
             }
             /*
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Added support for gifv videos.");
             }
             */
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Option for autoplaying gif.");
             }
             /*
@@ -113,7 +123,8 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Fix Qt 5.2 WebView chokes on caches from older Qt versions.");
             }
 
@@ -122,25 +133,29 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Use toolbar instead of sidebar for functions.");
             }
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Option to select toolbar position top/bottom.");
             }
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Account page shows user info and pages.");
             }
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Image info shown on page.");
             }
 
@@ -150,13 +165,15 @@ Dialog {
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("Save image to Pictures.");
             }
             Label {
                 width: parent.width;
                 wrapMode: Text.Wrap;
-                font.pixelSize: Theme.fontSizeExtraSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: qsTr("User Interface adjustments: next/previous links, image and comment actions.");
             }
         }

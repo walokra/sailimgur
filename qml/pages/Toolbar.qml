@@ -26,9 +26,8 @@ Item {
             id: logoButton;
             anchors { left: parent.left; }
             anchors.rightMargin: Theme.paddingMedium;
-            //anchors.verticalCenter: parent.verticalCenter;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeLarge;
+            icon.height: icon.width;
             icon.source: constant.iconLogo;
             opacity: 0.9;
 
@@ -58,7 +57,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter;
             //width: parent.width / 2;
             text: "Sailimgur";
-            font.pixelSize: constant.fontSizeMedium;
+            font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                ? constant.fontSizeLarge : constant.fontSizeMedium;
             color: constant.colorHighlight;
         }
         */
@@ -67,9 +67,8 @@ Item {
             id: searchButton;
             anchors { right: accountButton.left; }
             anchors.rightMargin: Theme.paddingMedium;
-            //anchors.verticalCenter: parent.verticalCenter;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeLarge;
+            icon.height: icon.width;
             icon.source: constant.iconSearch;
             onClicked: {
                 //console.debug("search button clicked!");
@@ -88,8 +87,8 @@ Item {
             anchors { right: uploadButton.left; }
             anchors.rightMargin: Theme.paddingMedium;
             anchors.verticalCenter: parent.verticalCenter;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeLarge;
+            icon.height: icon.width;
             icon.source: constant.iconPerson;
             onClicked: {
                 //console.debug("account button clicked!");
@@ -106,8 +105,8 @@ Item {
             id: uploadButton;
             anchors { right: parent.right; }
             anchors.verticalCenter: parent.verticalCenter;
-            icon.width: Theme.itemSizeSmall;
-            icon.height: Theme.itemSizeSmall;
+            icon.width: constant.iconSizeLarge;
+            icon.height: icon.width;
             icon.source: constant.iconUpload;
             onClicked: {
                 //console.debug("upload button clicked!")

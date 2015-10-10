@@ -62,21 +62,24 @@ Item {
                     anchors { left: parent.left; }
                     wrapMode: Text.Wrap;
                     text: author;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                 }
 
                 Label {
                     id: commentPoints;
                     anchors { left: commentAuthor.right; }
                     text: ", " + points + "p";
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                 }
 
                 Label {
                     id: commentDatetime;
                     anchors { left: commentPoints.right; leftMargin: constant.paddingSmall; right: parent.right; }
                     text: ", " + datetime;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                     elide: Text.ElideRight;
                 }
             }
@@ -86,7 +89,8 @@ Item {
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 text: comment;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 height: commentText.paintedHeight;
                 textFormat: Text.StyledText;
                 linkColor: Theme.highlightColor;

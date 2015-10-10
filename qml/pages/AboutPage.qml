@@ -44,7 +44,8 @@ Page {
                     id: aboutText;
                     width: parent.width;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: constant.fontSizeMedium;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeLarge : constant.fontSizeMedium
                     text: qsTr("Sailimgur is a simple <a href='http://imgur.com'>Imgur</a> app for Sailfish OS, powered by Qt, QML and JavaScript. \
 It has a simple, native and easy-to-use UI. Sailimgur is Open Source and licensed under GPL v3.");
                     textFormat: Text.StyledText;
@@ -62,14 +63,16 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 ListItem {
                     Label {
                         id: versionText;
-                        font.pixelSize: constant.fontSizeMedium;
+                        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                            ? constant.fontSizeLarge : constant.fontSizeMedium
                         text: APP_VERSION + "-" + APP_RELEASE;
                     }
 
                     Label {
                         id: changeLog;
                         anchors { right: parent.right; leftMargin: constant.paddingLarge; rightMargin: constant.paddingLarge; }
-                        font.pixelSize: constant.fontSizeMedium;
+                        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                            ? constant.fontSizeLarge : constant.fontSizeMedium
                         text: qsTr("Changelog");
                         color: Theme.highlightColor;
 
@@ -97,7 +100,8 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 Label {
                     anchors { left: rotImage.right; leftMargin: constant.paddingLarge;}
                     text: "Marko Wallin, @walokra"
-                    font.pixelSize: constant.fontSizeLarge
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXLarge : constant.fontSizeLarge
                 }
             }
 
@@ -105,7 +109,8 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 anchors { right: parent.right; rightMargin: Theme.paddingLarge; }
                 textFormat: Text.StyledText;
                 linkColor: Theme.highlightColor;
-                font.pixelSize: Theme.fontSizeSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeMedium : constant.fontSizeSMall
                 truncationMode: TruncationMode.Fade;
                 text: qsTr("Bug reports") + ": " + "<a href='https://github.com/walokra/sailimgur/issues'>Github</a>";
                 onLinkActivated: Qt.openUrlExternally(link);
@@ -123,7 +128,8 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 Label {
                     anchors { left: imgurImage.right; leftMargin: constant.paddingLarge; }
                     text: "<a href='http://imgur.com'>Imgur</a>";
-                    font.pixelSize: constant.fontSizeLarge;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXLarge : constant.fontSizeLarge
                     textFormat: Text.StyledText;
                     linkColor: Theme.highlightColor;
                     onLinkActivated: Qt.openUrlExternally(link);
@@ -140,7 +146,8 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 Label {
                     anchors { left: qtImage.right; leftMargin: constant.paddingLarge; }
                     text: "Qt + QML";
-                    font.pixelSize: constant.fontSizeLarge;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXLarge : constant.fontSizeLarge
                 }
             }
 
@@ -151,7 +158,8 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 width: parent.width;
                 height: 100;
                 wrapMode: Text.Wrap;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
                 text: "Remaining: " + settings.user + " = " + main.creditsUserRemaining + ", client = " + main.creditsClientRemaining;
             }
         }

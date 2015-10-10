@@ -9,7 +9,7 @@ QtObject {
     // imgur API key/secret
     // The OAuth2 key/secret pair below are only for testing
     // Release version in Jolla Store / OpenRepos has a different key pair
-    property string clientId : "f6e8f7a754f7266";
+    property string clientId : "";
     property string clientSecret : "";
 
     property string userAgent : appName + " " + APP_VERSION + "-" + APP_RELEASE + "(Jolla; Qt; SailfishOS)";
@@ -31,6 +31,22 @@ QtObject {
     property int paddingLarge : Theme.paddingLarge;
     property int paddingExtraLarge : 2 * Theme.paddingMedium;
 
+    // easier access to item size
+    property int itemSizeExtraSmall: Theme.itemSizeExtraSmall; // suits the smallest UI controls; used as the height of buttons and pulley menu entries
+    property int itemSizeSmall: Theme.itemSizeSmall; // suits small UI controls; used as the height of list items with one line of text
+    property int itemSizeMedium: Theme.itemSizeMedium; // suits average-sized UI controls; used as the height of list items with two lines of text
+    property int itemSizeLarge: Theme.itemSizeLarge; // suits controls with several lines of text or more prominent text; this is the height of a page header in portrait orientation
+    property int itemSizeExtraLarge: Theme.itemSizeExtraLarge; // suits larger items such as list delegates with an image thumbnail and associated image details
+    property int itemSizeHuge: Theme.itemSizeHuge; // suits larger items such as images in a fullscreen grid of thumbnail images
+
+    property int iconSizeExtraSmall: Theme.iconSizeExtraSmall; // suits the smallest icons, such as those in the Home status area
+    property int iconSizeSmall: Theme.iconSizeSmall; // suits small icons, such as CoverAction icons and icons on the Events screen
+    property int iconSizeSmallPlus: Theme.iconSizeSmallPlus; // a larger variant of iconSizeSmall, used for notification icons
+    property int iconSizeMedium: Theme.iconSizeMedium; // the most common icon size; suits icons in small to medium-sized list items
+    property int iconSizeLarge: Theme.iconSizeLarge; // suits larger icon displays and buttons
+    property int iconSizeExtraLarge: Theme.iconSizeExtraLarge; // suits very large icon displays
+    property int iconSizeLauncher: Theme.iconSizeLauncher; // for icons in the Home app grid
+
     // easier access to font size
     property int fontSizeXXSmall : Theme.fontSizeTiny;
     property int fontSizeXSmall : Theme.fontSizeExtraSmall;
@@ -51,9 +67,9 @@ QtObject {
     property string iconLeft: "image://theme/icon-m-left";
     property string iconPlay: "image://theme/icon-m-play";
     property string iconSave: "image://theme/icon-m-download";
-    property string iconInfo: "image://theme/icon-lock-information";
+    property string iconInfo: "image://theme/icon-m-about";
     property string iconBrowser: "image://theme/icon-m-region";
-    property string iconClipboard: "image://theme/icon-l-copy";
+    property string iconClipboard: "image://theme/icon-m-clipboard";
     property string iconUpload: "image://theme/icon-m-cloud-upload";
     property string iconPerson: "image://theme/icon-m-person";
     property string iconSearch: "image://theme/icon-m-search";

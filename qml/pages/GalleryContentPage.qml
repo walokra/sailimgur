@@ -194,7 +194,8 @@ Page {
                 anchors.rightMargin: constant.paddingSmall;
 
                 wrapMode: Text.Wrap;
-                font.pixelSize: constant.fontSizeMedium;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeLarge : constant.fontSizeMedium;
                 color: constant.colorHighlight;
                 text: galleryContentModel.title;
             }
@@ -205,7 +206,8 @@ Page {
                 anchors.rightMargin: constant.paddingSmall;
 
                 wrapMode: Text.Wrap;
-                font.pixelSize: constant.fontSizeSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeMedium : constant.fontSizeSmall;
                 color: constant.colorHighlight;
                 text: galleryContentModel.description;
                 visible: is_gallery == false;
@@ -287,7 +289,8 @@ Page {
                 Label {
                     id: scoreText;
                     anchors { left: parent.left; }
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                     text: galleryContentModel.score + " points";
                     color: constant.colorHighlight;
                 }
@@ -339,7 +342,8 @@ Page {
                     id: infoText;
                     anchors { top: scoreBars.bottom; left: parent.left; leftMargin: constant.paddingMedium; }
                     wrapMode: Text.Wrap;
-                    font.pixelSize: constant.fontSizeXXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
                     color: constant.colorHighlight;
                     text: galleryContentModel.info;
                 }
@@ -469,7 +473,8 @@ Page {
                     id: datetimeText;
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: constant.fontSizeXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
                     color: constant.colorHighlight;
                     text: galleryContentModel.datetime;
                 }
@@ -477,7 +482,8 @@ Page {
                     id: viewsText;
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: constant.fontSizeXSmall;
+                    font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
                     color: constant.colorHighlight;
                     text: qsTr("views") + ": " + galleryContentModel.views;
                 }

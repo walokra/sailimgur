@@ -54,7 +54,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 text: qsTr("Load comments automatically.");
             }
 
@@ -72,7 +73,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 wrapMode: Text.Wrap;
                 text: qsTr("Mature posts and comments may include sexually suggestive or adult-oriented content.");
             }
@@ -91,7 +93,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 wrapMode: Text.Wrap;
                 text: qsTr("Autoplay animated images (gif/gifv). Disabling autoplay may help with showing large albums.");
             }
@@ -111,7 +114,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 wrapMode: Text.Wrap;
                 text: qsTr("Open gallery album in own page. May help with showing large albums.");
             }
@@ -131,7 +135,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 wrapMode: Text.Wrap;
                 text: qsTr("Use video player to play gifv videos (mp4).");
             }
@@ -162,7 +167,8 @@ Dialog {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
                 anchors.rightMargin: constant.paddingMedium;
-                font.pixelSize: constant.fontSizeXSmall;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 text: qsTr("Might need to restart the app to work correctly.");
             }
         }

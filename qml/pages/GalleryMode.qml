@@ -59,14 +59,15 @@ Row {
     Label {
         id: accountModeLabel;
         width: parent.width;
-        height: Theme.itemSizeSmall;
+        height: constant.itemSizeMedium;
         text:
             settings.mode === constant.mode_favorites ?
                 qsTr("Your favorite images") : (
                     settings.mode === constant.mode_albums ? qsTr("Your albums") : (
                             settings.mode === constant.mode_images) ? qsTr("Your images") : ""
                     );
-        font.pixelSize: constant.fontSizeMedium;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeLarge : constant.fontSizeMedium
         color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images;

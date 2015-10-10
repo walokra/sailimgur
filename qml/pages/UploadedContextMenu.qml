@@ -12,7 +12,8 @@ ContextMenu {
 
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Open link in browser");
         onClicked: {
             var props = {
@@ -25,7 +26,8 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Copy link to clipboard");
         onClicked: {
             Clipboard.text = link;
@@ -34,7 +36,8 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Copy delete link to clipboard");
         onClicked: {
             Clipboard.text = "http://imgur.com/delete/" + deletehash;
@@ -43,7 +46,8 @@ ContextMenu {
     }
     MenuItem {
         anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: constant.fontSizeXSmall;
+        font.pixelSize: Screen.sizeCategory >= Screen.Large
+                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Delete image");
         onClicked: {
             deleteImageAlbum(imgur_id, deletehash);
