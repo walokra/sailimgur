@@ -25,7 +25,8 @@ Item {
         IconButton {
             id: logoButton;
             anchors { left: parent.left; }
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.rightMargin: Screen.sizeCategory >= Screen.Large
+                                                ? constant.paddingLarge : constant.paddingMedium;
             icon.width: constant.iconSizeLarge;
             icon.height: icon.width;
             icon.source: constant.iconLogo;
@@ -66,7 +67,8 @@ Item {
         IconButton {
             id: searchButton;
             anchors { right: accountButton.left; }
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.rightMargin: Screen.sizeCategory >= Screen.Large
+                                    ? constant.paddingExtraLarge : constant.paddingMedium;
             icon.width: constant.iconSizeLarge;
             icon.height: icon.width;
             icon.source: constant.iconSearch;
@@ -85,7 +87,8 @@ Item {
         IconButton {
             id: accountButton;
             anchors { right: uploadButton.left; }
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.rightMargin: Screen.sizeCategory >= Screen.Large
+                                    ? constant.paddingExtraLarge : constant.paddingMedium;
             anchors.verticalCenter: parent.verticalCenter;
             icon.width: constant.iconSizeLarge;
             icon.height: icon.width;
