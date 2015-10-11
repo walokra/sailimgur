@@ -22,6 +22,7 @@ PkgConfigBR:
 - Qt5Qml
 - Qt5Quick
 - sailfishapp >= 1.0.2
+- Qt5Multimedia
 Requires:
 - sailfishsilica-qt5 >= 0.10.9
 - qt5-qtsvg-plugin-imageformat-svg
