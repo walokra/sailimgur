@@ -110,7 +110,7 @@ It has a simple, native and easy-to-use UI. Sailimgur is Open Source and license
                 textFormat: Text.StyledText;
                 linkColor: Theme.highlightColor;
                 font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                    ? constant.fontSizeMedium : constant.fontSizeSMall
+                                    ? constant.fontSizeMedium : constant.fontSizeSmall
                 truncationMode: TruncationMode.Fade;
                 text: qsTr("Bug reports") + ": " + "<a href='https://github.com/walokra/sailimgur/issues'>Github</a>";
                 onLinkActivated: Qt.openUrlExternally(link);
