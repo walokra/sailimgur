@@ -24,6 +24,16 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.8.3 (2015-10-24)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
+                text: qsTr("Fix issue with fetching more comments.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.8.2 (2015-10-10)" }
 
             Label {

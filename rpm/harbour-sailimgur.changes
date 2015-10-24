@@ -1,3 +1,6 @@
+* Sat Oct 24 2015 Marko Wallin <mtw@iki.fi> 0.8.3-1
+Fix issue with fetching more comments.
+
 * Sat Oct 10 2015 Marko Wallin <mtw@iki.fi> 0.8.2-1
 Fix zoom on image.
 Adjust UI elements for tablet.
