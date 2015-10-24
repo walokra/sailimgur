@@ -7,6 +7,11 @@ DEFINES += APP_RELEASE=\\\"$$RELEASE\\\"
 # Qt Library
 QT += svg network multimedia
 
+appicons.path = /usr/share/icons/hicolor
+appicons.files = appicons/*
+
+INSTALLS += appicons
+
 CONFIG += sailfishapp
 
 HEADERS += \
