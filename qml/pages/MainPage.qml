@@ -184,13 +184,21 @@ Page {
             onMovementEnded: {
                 if (atYBeginning) {
                     actionBar.shown = true;
+
+//                    if (page > 0) {
+//                        page -= 1;
+//                        console.log("atYBeginning: " + page);
+//                        statusLabel.text = qsTr("Loading previous page");
+//                        galleryModel.prevPage(galleryModel.query);
+//                        galgrid.scrollToBottom();
+//                    }
                 }
 
                 if(atYEnd) {
                     page += 1;
-                    //console.log("atYEnd: " + page);
+//                    console.log("atYEnd: " + page);
                     statusLabel.text = qsTr("Loading next page");
-                    galleryModel.nextPage(galleryModel.query, true);
+                    galleryModel.nextPage(galleryModel.query);
                 }
             }
 
