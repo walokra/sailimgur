@@ -7,12 +7,14 @@ ListModel {
     property int index : 0;
     property var allComments : [];
     property int total : 0;
+    property int left : 0;
     property bool loaded: false;
     property bool showNsfw: settings.showNsfw;
 
     function resetVariables() {
         index = 0;
         total = 0;
+        left = 0;
         allComments = [];
         loaded = false;
     }
@@ -27,24 +29,26 @@ ListModel {
                                  function(){
                                      loadingRectComments.visible = false;
                                      loaded = true;
+                                     total = allComments.length;
+                                     left = total;
                                      getNextComments();
                                  }, function(status, statusText) {
                                      loadingRectComments.visible = false;
                                      loaded = true;
+                                     total = 0;
+                                     left = 0;
                                      infoBanner.showHttpError(status, statusText);
                                  }
         );
-        total = allComments.length;
     }
 
     function getNextComments() {
         var start = index * settings.commentsSlice;
         index += 1;
         var end = index * settings.commentsSlice;
-        //start = (start >= allComments.length) ? allComments.length : start;
-        //end = (end > allComments.length) ? allComments.length : end;
-        //console.log("start=" + start + "; end=" + end + "; total=" + allComments.length);
         listModel.append(allComments.slice(start, end));
+        left = total - end;
+//        console.log("getNextComments, start=" + start + "; end=" + end + "; left=" + left + "; total=" + total + "; allComments=" + allComments.length);
     }
 
     function getComment(id) {

@@ -435,8 +435,27 @@ Page {
                         }
                     }
 
-                    onMovementEnded: {
-                        if(atYEnd) {
+// Doesn't seem to work anymore sfos >= 1.1.9.28
+//                    onMovementEnded: {
+//                        console.log("onMovementEnded, atYEnd=", atYEnd)
+//                        if(atYEnd) {
+//                            commentsModel.getNextComments();
+//                        }
+//                    }
+                }
+
+                Item {
+                    id: showMoreCommentsItem;
+                    width: parent.width;
+                    height: visible ? showMoreCommentsButton.height + 2 * constant.paddingSmall : 0;
+                    visible: commentsModel.left > 0;
+
+                    Button {
+                        id: showMoreCommentsButton;
+                        anchors.centerIn: parent;
+                        enabled: commentsModel.left > 0;
+                        text: qsTr("more (" + commentsModel.total + " total, " + commentsModel.left + " remaining)");
+                        onClicked: {
                             commentsModel.getNextComments();
                         }
                     }
