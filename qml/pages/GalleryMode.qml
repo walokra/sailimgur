@@ -39,6 +39,9 @@ Row {
                 case constant.mode_memes:
                     modeBox.currentIndex = 4;
                     break;
+                case constant.mode_reddit:
+                    modeBox.currentIndex = 5;
+                    break;
                 default:
                     modeBox.currentIndex = 0;
             }
@@ -119,6 +122,15 @@ Row {
                     internal.setMode("memes");
                 }
             }
+
+            MenuItem {
+                id: redditMode;
+                text: qsTr("reddit");
+                onClicked: {
+                    internal.setMode("reddit");
+                }
+            }
+
         }
     }
 
@@ -150,6 +162,64 @@ Row {
         }
     }
 
+    ComboBox {
+        id: windowBox;
+        width: parent.width / 2;
+        currentIndex: 0;
+        label: qsTr("window:");
+        visible: accountModeLabel.visible == false;
+
+        menu: ContextMenu {
+            MenuItem {
+                id: dayWind;
+                text: qsTr("day");
+                onClicked: {
+                    settings.window = "day";
+                    internal.setWindowCommon();
+                }
+            }
+
+            MenuItem {
+                id: weekWind;
+                text: qsTr("week");
+                onClicked: {
+                    settings.window = "week";
+                    internal.setWindowCommon();
+                }
+            }
+
+            MenuItem {
+                id: monthWind;
+                text: qsTr("month");
+                onClicked: {
+                    settings.window = "month";
+                    internal.setWindowCommon();
+                }
+            }
+
+            MenuItem {
+                id: yearWind;
+                text: qsTr("year");
+                onClicked: {
+                    settings.window = "year";
+                    internal.setWindowCommon();
+                }
+            }
+
+            MenuItem {
+                id: allWind;
+                text: qsTr("all");
+                onClicked: {
+                    settings.window = "all";
+                    internal.setWindowCommon();
+                }
+            }
+        }
+    }
+
+
+
+
     QtObject {
         id: internal;
 
@@ -177,6 +247,13 @@ Row {
                 modeBox.currentIndex = 4;
                 sortBox.visible = true;
                 settings.mode = constant.mode_memes;
+            } else if (mode === "reddit") {
+                modeBox.currentIndex = 5;
+                sortBox.visible = false;
+                settings.sort = "time";
+                settings.showViral = false;
+                settings.showComments = false;
+                settings.mode = constant.mode_reddit;
             } else {
                 modeBox.currentIndex = 0;
                 sortBox.visible = true;
@@ -198,6 +275,13 @@ Row {
 
         function setSortCommon() {
             settings.saveSetting("sort", settings.sort);
+            galgrid.scrollToTop();
+            galleryModel.clear();
+            galleryModel.processGalleryMode(galleryModel.query);
+        }
+
+        function setWindowCommon() {
+            settings.saveSetting("window", settings.window);
             galgrid.scrollToTop();
             galleryModel.clear();
             galleryModel.processGalleryMode(galleryModel.query);
