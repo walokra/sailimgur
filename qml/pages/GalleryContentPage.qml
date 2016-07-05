@@ -9,6 +9,7 @@ Page {
 
     property bool is_album: false;
     property bool is_gallery: true;
+    property bool is_reddit: false;
     property string imgur_id : "";
 
     property string galleryContentPageTitle : constant.appName;
@@ -36,11 +37,16 @@ Page {
 
     onLoad: {     
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
+
+        is_reddit = (settings.mode === constant.mode_reddit);
+        ///console.log("TEST", is_reddit);
+
         galleryContentModel.resetVariables();
         galleryContentModel.clear();
         commentsModel.resetVariables();
         commentsModel.clear();
         loadingRectComments.visible = false;
+
 
         if (galleryModel) {
             imgur_id = galleryModel.get(currentIndex).id;
@@ -56,7 +62,7 @@ Page {
             galleryContentModel.getImage(imgur_id, is_gallery);
         }
 
-        if (settings.showComments && is_gallery == true) {
+        if ((!is_reddit) && settings.showComments && is_gallery == true) {
             loadingRectComments.visible = true;
             commentsModel.getComments(imgur_id);
         }
@@ -384,7 +390,7 @@ Page {
                 anchors.rightMargin: constant.paddingSmall;
                 height: childrenRect.height + showCommentsItem.height + galleryNavigation.height + constant.paddingMedium;
                 width: parent.width;
-                visible: is_gallery == true;
+                visible: ((is_reddit == false) && (is_gallery == true));
 
                 Item {
                     id: showCommentsItem;

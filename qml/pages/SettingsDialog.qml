@@ -50,6 +50,7 @@ Dialog {
                     checked ? settings.showComments = true : settings.showComments = false;
                 }
             }
+
             Label {
                 anchors { left: parent.left; right: parent.right; }
                 anchors.leftMargin: constant.paddingExtraLarge;
@@ -58,6 +59,20 @@ Dialog {
                                     ? constant.fontSizeSmall : constant.fontSizeXSmall;
                 text: qsTr("Load comments automatically.");
             }
+
+            Label {
+                anchors { left:parent.left;}
+                text: qsTr("Reddit Sub:");
+                font.pixelSize: constant.fontSizeMedium;
+            }
+
+            TextField {
+                id: redditSubInput;
+                anchors { right: parent.right;}
+                width: parent.width / 1.1;
+                placeholderText: qsTr(settings.reddit_sub);
+            }
+
 
             TextSwitch {
                 anchors { left: parent.left; right: parent.right; }
@@ -177,7 +192,22 @@ Dialog {
     }
 
     onAccepted: {
+        var oldRedditSub = settings.reddit_sub;
+
+        // Upon change, and reddit mode activated -- reset gallery.
+        if (oldRedditSub !== redditSubInput.text.trim()){
+            console.log("differs");
+            settings.reddit_sub = redditSubInput.text.trim();
+
+            if (settings.mode === constant.mode_reddit){
+                console.log("reddit mode");
+                galleryModel.clear();
+                galleryModel.processGalleryMode(galleryModel.query);
+            }
+        }
         settings.saveSettings();
+
+
     }
 
     Component.onCompleted: {

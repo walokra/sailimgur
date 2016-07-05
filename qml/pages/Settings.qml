@@ -32,6 +32,7 @@ QtObject {
     property string section : "hot"; // hot | top | user
     property string sort : "viral"; // viral | time
     property string window : "day"; // day | week | month | year | all
+    property string reddit_sub : "clouds";
     property bool showViral : false; // true | false
     property bool autoplayAnim: true; // play anim gifs automatically?
 
@@ -64,6 +65,7 @@ QtObject {
         Storage.writeSetting("useGalleryPage", settings.useGalleryPage);
         Storage.writeSetting("toolbarBottom", settings.toolbarBottom);
         Storage.writeSetting("useVideoLoader", settings.useVideoLoader);
+        Storage.writeSetting("redditSub", settings.reddit_sub);
 
         settingsSaved();
     }

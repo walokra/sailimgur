@@ -16,6 +16,9 @@ var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 // https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
 var ENDPOINT_GALLERY_SEARCH = ENDPOINT_GALLERY + "/search";
 
+//Reddit stuff
+var REDDIT_SUB = "clouds";
+
 var ENDPOINT_GALLERY_ALBUM = ENDPOINT_GALLERY + "/album";
 var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
 var ENDPOINT_ALBUM = BASEURL + "/album/";
@@ -100,6 +103,17 @@ function getMemesSubGallery(model, page, settings, onSuccess, onFailure) {
     sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
+/** Reddit mode **/
+function getRedditSubGallery(model, page, settings, onSuccess, onFailure) {
+    // Url prone to change due to shifting subreddit interests...
+    var url = ENDPOINT_GALLERY + "/r/" + REDDIT_SUB;
+
+    url += "/top/" + settings.window + "/page/" + page;
+
+    console.log("URL:", url);
+    sendJSONRequest(url, 1,  model, onSuccess, onFailure); // 1 --> still a gallery
+}
+
 function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
     //console.log("sendJSONRequest, url=" + url + ", actiontype=" + actiontype);
     var xhr = new XMLHttpRequest();
@@ -118,6 +132,8 @@ function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
                     handleAlbumsJSON(xhr.responseText, model);
                 } else if (actiontype === "images") {
                     handleImagesJSON(xhr.responseText, model);
+                } else if (actiontype === "reddit") {
+                    handleRedditJSON(xhr.responseText, model, onFailure);
                 }
                 //console.log("RateLimit: user=" + creditsUserRemaining  + ", client=" + creditsClientRemaining);
                 onSuccess(xhr.status);
@@ -201,6 +217,32 @@ function getAlbum(id, model, albumModel, onSuccess, onFailure) {
     xhr.send();
 }
 
+
+//get reddit image (called by GalleryImage first)
+function getRedditImage(id, model, albumModel, onSuccess, onFailure) {
+    var url = ENDPOINT_IMAGE;
+    url += "/" + id;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                handleGalleryImageJSON(xhr.responseText, model, albumModel);
+                onSuccess(xhr.status);
+            } else {
+               var jsonObject = JSON.parse(xhr.responseText);
+               onFailure(xhr.status, "NOPE: " + url); // jsonObject.data.error);
+            }
+        }
+    }
+    xhr = createGETHeader(xhr);
+    xhr.send();
+}
+
+
+
 // get gallery image
 function getGalleryImage(id, model, albumModel, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY_IMAGE;
@@ -213,6 +255,12 @@ function getGalleryImage(id, model, albumModel, onSuccess, onFailure) {
             if (xhr.status == 200) {
                 handleGalleryImageJSON(xhr.responseText, model, albumModel);
                 onSuccess(xhr.status);
+
+            } else if (xhr.status == 404 ) {
+                // Try again, but under a different URL startpoint.
+                getRedditImage(id, model, albumModel, onSuccess, onFailure);
+
+
             } else {
                 var jsonObject = JSON.parse(xhr.responseText);
                 onFailure(xhr.status, xhr.statusText + ": " + jsonObject.data.error);
@@ -664,6 +712,10 @@ function processGalleryMode(query, model, page, settings, onSuccess, onFailure) 
         getRandomGalleryImages(model, page, onSuccess, onFailure);
     } else if (settings.mode === "memes") {
         getMemesSubGallery(model, page, settings, onSuccess, onFailure);
+    } else if (settings.mode === "reddit") {
+        REDDIT_SUB = settings.reddit_sub;
+        console.log("REDDIT SUB=", REDDIT_SUB);
+        getRedditSubGallery(model, page, settings, onSuccess, onFailure);
     } else if (settings.mode === "favorites") {
         getFavorites(model, onSuccess, onFailure);
     } else if (settings.mode === "albums") {

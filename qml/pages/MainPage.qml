@@ -81,8 +81,9 @@ Page {
     }
 
     Item {
-        anchors.fill: parent
-        focus: true
+        id: flickerMode;
+        anchors.fill: parent;
+        focus: true;
         Keys.onPressed: {
             // Main page grid scroll
             if (event.key === Qt.Key_Down) {
@@ -115,6 +116,35 @@ Page {
                 modeChanged("memes");
                 event.accepted = true;
             }
+            if (event.key === Qt.Key_6) {
+                modeChanged("reddit");
+                event.accepted = true;
+            }
+        }
+    }
+
+    TextField {
+        id: redditSubInputField;
+        anchors.right: parent.right;
+        anchors.top: parent.top;
+        anchors.topMargin: 20;
+
+        visible: settings.mode === constant.mode_reddit;
+
+        width: parent.width / 1.2;
+
+        placeholderText: qsTr(settings.reddit_sub);
+
+        font.pixelSize: constant.fontSizeLarge;
+
+        EnterKey.enabled: text.length > 0;
+        EnterKey.iconSource: "image://theme/icon-m-enter-accept";
+        EnterKey.onClicked: {
+            settings.reddit_sub = redditSubInputField.text.trim();
+
+            galgrid.scrollToTop();
+            galleryModel.clear();
+            galleryModel.processGalleryMode(galleryModel.query);
         }
     }
 
