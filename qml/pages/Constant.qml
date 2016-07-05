@@ -81,7 +81,6 @@ QtObject {
     property string mode_random : "random";
     property string mode_score : "score";
     property string mode_memes : "memes";
-    property string mode_reddit : "reddit";
     property string mode_favorites : "favorites";
     property string mode_albums : "albums";
     property string mode_images : "images";
