@@ -17,7 +17,7 @@ var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 var ENDPOINT_GALLERY_SEARCH = ENDPOINT_GALLERY + "/search";
 
 //Reddit stuff
-var REDDIT_SUB = "nsfw";
+var REDDIT_SUB = "clouds";
 
 var ENDPOINT_GALLERY_ALBUM = ENDPOINT_GALLERY + "/album";
 var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
