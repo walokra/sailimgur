@@ -24,6 +24,16 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.9.0 (2016-07-16)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
+                text: qsTr("Add mode to browse subreddits. Add time window option to highest scoring and memes modes.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.8.3 (2015-10-24)" }
 
             Label {

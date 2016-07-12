@@ -1,3 +1,7 @@
+* Sat Jul 16 2016 Marko Wallin <mtw@iki.fi> 0.9.0-1
+Added mode to browse subreddits.
+Add time window option to highest scoring and memes modes.
+
 * Sat Oct 24 2015 Marko Wallin <mtw@iki.fi> 0.8.3-1
 Fix issue with fetching more comments.
 
