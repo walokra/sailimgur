@@ -97,27 +97,27 @@ Page {
 
             // Changing gallery
             if (event.key === Qt.Key_1) {
-                modeChanged("main");
+                modeChanged(constant.mode_main);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_2) {
-                modeChanged("user");
+                modeChanged(constant.mode_user);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_3) {
-                modeChanged("random");
+                modeChanged(constant.mode_random);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_4) {
-                modeChanged("top");
+                modeChanged(constant.mode_score);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_5) {
-                modeChanged("memes");
+                modeChanged(constant.mode_memes);
                 event.accepted = true;
             }
             if (event.key === Qt.Key_6) {
-                modeChanged("reddit");
+                modeChanged(constant.mode_reddit);
                 event.accepted = true;
             }
         }
@@ -127,25 +127,25 @@ Page {
         id: redditSubInputField;
         anchors.right: parent.right;
         anchors.top: parent.top;
-        anchors.topMargin: 20;
 
         visible: settings.mode === constant.mode_reddit;
 
         width: parent.width / 1.2;
 
-        placeholderText: qsTr(settings.reddit_sub);
+        placeholderText: qsTr(settings.redditSub);
 
         font.pixelSize: constant.fontSizeLarge;
 
         EnterKey.enabled: text.length > 0;
         EnterKey.iconSource: "image://theme/icon-m-enter-accept";
         EnterKey.onClicked: {
-            settings.reddit_sub = redditSubInputField.text.trim();
+            settings.redditSub = redditSubInputField.text.trim();
 
             galgrid.scrollToTop();
             galleryModel.clear();
-            galleryModel.processGalleryMode(galleryModel.query);
-        }
+            galleryModel.processGalleryMode();
+            focus = false;
+        }       
     }
 
     SilicaFlickable {

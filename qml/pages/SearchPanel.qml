@@ -22,6 +22,7 @@ Item {
                 searchText = searchText.substr(searchText.lastIndexOf('/') + 1);
             }
 
+            settings.mode = constant.mode_score;
             internal.search(searchText);
             focus = false;
         }

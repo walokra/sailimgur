@@ -20,31 +20,7 @@ Row {
         target: settings;
 
         onSettingsLoaded: {
-            switch (settings.mode) {
-                case constant.mode_main:
-                    modeBox.currentIndex = 0;
-                    settings.section = "hot";
-                    break;
-                case constant.mode_user:
-                    modeBox.currentIndex = 1;
-                    settings.section = constant.mode_user;
-                    break;
-                case constant.mode_random:
-                    modeBox.currentIndex = 2;
-                    break;
-                case constant.mode_score:
-                    modeBox.currentIndex = 3;
-                    settings.section = "top";
-                    break;
-                case constant.mode_memes:
-                    modeBox.currentIndex = 4;
-                    break;
-                case constant.mode_reddit:
-                    modeBox.currentIndex = 5;
-                    break;
-                default:
-                    modeBox.currentIndex = 0;
-            }
+            internal.setMode(settings.mode);
 
             switch (settings.sort) {
                 case "viral":
@@ -52,6 +28,9 @@ Row {
                     break;
                 case "time":
                     sortBox.currentIndex = 1;
+                    break;
+                case "top":
+                    sortBox.currentIndex = 2;
                     break;
                 default:
                     sortBox.currentIndex = 0;
@@ -73,21 +52,22 @@ Row {
                             ? constant.fontSizeLarge : constant.fontSizeMedium
         color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
-        visible: settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images;
+        visible: (settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images);
     }
 
     ComboBox {
         id: modeBox;
         currentIndex: 0;
-        width: parent.width / 2;
-        visible: accountModeLabel.visible == false && galleryModel.query === "";
+        width: (settings.sort !== "top" || settings.mode === constant.mode_score)
+                ? parent.width / 2 : parent.width / 3;
+        visible: (accountModeLabel.visible == false && galleryModel.query === "");
 
         menu: ContextMenu {
             MenuItem {
                 id: mainMode;
                 text: qsTr("most viral");
                 onClicked: {
-                    internal.setMode("main");
+                    internal.setMode(constant.mode_main);
                 }
             }
 
@@ -95,7 +75,7 @@ Row {
                 id: userMode;
                 text: qsTr("user submitted");
                 onClicked: {
-                    internal.setMode("user");
+                    internal.setMode(constant.mode_user);
                 }
             }
 
@@ -103,7 +83,7 @@ Row {
                 id: randomMode;
                 text: qsTr("random");
                 onClicked: {
-                    internal.setMode("random");
+                    internal.setMode(constant.mode_random);
                 }
             }
 
@@ -111,7 +91,7 @@ Row {
                 id: scoreMode;
                 text: qsTr("highest scoring");
                 onClicked: {
-                    internal.setMode("top");
+                    internal.setMode(constant.mode_score);
                 }
             }
 
@@ -119,7 +99,7 @@ Row {
                 id: memesMode;
                 text: qsTr("memes");
                 onClicked: {
-                    internal.setMode("memes");
+                    internal.setMode(constant.mode_memes);
                 }
             }
 
@@ -127,7 +107,7 @@ Row {
                 id: redditMode;
                 text: qsTr("reddit");
                 onClicked: {
-                    internal.setMode("reddit");
+                    internal.setMode(constant.mode_reddit);
                 }
             }
 
@@ -136,15 +116,17 @@ Row {
 
     ComboBox {
         id: sortBox;
-        width: parent.width / 2;
+        width: (settings.sort !== "top" || settings.mode === constant.mode_score)
+                ? parent.width / 2 : parent.width / 3;
         currentIndex: 0;
-        label: qsTr("sort:");
+//        label: qsTr("sort:");
         visible: accountModeLabel.visible == false;
 
         menu: ContextMenu {
             MenuItem {
                 id: viralSort;
                 text: qsTr("popularity");
+                visible: (settings.mode !== constant.mode_reddit)
                 onClicked: {
                     settings.sort = "viral";
                     internal.setSortCommon();
@@ -159,15 +141,30 @@ Row {
                     internal.setSortCommon();
                 }
             }
+
+            MenuItem {
+                id: topSort;
+                text: qsTr("top");
+                visible: (settings.mode === constant.mode_score
+                          || settings.mode === constant.mode_memes
+                          || settings.mode === constant.mode_reddit)
+                onClicked: {
+                    settings.sort = "top";
+                    internal.setSortCommon();
+                }
+            }
         }
     }
 
     ComboBox {
         id: windowBox;
-        width: parent.width / 2;
+        width: (settings.sort !== "top" || settings.mode === constant.mode_score)
+                ? parent.width / 2 : parent.width / 3;
         currentIndex: 0;
-        label: qsTr("window:");
-        visible: accountModeLabel.visible == false;
+//        label: qsTr("window:");
+        visible: (accountModeLabel.visible == false &&
+                  settings.sort === "top" &&
+                  settings.mode !== constant.mode_random);
 
         menu: ContextMenu {
             MenuItem {
@@ -217,40 +214,55 @@ Row {
         }
     }
 
-
-
-
     QtObject {
         id: internal;
 
         function setMode(mode) {
-            if (mode === "main") {
+            if (mode === constant.mode_main) {
                 modeBox.currentIndex = 0;
                 sortBox.visible = true;
+                sortBox.currentIndex = 0;
+                // There's no top sort
+                if (settings.sort === "top") {
+                    settings.sort = "viral";
+                }
                 settings.mode = constant.mode_main;
                 settings.section = "hot";
-            } else if (mode === "user") {
+                settings.window = "day";
+            } else if (mode === constant.mode_user) {
                 modeBox.currentIndex = 1;
                 sortBox.visible = true;
                 settings.mode = constant.mode_user;
                 settings.section = constant.mode_user;
-            } else if (mode === "random") {
+                if (settings.sort === "top") {
+                    settings.sort = "viral";
+                }
+                settings.window = "day";
+            } else if (mode === constant.mode_random) {
                 modeBox.currentIndex = 2;
                 sortBox.visible = false;
                 settings.mode = constant.mode_random;
-            } else if (mode === "top") {
+            } else if (mode === constant.mode_score) {
                 modeBox.currentIndex = 3;
                 sortBox.visible = false;
                 settings.mode = constant.mode_score;
                 settings.section = "top";
-            } else if (mode === "memes") {
+                settings.sort = "top";
+            } else if (mode === constant.mode_memes) {
                 modeBox.currentIndex = 4;
+                sortBox.currentIndex = 1;
                 sortBox.visible = true;
-                settings.mode = constant.mode_memes;
-            } else if (mode === "reddit") {
-                modeBox.currentIndex = 5;
-                sortBox.visible = false;
                 settings.sort = "time";
+                windowBox.currentIndex = 1;
+                settings.window = "week";
+                settings.mode = constant.mode_memes;
+            } else if (mode === constant.mode_reddit) {
+                modeBox.currentIndex = 5;
+                sortBox.visible = true;
+                sortBox.currentIndex = 1;
+                settings.sort = "time";
+                windowBox.currentIndex = 1;
+                settings.window = "week";
                 settings.showViral = false;
                 settings.showComments = false;
                 settings.mode = constant.mode_reddit;

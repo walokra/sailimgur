@@ -70,7 +70,7 @@ Dialog {
                 id: redditSubInput;
                 anchors { right: parent.right;}
                 width: parent.width / 1.1;
-                placeholderText: qsTr(settings.reddit_sub);
+                placeholderText: qsTr(settings.redditSub);
             }
 
 
@@ -192,22 +192,18 @@ Dialog {
     }
 
     onAccepted: {
-        var oldRedditSub = settings.reddit_sub;
+        var oldRedditSub = settings.redditSub;
 
         // Upon change, and reddit mode activated -- reset gallery.
         if (oldRedditSub !== redditSubInput.text.trim()){
-            console.log("differs");
-            settings.reddit_sub = redditSubInput.text.trim();
+            settings.redditSub = redditSubInput.text.trim();
 
             if (settings.mode === constant.mode_reddit){
-                console.log("reddit mode");
                 galleryModel.clear();
                 galleryModel.processGalleryMode(galleryModel.query);
             }
         }
         settings.saveSettings();
-
-
     }
 
     Component.onCompleted: {

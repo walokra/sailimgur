@@ -39,7 +39,6 @@ Page {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
 
         is_reddit = (settings.mode === constant.mode_reddit);
-        ///console.log("TEST", is_reddit);
 
         galleryContentModel.resetVariables();
         galleryContentModel.clear();
@@ -140,7 +139,6 @@ Page {
             }
 
             MenuItem {
-                anchors { left: parent.left; right: parent.right; }
                 text: qsTr("Copy link to clipboard");
                 onClicked: {
                     Clipboard.text = galleryContentModel.gallery_page_link;

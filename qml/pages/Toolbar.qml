@@ -34,12 +34,9 @@ Item {
 
             onClicked: {
                 //console.debug("logo button clicked!");
-                if (settings.mode === constant.mode_favorites
-                        || settings.mode === constant.mode_albums
-                        || settings.mode === constant.mode_images) {
-                    settings.mode = constant.mode_main;
-                    settings.saveSetting("mode", settings.mode);
-                }
+                settings.mode = constant.mode_main;
+                settings.saveSetting("mode", settings.mode);
+                modeChanged("main");
 
                 page = 0;
                 galleryModel.query = "";

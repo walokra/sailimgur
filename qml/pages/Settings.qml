@@ -28,11 +28,11 @@ QtObject {
     property int albumImagesSlice : 5;
 
     // default options for gallery
-    property string mode : "main"; // main | user | random | memes | favorities
+    property string mode : "main"; // main | user | random | memes | favorities | reddit
     property string section : "hot"; // hot | top | user
-    property string sort : "viral"; // viral | time
+    property string sort : "viral"; // viral | time | top
     property string window : "day"; // day | week | month | year | all
-    property string reddit_sub : "clouds";
+    property string redditSub : "earthporn";
     property bool showViral : false; // true | false
     property bool autoplayAnim: true; // play anim gifs automatically?
 
@@ -65,7 +65,7 @@ QtObject {
         Storage.writeSetting("useGalleryPage", settings.useGalleryPage);
         Storage.writeSetting("toolbarBottom", settings.toolbarBottom);
         Storage.writeSetting("useVideoLoader", settings.useVideoLoader);
-        Storage.writeSetting("redditSub", settings.reddit_sub);
+        Storage.writeSetting("redditSub", settings.redditSub);
 
         settingsSaved();
     }

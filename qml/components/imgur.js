@@ -16,9 +16,8 @@ var ENDPOINT_GET_CREDITS = BASEURL + "/credits";
 // https://api.imgur.com/3/gallery/search/{sort}/{page}?q=string
 var ENDPOINT_GALLERY_SEARCH = ENDPOINT_GALLERY + "/search";
 
-//Reddit stuff
+// Reddit stuff
 var redditModeActive = false; // Global
-var REDDIT_SUB = "clouds";
 
 var ENDPOINT_GALLERY_ALBUM = ENDPOINT_GALLERY + "/album";
 var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
@@ -57,17 +56,17 @@ Returns the images in the gallery. For example the main gallery is https://api.i
 
 https://api.imgur.com/3/gallery/{section}/{sort}/{window}/{page}?showViral=bool
 
-section 	optional 	hot | top | user - defaults to hot
-sort 	optional 	viral | time - defaults to viral
-page 	optional 	integer - the data paging number
-window 	optional 	Change the date range of the request if the section is "top", day | week | month | year | all, defaults to day
+section     optional 	hot | top | user - defaults to hot
+sort        optional 	viral | time - defaults to viral
+page        optional 	integer - the data paging number
+window      optional 	Change the date range of the request if the section is "top",
+                        day | week | month | year | all, defaults to day
 showViral 	optional 	true | false - Show or hide viral images from the 'user' section. Defaults to true
 */
 function getGallery(model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GALLERY;
     url += "/" + settings.section + "/" + settings.sort + "/" + settings.window + "/" + page + "/?showViral=" + settings.showViral;
 
-    console.log("getGallery: " + url);
     sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
@@ -95,7 +94,8 @@ https://api.imgur.com/3/gallery/g/memes/{sort}/{window}/{page}
 
 sort	optional	viral | time | top - defaults to viral
 page	optional	integer - the data paging number
-window	optional	Change the date range of the request if the sort is "top", day | week | month | year | all, defaults to week
+window	optional	Change the date range of the request if the sort is "top",
+                    day | week | month | year | all, defaults to week
 */
 function getMemesSubGallery(model, page, settings, onSuccess, onFailure) {
     var url = ENDPOINT_GET_GALLERY_MEMES;
@@ -105,15 +105,28 @@ function getMemesSubGallery(model, page, settings, onSuccess, onFailure) {
     sendJSONRequest(url, 1, model, onSuccess, onFailure);
 }
 
-/** Reddit mode **/
+/**
+Subreddit Galleries
+View gallery images for a subreddit
+
+Route:	https://api.imgur.com/3/gallery/r/{subreddit}/{sort}/{page}
+        https://api.imgur.com/3/gallery/r/{subreddit}/{sort}/{window}/{page}
+
+Response Model:	Gallery Images with 'reddit_comments' url
+
+Key         Required	Value
+subreddit	required	pics - A valid subreddit name
+sort        optional	time | top - defaults to time
+page        optional	integer - the data paging number
+window      optional	Change the date range of the request if the sort is "top",
+                        day | week | month | year | all, defaults to week
+*/
 function getRedditSubGallery(model, page, settings, onSuccess, onFailure) {
     // Url prone to change due to shifting subreddit interests...
-    var url = ENDPOINT_GALLERY + "/r/" + REDDIT_SUB;
+    var url = ENDPOINT_GALLERY + "/r/" + settings.redditSub;
+    url += "/" + settings.sort + "/" + settings.window + "/" + page;
 
-    url += "/top/" + settings.window + "/page/" + page;
-
-    console.log("reddit url:", url);
-    sendJSONRequest(url, 1,  model, onSuccess, onFailure); // 1 --> still a gallery
+    sendJSONRequest(url, 1,  model, onSuccess, onFailure);
 }
 
 function sendJSONRequest(url, actiontype, model, onSuccess, onFailure) {
@@ -673,9 +686,7 @@ function getAuthorizationHeader() {
 }
 
 function processGalleryMode(query, model, page, settings, onSuccess, onFailure) {
-
-    // Global accesor used to use the correct URL base
-    // for getGalleryImage()
+    // Global accesor used to use the correct URL base for getGalleryImage()
     redditModeActive = false;
 
     if (query) {
@@ -689,9 +700,6 @@ function processGalleryMode(query, model, page, settings, onSuccess, onFailure) 
         getMemesSubGallery(model, page, settings, onSuccess, onFailure);
     } else if (settings.mode === "reddit") {
         redditModeActive = true;
-        REDDIT_SUB = settings.reddit_sub;
-
-        console.log("REDDIT SUB=", REDDIT_SUB);
         getRedditSubGallery(model, page, settings, onSuccess, onFailure);
 
     } else if (settings.mode === "favorites") {
