@@ -107,14 +107,15 @@ Row {
                 infoBanner.showText("Image saved as " + name);
             }
             savingInProgress = false;
-            dlIcon.icon.source = constant.iconSaveDone;
+            // FIXME: TypeError: Cannot read property of null
+//            dlIcon.icon.source = constant.iconSaveDone;
         }
         function errorImageExists(name) {
             if (infoBanner) {
                 infoBanner.showText("Image already saved as " + name);
             }
             savingInProgress = false;
-            dlIcon.icon.source = constant.iconSaveDone;
+//            dlIcon.icon.source = constant.iconSaveDone;
         }
     }
 
