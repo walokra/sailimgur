@@ -12,7 +12,7 @@ Page {
     property string  url : "anonymous";
     property string bio : "";
     property string created : "";
-    property int reputation : 0;
+    property string reputation : "";
     //property var pro_expiration : false;
 
     onLoad: {
@@ -72,7 +72,8 @@ Page {
                 spacing: Theme.paddingMedium;
 
                 Label {
-                    text: reputation + qsTr(" reputation");
+//                    text: reputation + qsTr(" reputation");
+                    text: reputation;
                     color: constant.colorHighlight;
                     font.pixelSize: Screen.sizeCategory >= Screen.Large
                                         ? constant.fontSizeSmall : constant.fontSizeXSmall
@@ -290,9 +291,9 @@ Page {
             //var pro_expr = (pro_expiration === false) ? pro_expiration : Utils.formatEpochDatetime(output.pro_expiration);
             account_id = output.id;
             url = output.url;
-            bio = output.bio;
+            bio = (output.bio) ? output.bio : "";
             created = date;
-            reputation = output.reputation;
+            reputation = output.reputation_name;
             //pro_expiration = pro_expr;
         }
     }
