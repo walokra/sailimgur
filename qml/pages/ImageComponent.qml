@@ -5,7 +5,10 @@ Component {
     BackgroundItem {
         id: root;
 
-        clip: true;
+        anchors { left: parent.left; right: parent.right; }
+
+        // FIXME: can't clip here as it cuts the width
+        // clip: true;
         height: Math.max(image.height, 3 * loadingImageIndicator.height);
         width: Screen.width;
 
