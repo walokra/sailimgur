@@ -37,10 +37,14 @@ Item {
         MouseArea {
             anchors.fill: parent;
             onClicked: {
-                if (commentActionButtons.visible) {
-                    commentActionButtons.visible = false;
+                if (loggedIn) {
+                    if (commentActionButtons.visible) {
+                        commentActionButtons.visible = false;
+                    } else {
+                        commentActionButtons.visible = true;
+                    }
                 } else {
-                    commentActionButtons.visible = true;
+                    commentActionButtons.visible = false;
                 }
             }
         }
@@ -57,29 +61,28 @@ Item {
                 anchors { left: parent.left; right: parent.right; }
                 height: commentPoints.height
 
+                property var fontSize: constant.fontSizeIgnore
+
                 Label {
                     id: commentAuthor;
                     anchors { left: parent.left; }
                     wrapMode: Text.Wrap;
                     text: author;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
+                    font.pixelSize: parent.fontSize;
                 }
 
                 Label {
                     id: commentPoints;
                     anchors { left: commentAuthor.right; }
                     text: ", " + points + "p";
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
+                    font.pixelSize: parent.fontSize;
                 }
 
                 Label {
                     id: commentDatetime;
                     anchors { left: commentPoints.right; leftMargin: constant.paddingSmall; right: parent.right; }
                     text: ", " + datetime;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
+                    font.pixelSize: parent.fontSize;
                     elide: Text.ElideRight;
                 }
             }
@@ -89,16 +92,15 @@ Item {
                 anchors { left: parent.left; right: parent.right; }
                 wrapMode: Text.Wrap;
                 text: comment;
-                font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                    ? constant.fontSizeSmall : constant.fontSizeXSmall;
+                font.pixelSize: constant.fontSizeNormal;
                 height: commentText.paintedHeight;
                 textFormat: Text.StyledText;
                 linkColor: Theme.highlightColor;
                 onLinkActivated: {
                     contextLink = link;
                     contextMenu = commentContextMenu.createObject(commentListView);
-                    contextMenu.show(commentDelegate);
-                    contextMenu.anchors.left = depthRow.right
+                    contextMenu.open(commentDelegate);
+                    contextMenu.x = depthRow.x + depthRow.width;
                 }
             }
 

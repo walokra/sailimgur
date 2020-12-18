@@ -35,7 +35,7 @@ Page {
         }
     }
 
-    onLoad: {     
+    onLoad: {
         //console.log("galleryContentPage.onLoad: total=" + galleryContentModel.count + ", currentIndex=" + currentIndex);
 
         is_reddit = (settings.mode === constant.mode_reddit);
@@ -68,8 +68,6 @@ Page {
 
         setPrevButton();
         flickable.scrollToTop();
-
-
     }
 
     onRemovedFromModel: {
@@ -198,8 +196,7 @@ Page {
                 anchors.rightMargin: constant.paddingSmall;
 
                 wrapMode: Text.Wrap;
-                font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                    ? constant.fontSizeLarge : constant.fontSizeMedium;
+                font.pixelSize: constant.fontSizeTitle;
                 color: constant.colorHighlight;
                 text: galleryContentModel.title;
             }
@@ -210,8 +207,7 @@ Page {
                 anchors.rightMargin: constant.paddingSmall;
 
                 wrapMode: Text.Wrap;
-                font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                    ? constant.fontSizeMedium : constant.fontSizeSmall;
+                font.pixelSize: constant.fontSizeNormal;
                 color: constant.colorHighlight;
                 text: galleryContentModel.description;
                 visible: is_gallery == false;
@@ -221,24 +217,13 @@ Page {
                 id: galleryContentColumn;
                 anchors { left: parent.left; right: parent.right; }
 
-                height: (showMoreItem.visible || showPrevItem.visible ) ? albumListView.height + showMoreButton.height + showPrevButton.height : albumListView.height;
+                height: (topNavRow.visible) ? albumListView.height + topNavRow.height + bottomNavRow.height : albumListView.height;
                 width: parent.width;
 
-                Item {
-                    id: showPrevItem;
-                    width: parent.width;
-                    height: visible ? showPrevButton.height + 2 * constant.paddingSmall : 0;
-                    visible: galleryContentModel.prev > 0;
-
-                    Button {
-                        id: showPrevButton;
-                        anchors.centerIn: parent;
-                        enabled: galleryContentModel.prev > 0;
-                        text: qsTr("show previous (" + galleryContentModel.prev + " remaining)");
-                        onClicked: {
-                            galleryContentModel.getPrevImages();
-                        }
-                    }
+                GalleryLoadingNavigation {
+                    id: topNavRow
+                    model: galleryContentModel
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Flow {
@@ -262,110 +247,112 @@ Page {
                     }
                 }
 
-                Item {
-                    id: showMoreItem;
-                    width: parent.width;
-                    height: visible ? showMoreButton.height + 2 * constant.paddingSmall : 0;
-                    visible: galleryContentModel.left > 0;
-
-                    Button {
-                        id: showMoreButton;
-                        anchors.centerIn: parent;
-                        enabled: galleryContentModel.left > 0;
-                        text: qsTr("show more (" + galleryContentModel.total + " total, " + galleryContentModel.left + " remaining)");
-                        onClicked: {
-                            if (settings.useGalleryPage) {
-                                pageStack.push(Qt.resolvedUrl("GalleryItemPage.qml"));
-                            } else {
-                                galleryContentModel.getNextImages();
-                            }
-                        }
-                    }
+                GalleryLoadingNavigation {
+                    id: bottomNavRow;
+                    model: galleryContentModel;
+                    anchors.horizontalCenter: parent.horizontalCenter;
                 }
             } // galleryContentColumn
 
             Item {
-                id: pointColumn;
-                anchors.topMargin: constant.paddingMedium;
-                anchors { left: parent.left; right: parent.right; leftMargin: constant.paddingMedium; }
-                height: scoreText.height + scoreBars.height + infoText.height + ((writeCommentField.visible) ? writeCommentField.height : 0);
+                id: pointsColumn;
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    leftMargin: constant.paddingMedium;
+                    topMargin: constant.paddingMedium;
+                }
+                height: childrenRect.height;
 
-                Label {
-                    id: scoreText;
-                    anchors { left: parent.left; }
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
-                    text: galleryContentModel.score + " points";
-                    color: constant.colorHighlight;
+
+                Row {
+                    id: scoreRow;
+                    spacing: Theme.paddingMedium;
+
+                    Row {
+                        id: scoreBars;
+                        anchors.verticalCenter: parent.verticalCenter;
+
+                        height: 10;
+                        spacing: 0;
+
+                        Rectangle {
+                            id: scoreUps;
+                            width: 100 * (galleryContentModel.upsPercent/100);
+                            height: parent.height;
+                            color: "green";
+                        }
+
+                        Rectangle {
+                           id: scoreDowns;
+                           width: 100 * (galleryContentModel.downsPercent/100);
+                           height: parent.height;
+                           color: "red";
+                        }
+                    }
+
+                    Label {
+                        id: scoreText;
+                        font.pixelSize: constant.fontSizeMeta;
+                        text: galleryContentModel.score + " points";
+                        color: constant.colorHighlight;
+                    }
                 }
 
-                ListItem {
-                    id: scoreBars;
-                    anchors { left: parent.left; }
-                    height: childrenRect.height;
+                IconButton {
+                    id: replyButton;
 
-                    Rectangle {
-                        id: scoreUps;
-                        anchors { left: parent.left; }
-                        anchors.verticalCenter: parent.verticalCenter;
-                        width: 100 * (galleryContentModel.upsPercent/100);
-                        height: 10;
-                        color: "green";
+                    anchors {
+                        right: parent.right;
+                        top: parent.top;
                     }
 
-                    Rectangle {
-                        id: scoreDowns;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        anchors { left: scoreUps.right; }
-                        width: 100 * (galleryContentModel.downsPercent/100);
-                        height: 10;
-                        color: "red";
-                    }
+                    enabled: loggedIn
+                    visible: loggedIn
 
-                    IconButton {
-                        id: replyButton;
-                        anchors { right: parent.right; rightMargin: constant.paddingMedium; }
-                        anchors.verticalCenter: parent.verticalCenter;
-                        enabled: loggedIn;
-                        //width: 48;
-                        //height: 48;
-                        icon.width: Theme.itemSizeExtraSmall;
-                        icon.height: Theme.itemSizeExtraSmall;
-                        icon.source: constant.iconComments;
-                        onClicked: {
-                            if (writeCommentField.visible) {
-                                writeCommentField.visible = false;
-                            } else {
-                                writeCommentField.visible = true;
-                            }
+                    icon.width: Theme.itemSizeSmall;
+                    icon.height: Theme.itemSizeSmall;
+                    icon.source: constant.iconComments;
+
+                    onClicked: {
+                        if (writeCommentField.visible) {
+                            writeCommentField.visible = false;
+                        } else {
+                            writeCommentField.visible = true;
                         }
                     }
                 }
 
                 Label {
                     id: infoText;
-                    anchors { top: scoreBars.bottom; left: parent.left; leftMargin: constant.paddingMedium; }
+                    anchors {
+                        top: scoreRow.bottom;
+                        left: parent.left;
+                        margins: Theme.paddingSmall;
+                    }
+
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeXSmall : constant.fontSizeXXSmall;
+                    font.pixelSize: constant.fontSizeIgnore;
                     color: constant.colorHighlight;
                     text: galleryContentModel.info;
                 }
 
                 TextArea {
                     id: writeCommentField;
-                    anchors { top: infoText.bottom; left: parent.left; right: parent.right; }
-                    anchors.topMargin: constant.paddingMedium;
+                    anchors {
+                        top: infoText.bottom;
+                        left: parent.left;
+                        right: parent.right;
+                        margins: Theme.paddingMedium;
+                    }
                     visible: false;
                     placeholderText: qsTr("Write comment");
 
                     EnterKey.enabled: text.trim().length > 0;
                     EnterKey.iconSource: "image://theme/icon-m-enter-accept";
                     EnterKey.onClicked: {
-                        //console.log("Comment: " + text);
                         Imgur.commentCreation(imgur_id, text, null,
                               function (data) {
-                                  //console.log("data: " + JSON.stringify(data));
                                   infoBanner.showText(qsTr("Comment sent!"));
                                   visible = false;
                                   text = "";
@@ -438,14 +425,6 @@ Page {
                             width: commentListView.width
                         }
                     }
-
-// Doesn't seem to work anymore sfos >= 1.1.9.28
-//                    onMovementEnded: {
-//                        console.log("onMovementEnded, atYEnd=", atYEnd)
-//                        if(atYEnd) {
-//                            commentsModel.getNextComments();
-//                        }
-//                    }
                 }
 
                 Item {
@@ -496,8 +475,7 @@ Page {
                     id: datetimeText;
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
+                    font.pixelSize: constant.fontSizeMeta;
                     color: constant.colorHighlight;
                     text: galleryContentModel.datetime;
                 }
@@ -505,8 +483,7 @@ Page {
                     id: viewsText;
                     width: parent.width / 2;
                     wrapMode: Text.Wrap;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
+                    font.pixelSize: constant.fontSizeMeta;
                     color: constant.colorHighlight;
                     text: qsTr("views") + ": " + galleryContentModel.views;
                 }

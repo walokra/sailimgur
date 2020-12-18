@@ -8,7 +8,8 @@ Component {
         id: root;
         anchors { left: parent.left; right: parent.right; }
 
-        height: (video) ? video.height : 0;
+        height: Math.max(((video) ? video.height : 0), image.height, 3*loadingVideoIndicator.height);
+        width: Screen.width;
 
         property int start_x;
         property int start_y;
@@ -36,19 +37,22 @@ Component {
 
         Image {
             id: image;
-            anchors { left: parent.left; right: parent.right; }
             asynchronous: true;
 
             fillMode: Image.PreserveAspectFit;
-            source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted) ? link_original : link;
+            source: link_original;
             width: parent.width;
+            height: sourceSize.height * (Screen.width / sourceSize.width);
+
             visible: (mediaPlayer) ? mediaPlayer.playbackState == MediaPlayer.StoppedState : true;
         }
 
         VideoOutput {
             id: video;
-            anchors { left: parent.left; right: parent.right; }
-            width: parent.orientation === Orientation.Portrait ? Screen.width : Screen.height;
+
+            width: image.width;
+            height: image.height;
+
             fillMode: VideoOutput.PreserveAspectFit;
 
             source: MediaPlayer {
@@ -80,10 +84,10 @@ Component {
             internal.clickPlay();
         }
 
-        onPressAndHold: {
-            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-            drawer.open = true;
-        }
+//        onPressAndHold: {
+//            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
+//            drawer.open = true;
+//        }
 
         onPressed: {
             start_x = mouseX;
@@ -97,7 +101,7 @@ Component {
             var abs_x_diff = Math.abs(x_diff);
             var abs_y_diff = Math.abs(y_diff);
 
-            if (abs_x_diff != abs_y_diff) {
+            if (abs_x_diff !== abs_y_diff) {
                 if (abs_x_diff > abs_y_diff) {
                     if (abs_x_diff > 50) {
                         if (x_diff > 0) {

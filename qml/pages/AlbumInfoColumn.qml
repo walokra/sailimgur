@@ -119,19 +119,10 @@ Item {
         id: actionButtons;
         anchors.horizontalCenter: parent.horizontalCenter;
         width: childrenRect.width;
-        height: constant.iconSizelarge
         spacing: Theme.paddingLarge * 2;
+        height: constant.iconSizeMedium
 
-//        IconButton {
-//            id: dislikeButton;
-//            enabled: loggedIn;
-//            icon.width: constant.iconSizeSmall;
-//            icon.height: icon.width;
-//            icon.source: constant.iconDislike + "?" + ((galleryContentModel.vote === "down") ? "red" : constant.iconDefaultColor)
-//            onClicked: {
-//                internal.galleryVote("down");
-//            }
-//        }
+        visible: loggedIn
 
         Rectangle {
             id: dislikeRect;
@@ -155,20 +146,9 @@ Item {
             }
         }
 
-//        IconButton {
-//            id: likeButton;
-//            enabled: loggedIn;
-//            icon.width: constant.iconSizeMedium;
-//            icon.height: icon.width;
-//            icon.source: constant.iconLike + "?" + ((galleryContentModel.vote === "up") ? "green" : constant.iconDefaultColor)
-//            onClicked: {
-//                internal.galleryVote("up");
-//            }
-//        }
-
         Rectangle {
             id: likeRect;
-            width: constant.iconSizeLarge
+            width: constant.iconSizeMedium
             height: width
             anchors.verticalCenter: parent.verticalCenter
 
@@ -179,7 +159,7 @@ Item {
                 id: likeButton;
                 anchors.centerIn: parent;
                 enabled: loggedIn;
-                icon.width: constant.iconSizeLarge
+                icon.width: constant.iconSizeMedium
                 icon.height: icon.width
                 icon.source: constant.iconLike;
                 onClicked: {
@@ -187,17 +167,6 @@ Item {
                 }
             }
         }
-
-//        IconButton {
-//            id: favoriteButton;
-//            enabled: loggedIn;
-//            icon.width: constant.iconSizeSmall;
-//            icon.height: icon.width;
-//            icon.source: constant.iconFavorite + "?" + ((galleryContentModel.favorite) ? "green" : constant.iconDefaultColor)
-//            onClicked: {
-//                internal.galleryFavorite(is_album);
-//            }
-//        }
 
         Rectangle {
             id: favRect;

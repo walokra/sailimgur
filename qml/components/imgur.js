@@ -458,21 +458,8 @@ function fillAlbumImagesModel(output, model) {
     var link_original;
 
     if (output.link) {
-        //console.debug("link=" + output.link);
-        link = IMGUR_IMG_URL;
         link_original = output.link;
-        if (parseInt(output.width) > 640) {
-            // if image isn't gif then get the smaller one
-            var ext = getExt(output.link);
-            if (ext === "gif" || ext === "GIF") {
-                link = output.link;
-            } else {
-                link += output.id+"l."+ext; // l=640x640 aspec
-            }
-        } else {
-            link = output.link;
-        }
-
+        link = output.link;
     }
 
     var imageData = {

@@ -28,7 +28,7 @@ Item {
 
             if (animated === false) {
                 imageLoader.active = true;
-            } else if (type === "image/gif" && (mp4 !== "") && settings.useVideoLoader === true) {
+            } else if ((type === "image/gif" || (mp4 !== "")) && settings.useVideoLoader === true) {
                 // If gifv video is under maxGifSize, use animatedImage (smoother)
                 if (size && size.indexOf("MiB") > -1) {
                     var sizeNo = size.replace(" MiB", "");
@@ -47,37 +47,16 @@ Item {
         internal.activateLoader();
     }
 
-    MouseArea {
-        enabled: drawer.open;
-        anchors.fill: galleryContainer;
-        onClicked: {
-            drawer.open = false;
-        }
-    }
-
     Column {
         id: galleryContainer;
         anchors.left: parent.left; anchors.right: parent.right;
         height: childrenRect.height;
-        //height: drawer.height + imageDescText.height + indexLabel.height + Theme.paddingSmall;
 
         Drawer {
-            id: drawer;
-
             anchors.left: parent.left; anchors.right: parent.right;
-            dock: page.isPortrait ? Dock.Left : Dock.Bottom;
             height: imageColumn.height;
-            backgroundSize: parent.width / 5;
 
-            background: Item {
-                id: drawerContextMenu;
-                anchors.left: parent.left; anchors.right: parent.right;
-                height: childrenRect.height;
-
-                ImageButtons {
-                    id: imageButtons;
-                }
-            }
+            background: Item { }
 
             foreground: Column {
                 id: imageColumn;
@@ -85,16 +64,13 @@ Item {
                 height: imageTitleText.height + ((imageLoader.active) ? imageLoader.height : videoLoader.height);
                 spacing: constant.paddingSmall;
 
-                enabled: !drawer.opened;
-
                 Label {
                     id: imageTitleText;
                     anchors.leftMargin: constant.paddingSmall;
                     anchors.rightMargin: constant.paddingSmall;
                     wrapMode: Text.Wrap;
                     text: title;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeSmall : constant.fontSizeXSmall;
+                    font.pixelSize: constant.fontSizeNormal;
                     color: constant.colorHighlight;
                     anchors { left: parent.left; right: parent.right; }
                     visible: (title && is_album) ? true : false;
@@ -107,7 +83,7 @@ Item {
                     visible: active;
                     asynchronous: true;
 
-                    width: Math.min(vWidth, parent.width);
+                    width: Screen.width;
                     height: (active) ? vHeight : 0;
 
                     anchors.horizontalCenter: parent.horizontalCenter;
@@ -132,24 +108,27 @@ Item {
             }
         } // Drawer
 
+        ImageButtons { }
+
         Label {
             id: imageDescText;
             wrapMode: Text.Wrap;
             text: description;
-            font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                ? constant.fontSizeSmall : constant.fontSizeXSmall;
-            anchors { left: parent.left; right: parent.right; }
-            anchors.leftMargin: constant.paddingSmall;
-            anchors.rightMargin: constant.paddingSmall;
+            font.pixelSize: constant.fontSizeNormal;
+            anchors {
+                left: parent.left
+                right: parent.right
+                leftMargin: constant.paddingSmall;
+                rightMargin: constant.paddingSmall;
+            }
             visible: (description) ? true : false;
             elide: Text.ElideRight;
             textFormat: Text.StyledText;
             linkColor: Theme.highlightColor;
             onLinkActivated: {
-                //console.log("Link clicked! " + link);
                 contextLink = link;
                 contextMenu = commentContextMenu.createObject(galleryContainer);
-                contextMenu.show(galleryContentDelegate);
+                contextMenu.open(galleryContentDelegate);
             }
         }
     }

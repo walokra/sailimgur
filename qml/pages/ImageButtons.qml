@@ -1,11 +1,18 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-ListItem {
-    id: container;
+Row {
+    property var iconSize: Theme.itemSizeSmall;
 
-    height: childrenRect.height + constant.paddingMedium;
-    anchors.horizontalCenter: parent.horizontalCenter;
+    height: iconSize + 2 * Theme.paddingMedium;
+
+    anchors {
+        horizontalCenter: parent.horizontalCenter;
+        bottomMargin: Theme.paddingMedium;
+        topMargin: Theme.paddingMedium;
+    }
+
+    spacing: Theme.paddingLarge;
 
     Component.onCompleted: {
         sailimgurMgr.saveImageSucceeded.connect(internal.saveImageSucceeded);
@@ -13,13 +20,13 @@ ListItem {
     }
 
     IconButton {
-        id: saveButton;
-        anchors { left: parent.left; }
-        //anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.rightMargin: Theme.paddingLarge;
-        icon.width: Theme.itemSizeExtraSmall;
-        icon.height: Theme.itemSizeExtraSmall;
+        id: dlIcon;
+        icon.width: parent.iconSize;
+        icon.height: parent.iconSize;
         icon.source: constant.iconSave;
+
+        visible: !savingInProgress
+
         onClicked: {
             savingInProgress = true;
             if (type === "image/gif" && size && size.indexOf("MiB") > -1) {
@@ -36,13 +43,16 @@ ListItem {
     }
 
     IconButton {
-        id: browserButton;
-        anchors { left: saveButton.right; }
-        //anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.leftMargin: Theme.paddingLarge;
-        anchors.rightMargin: Theme.paddingLarge;
-        icon.width: Theme.itemSizeExtraSmall;
-        icon.height: Theme.itemSizeExtraSmall;
+        icon.width: parent.iconSize;
+        icon.height: parent.iconSize;
+        icon.source: constant.iconSaving;
+
+        visible: savingInProgress;
+    }
+
+    IconButton {
+        icon.width: parent.iconSize;
+        icon.height: parent.iconSize;
         icon.source: constant.iconBrowser;
         onClicked: {
             //Qt.openUrlExternally(link);
@@ -55,13 +65,8 @@ ListItem {
     }
 
     IconButton {
-        id: clipboardButton;
-        anchors { left: browserButton.right; }
-        //anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.leftMargin: Theme.paddingLarge;
-        anchors.rightMargin: Theme.paddingLarge;
-        icon.width: Theme.itemSizeExtraSmall;
-        icon.height: Theme.itemSizeExtraSmall;
+        icon.width: parent.iconSize;
+        icon.height: parent.iconSize;
         icon.source: constant.iconClipboard;
         onClicked: {
             Clipboard.text = link_original;
@@ -70,13 +75,8 @@ ListItem {
     }
 
     IconButton {
-        id: infoButton;
-        anchors { left: clipboardButton.right; }
-        //anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.leftMargin: Theme.paddingLarge;
-        anchors.rightMargin: Theme.paddingLarge;
-        icon.width: Theme.itemSizeExtraSmall;
-        icon.height: Theme.itemSizeExtraSmall;
+        icon.width: parent.iconSize;
+        icon.height: parent.iconSize;
         icon.source: constant.iconInfo;
         onClicked: {
             //console.debug(JSON.stringify(galleryContentModel));
@@ -103,18 +103,18 @@ ListItem {
         id: internal;
 
         function saveImageSucceeded(name) {
-            //var msg = qsTr("Image saved as %1").arg(name);
             if (infoBanner) {
                 infoBanner.showText("Image saved as " + name);
             }
             savingInProgress = false;
+            dlIcon.icon.source = constant.iconSaveDone;
         }
         function errorImageExists(name) {
-            //var msg = qsTr("Image already saved as %1").arg(name);
             if (infoBanner) {
                 infoBanner.showText("Image already saved as " + name);
             }
             savingInProgress = false;
+            dlIcon.icon.source = constant.iconSaveDone;
         }
     }
 

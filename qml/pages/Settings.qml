@@ -14,7 +14,7 @@ QtObject {
     property int albumImagesLimit: 3;
     property bool showComments: false;
     property bool showNsfw: false;
-    property bool playImages: false;
+    property bool playImages: false; // play anim gifs automatically?
     property bool toolbarBottom: false;
     property bool toolbarHidden: true;
     property bool useGalleryPage: false;
@@ -34,7 +34,6 @@ QtObject {
     property string window : "day"; // day | week | month | year | all
     property string redditSub : "earthporn";
     property bool showViral : false; // true | false
-    property bool autoplayAnim: true; // play anim gifs automatically?
 
     property string installedVersion: ""; // which version user currently has?
 

@@ -44,6 +44,7 @@ OTHER_FILES = \
     qml/pages/GalleryNavigation.qml \
     qml/pages/GalleryContentPage.qml \
     qml/pages/GalleryContentDelegate.qml \
+    qml/pages/GalleryLoadingNavigation.qml \
     qml/pages/GalleryMode.qml \
     qml/pages/CommentsModel.qml \
     qml/pages/GalleryModel.qml \

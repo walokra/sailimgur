@@ -2,10 +2,12 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Row {
-    id: root;
-    anchors { left: parent.left; right: parent.right; }
-    width: parent.width;
-    height: childrenRect.height;
+    anchors {
+        left: parent.left;
+        right: parent.right;
+    }
+    height: childrenRect.height + Theme.horizontalPageMargin;
+    spacing: Theme.paddingSmall;
 
     Connections {
         target: mp;
@@ -13,8 +15,6 @@ Row {
             internal.setMode(mode);
         }
     }
-
-    spacing: Theme.paddingSmall;
 
     Connections {
         target: settings;
@@ -48,8 +48,7 @@ Row {
                     settings.mode === constant.mode_albums ? qsTr("Your albums") : (
                             settings.mode === constant.mode_images) ? qsTr("Your images") : ""
                     );
-        font.pixelSize: Screen.sizeCategory >= Screen.Large
-                            ? constant.fontSizeLarge : constant.fontSizeMedium
+        font.pixelSize: constant.fontSizeTitle;
         color: constant.colorHighlight;
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere;
         visible: (settings.mode === constant.mode_favorites || settings.mode === constant.mode_albums || settings.mode === constant.mode_images);

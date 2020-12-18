@@ -33,195 +33,82 @@ Page {
 
         Column {
             id: contentArea;
-            anchors { top: header.bottom; left: parent.left; right: parent.right; }
+
+            anchors {
+                top: header.bottom;
+                left: parent.left;
+                right: parent.right;
+                margins: Theme.horizontalPageMargin;
+            }
+
+            property var fontSize: constant.fontSizeNormal;
+
             height: childrenRect.height;
             spacing: constant.paddingMedium;
 
             anchors { left: parent.left; right: parent.right; }
             anchors { leftMargin: constant.paddingMedium; rightMargin: constant.paddingMedium; }
 
-            Row {
-                Label {
-                    text: qsTr('Id: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.image_id;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
+            DetailItem {
+                label: qsTr('Id');
+                value: root.image_id;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Width: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
-
-                Label {
-                    text: root.image_width;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
+            DetailItem {
+                label: qsTr('Width');
+                value: root.image_width;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Height: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
-
-                Label {
-                    text: root.image_height;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
+            DetailItem {
+                label: qsTr('Height');
+                value: root.image_height;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Type: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.type;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Type');
+                value: root.type;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Size: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
-
-                Label {
-                    text: root.size;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
+            DetailItem {
+                label: qsTr('Size');
+                value: root.size;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Views: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
-
-                Label {
-                    text: root.views;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                }
+            DetailItem {
+                label: qsTr('Views');
+                value: root.views;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Bandwidth: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.bandwith;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Bandwidth');
+                value: root.bandwith;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Section: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.section;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Section');
+                value: root.section;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Animated: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.animated;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Animated');
+                value: root.animated;
             }
 
-            Row {
-                Label {
-                    text: qsTr('NSFW: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.nsfw;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('NSFW');
+                value: root.nsfw;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Upvotes: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.ups;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Upvotes');
+                value: root.ups;
             }
 
-            Row {
-                Label {
-                    text: qsTr('Downvotes: ');
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
-
-                Label {
-                    text: root.downs;
-                    font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                        ? constant.fontSizeMedium : constant.fontSizeSmall;
-                    wrapMode: Text.WrapAnywhere;
-                }
+            DetailItem {
+                label: qsTr('Downvotes');
+                value: root.downs;
             }
+
         }
 
         VerticalScrollDecorator { flickable: flickable; }

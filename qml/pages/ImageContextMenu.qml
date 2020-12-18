@@ -6,20 +6,19 @@ ContextMenu {
     property var url;
 
     Label {
-        id: linkLabel;
-        anchors { left: parent.left; right: parent.right;
-            leftMargin: constant.paddingSmall;
-            rightMargin: constant.paddingSmall;
-        }
-        font.pixelSize: Screen.sizeCategory >= Screen.Large
-                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
+        font.pixelSize: constant.fontSizeSmall;
+        x: parent.x + Theme.paddingSmall;
         color: constant.colorHighlight;
         wrapMode: Text.Wrap;
         elide: Text.ElideRight;
         text: url;
     }
+
     Separator {
-        anchors { left: parent.left; right: parent.right; }
+        anchors {
+            left: parent.left;
+            right: parent.right;
+        }
         color: constant.colorSecondary;
     }
 
@@ -37,19 +36,15 @@ ContextMenu {
             //infoBanner.showText(qsTr("Launching browser."));
         }
     }
+
     MenuItem {
-        anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: Screen.sizeCategory >= Screen.Large
-                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Open in external browser");
         onClicked: {
             Qt.openUrlExternally(url);
         }
     }
+
     MenuItem {
-        anchors { left: parent.left; right: parent.right; }
-        font.pixelSize: Screen.sizeCategory >= Screen.Large
-                            ? constant.fontSizeSmall : constant.fontSizeXSmall;
         text: qsTr("Copy link to clipboard");
         onClicked: {
             Clipboard.text = url;
