@@ -48,7 +48,7 @@ Item {
             wrapMode: Text.Wrap;
             onLinkActivated: {
                 contextMenu = uploadedContextMenu.createObject(parent_item);
-                contextMenu.show(uploadedDelegate);
+                contextMenu.open(uploadedDelegate);
             }
             text: Utils.replaceURLWithHTMLLinks(item_link);
         }

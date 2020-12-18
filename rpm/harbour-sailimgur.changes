@@ -1,3 +1,7 @@
+* Sat Dec 19 2020 Marko Wallin <mtw@iki.fi> 0.10.0-1
+User interface updates from patch by ichthyosaurus.
+Fix issues with profile info showing.
+
 * Sat Jul 16 2016 Marko Wallin <mtw@iki.fi> 0.9.0-1
 Added mode to browse subreddits.
 Add time window option to highest scoring and memes modes.

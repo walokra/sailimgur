@@ -56,6 +56,12 @@ QtObject {
     property int fontSizeXLarge : Theme.fontSizeExtraLarge;
     property int fontSizeXXLarge : Theme.fontSizeHuge;
 
+    property var fontSizeHeader: Theme.fontSizeLarge;
+    property var fontSizeTitle: Theme.fontSizeLarge;
+    property var fontSizeNormal: Theme.fontSizeMedium;
+    property var fontSizeMeta: Theme.fontSizeSmall;
+    property var fontSizeIgnore: Theme.fontSizeExtraSmall;
+
     // icons
     property string iconDislike : "image://theme/icon-m-down";
     property string iconLike : "image://theme/icon-m-up";
@@ -66,7 +72,9 @@ QtObject {
     property string iconRight: "image://theme/icon-m-right";
     property string iconLeft: "image://theme/icon-m-left";
     property string iconPlay: "image://theme/icon-m-play";
-    property string iconSave: "image://theme/icon-m-download";
+    property string iconSave: "image://theme/icon-m-cloud-download";
+    property string iconSaveDone: "image://theme/icon-m-image";
+    property string iconSaving: "image://theme/icon-m-sync";
     property string iconInfo: "image://theme/icon-m-about";
     property string iconBrowser: "image://theme/icon-m-region";
     property string iconClipboard: "image://theme/icon-m-clipboard";

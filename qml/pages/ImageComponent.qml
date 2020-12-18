@@ -4,63 +4,80 @@ import Sailfish.Silica 1.0
 Component {
     BackgroundItem {
         id: root;
+
         anchors { left: parent.left; right: parent.right; }
 
-        height: image.height;
+        // FIXME: can't clip here as it cuts the width
+        // clip: true;
+        height: Math.max(image.height, 3 * loadingImageIndicator.height);
+        width: Screen.width;
 
         property int start_x;
         property int start_y;
 
-        property bool isTablet: Screen.sizeCategory >= Screen.Large;
-
         AnimatedImage {
             id: image;
-            anchors { left: parent.left; right: parent.right; }
+
+            anchors {
+               horizontalCenter: parent.horizontalCenter;
+            }
+
             asynchronous: true;
 
+            source: link_original;
+
             fillMode: Image.PreserveAspectFit;
-            source: (deviceOrientation === Orientation.Landscape || deviceOrientation === Orientation.LandscapeInverted || isTablet) ? link_original : link;
-            width: parent.width;
-            playing: settings.autoplayAnim;
+            width: Screen.width;
+            height: sourceSize.height * (Screen.width / sourceSize.width);
+
+            playing: settings.playImages;
             paused: false;
             onStatusChanged: playing;
             smooth: false;
 
             PinchArea {
-                id: pinchArea
+                id: pinchArea;
 
-                property real minScale: 1.0
-                property real maxScale: 3.0
+                property real minScale: 1.0;
+                property real maxScale: 3.0;
+                property real curScale: 1.0;
 
-                anchors.fill: parent
-                enabled: image.status === Image.Ready
-                pinch.target: image
-                pinch.minimumScale: minScale * 0.5 // This is to create "bounce back effect"
-                pinch.maximumScale: maxScale * 1.5 // when over zoomed
+                anchors.fill: parent;
+
+                enabled: image.status === Image.Ready;
+
+                pinch.target: image;
+                pinch.minimumScale: minScale * 0.7; // This is to create "bounce back effect"
+                pinch.maximumScale: maxScale * 1.4; // when over zoomed
+                pinch.dragAxis: Pinch.XAndYAxis;
+                pinch.maximumRotation: 0;
+                pinch.minimumRotation: 0;
 
                 onPinchFinished: {
                     if (image.scale < pinchArea.minScale) {
-                        bounceBackAnimation.to = pinchArea.minScale
-                        bounceBackAnimation.start()
+                        bounceBackAnimation.to = pinchArea.minScale;
+                        bounceBackAnimation.start();
                     }
                     else if (image.scale > pinchArea.maxScale) {
-                        bounceBackAnimation.to = pinchArea.maxScale
-                        bounceBackAnimation.start()
+                        bounceBackAnimation.to = pinchArea.maxScale;
+                        bounceBackAnimation.start();
                     }
+
+                    curScale = pinch.scale < 1.0 ? 1.0 : pinch.scale;
                 }
 
                 NumberAnimation {
-                    id: bounceBackAnimation
-                    target: image
-                    duration: 250
-                    property: "scale"
-                    from: image.scale
+                    id: bounceBackAnimation;
+                    target: image;
+                    duration: 250;
+                    property: "scale";
+                    from: image.scale;
                 }
                 // workaround to qt5.2 bug
                 // otherwise pincharea is ignored
                 Rectangle {
-                    opacity: 0.0
-                    anchors.fill: parent
+                    opacity: 0.0;
+                    anchors.fill: parent;
                 }
             }
         }
@@ -97,14 +114,14 @@ Component {
         }
 
         onPositionChanged: {
-            if (!isSlideshow) {
+            if (!isSlideshow && pinchArea.curScale == 1.0) {
                 var x_diff = mouseX - start_x;
                 var y_diff = mouseY - start_y;
 
                 var abs_x_diff = Math.abs(x_diff);
                 var abs_y_diff = Math.abs(y_diff);
 
-                if (abs_x_diff != abs_y_diff) {
+                if (abs_x_diff !== abs_y_diff) {
                     if (abs_x_diff > abs_y_diff) {
                         if (abs_x_diff > 50) {
                             if (x_diff > 0) {

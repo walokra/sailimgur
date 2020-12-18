@@ -4,11 +4,17 @@ import "../components/imgur.js" as Imgur
 
 Item {
     id: navBg;
+
+    anchors {
+        bottom: parent.bottom;
+        bottomMargin: constant.paddingSmall
+    }
+
     width: parent.width;
-    anchors { bottom: parent.bottom; }
-    anchors.bottomMargin: constant.paddingSmall
     height: constant.iconSizeMedium + constant.paddingSmall
+
     z: 2;
+
     visible: galleryModel.count > 1 || page > 0;
 
     function previous() {
@@ -48,35 +54,32 @@ Item {
         prevEnabled = true;
     }
 
-    ListItem {
-        id: navigationItem;
+    IconButton {
+        id: prevButton;
+        visible: prevEnabled;
+        enabled: prevEnabled;
+        icon.width: constant.iconSizeLarge;
+        icon.height: icon.width;
+        anchors { left: parent.left; leftMargin: constant.paddingMedium; }
 
-        IconButton {
-            id: prevButton;
-            visible: prevEnabled;
-            enabled: prevEnabled;
-            icon.width: constant.iconSizeMedium;
-            icon.height: icon.width;
-            anchors { left: parent.left; leftMargin: constant.paddingMedium; }
-
-            icon.source: constant.iconLeft;
-            onClicked: {
-                previous();
-            }
+        icon.source: constant.iconLeft;
+        onClicked: {
+            flickable.scrollToTop();
+            previous();
         }
+    }
 
-        IconButton {
-            id: nextButton;
-            visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
-            icon.width: constant.iconSizeMedium;
-            icon.height: icon.width;
-            anchors { right: parent.right; rightMargin: constant.paddingMedium; }
+    IconButton {
+        id: nextButton;
+        visible: is_gallery || (!is_gallery && currentIndex < galleryModel.count -1);
+        icon.width: constant.iconSizeLarge;
+        icon.height: icon.width;
+        anchors { right: parent.right; rightMargin: constant.paddingMedium; }
 
-            icon.source: constant.iconRight;
-            onClicked: {
-                next();
-            }
+        icon.source: constant.iconRight;
+        onClicked: {
+            flickable.scrollToTop();
+            next();
         }
-
-    } // navigationItem
+    }
 }

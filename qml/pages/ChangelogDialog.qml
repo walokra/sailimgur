@@ -24,6 +24,16 @@ Dialog {
             anchors.margins: Theme.paddingSmall;
             spacing: Theme.paddingSmall;
 
+            SectionHeader { text: qsTr("Version") + " 0.10.0 (2020-12-19)" }
+
+            Label {
+                width: parent.width;
+                wrapMode: Text.Wrap;
+                font.pixelSize: Screen.sizeCategory >= Screen.Large
+                                    ? constant.fontSizeSmall : constant.fontSizeXSmall
+                text: qsTr("User interface updates from patch by ichthyosaurus.");
+            }
+
             SectionHeader { text: qsTr("Version") + " 0.9.0 (2016-07-16)" }
 
             Label {
