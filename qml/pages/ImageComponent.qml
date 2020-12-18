@@ -100,10 +100,10 @@ Component {
             internal.clickPlay();
         }
 
-//        onPressAndHold: {
-//            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-//            drawer.open = true;
-//        }
+        onPressAndHold: {
+            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
+            drawer.open = true;
+        }
 
         onPressed: {
             start_x = mouseX;

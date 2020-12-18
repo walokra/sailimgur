@@ -47,22 +47,44 @@ Item {
         internal.activateLoader();
     }
 
+    MouseArea {
+        enabled: drawer.open;
+        anchors.fill: galleryContainer;
+        onClicked: {
+            drawer.open = false;
+        }
+    }
+
     Column {
         id: galleryContainer;
         anchors.left: parent.left; anchors.right: parent.right;
         height: childrenRect.height;
 
         Drawer {
+            id: drawer;
             anchors.left: parent.left; anchors.right: parent.right;
+            dock: page.isPortrait ? Dock.Left : Dock.Bottom;
             height: imageColumn.height;
+            backgroundSize: parent.width / 5;
 
-            background: Item { }
+//            background: Item { }
+            background: Item {
+                id: drawerContextMenu;
+                anchors.left: parent.left; anchors.right: parent.right;
+                height: childrenRect.height;
+
+                ImageButtons {
+                    id: imageButtons;
+                }
+            }
 
             foreground: Column {
                 id: imageColumn;
                 anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; }
                 height: imageTitleText.height + ((imageLoader.active) ? imageLoader.height : videoLoader.height);
                 spacing: constant.paddingSmall;
+
+                enabled: !drawer.opened;
 
                 Label {
                     id: imageTitleText;
@@ -108,7 +130,7 @@ Item {
             }
         } // Drawer
 
-        ImageButtons { }
+//        ImageButtons { }
 
         Label {
             id: imageDescText;
