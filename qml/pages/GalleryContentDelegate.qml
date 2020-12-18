@@ -28,7 +28,7 @@ Item {
 
             if (animated === false) {
                 imageLoader.active = true;
-            } else if ((type === "image/gif" || (mp4 !== "")) && settings.useVideoLoader === true) {
+            } else if ((type === "image/gif" || type === "video/mp4" || (mp4 !== "")) && settings.useVideoLoader === true) {
                 // If gifv video is under maxGifSize, use animatedImage (smoother)
                 if (size && size.indexOf("MiB") > -1) {
                     var sizeNo = size.replace(" MiB", "");
