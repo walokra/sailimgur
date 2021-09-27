@@ -4,7 +4,7 @@ Version: 0.10.0
 Release: 1
 Group: Applications/Internet
 URL: http://ruleoftech.com/lab/sailimgur
-License: LICENSE
+License: GPLv3
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
