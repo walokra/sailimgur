@@ -9,8 +9,8 @@ QtObject {
     // imgur API key/secret
     // The OAuth2 key/secret pair below are only for testing
     // Release version in Jolla Store / OpenRepos has a different key pair
-    property string clientId : "";
-    property string clientSecret : "";
+    property string clientId : CLIENT_ID;
+    property string clientSecret : CLIENT_SECRET;
 
     property string userAgent : appName + " " + APP_VERSION + "-" + APP_RELEASE + "(Jolla; Qt; SailfishOS)";
 
