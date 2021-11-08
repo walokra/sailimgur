@@ -16,11 +16,13 @@ CONFIG += sailfishapp
 
 HEADERS += \
     src/imageuploader.h \
-    src/sailimgur.h
+    src/sailimgur.h  \
+    src/simplecrypt.h
 
 SOURCES += main.cpp \
     src/imageuploader.cpp \
-    src/sailimgur.cpp
+    src/sailimgur.cpp \
+    src/simplecrypt.cpp
 
 OTHER_FILES = \
     rpm/harbour-sailimgur.changes \

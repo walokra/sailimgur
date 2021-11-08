@@ -9,9 +9,10 @@
 
 #include "src/imageuploader.h"
 #include "src/sailimgur.h"
+#include "src/simplecrypt.h"
 
 #define CLIENT_ID "44f3bd95ad7db12"
-#define CLIENT_SECRET ""
+#define CLIENT_SECRET "AwLij1UYyeMhkq3xUEvNu3DH9/1YEMbtcZb3pQ5GwLB5yviiARnO5X3N+6VS"
 
 /**
  * Clears the web cache, because Qt 5.2 WebView chokes on caches from older Qt versions.
@@ -42,6 +43,10 @@ void clearWebCache() {
 int main(int argc, char *argv[])
 {
 
+    SimpleCrypt *crypto = new SimpleCrypt();
+    crypto->setKey(0xd2fa13b37d936b07);
+    QString client_secret = crypto->decryptToString(QString(CLIENT_SECRET));
+
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
 
     clearWebCache();
@@ -56,7 +61,7 @@ int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("APP_RELEASE", APP_RELEASE);
 
     view->rootContext()->setContextProperty("CLIENT_ID", CLIENT_ID);
-    view->rootContext()->setContextProperty("CLIENT_SECRET", CLIENT_SECRET);
+    view->rootContext()->setContextProperty("CLIENT_SECRET", client_secret);
 
     Sailimgur mgr;
     view->rootContext()->setContextProperty("sailimgurMgr", &mgr);
