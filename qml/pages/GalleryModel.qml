@@ -29,7 +29,7 @@ ListModel {
 
         signInPage.init();
 
-       Imgur.processGalleryMode(query, listModel, page, settings,
+       Imgur.processGalleryMode(query, listModel, pageNo, settings,
             onSuccess(),
             onFailure()
         );

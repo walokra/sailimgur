@@ -672,29 +672,29 @@ function getAuthorizationHeader() {
     }
 }
 
-function processGalleryMode(query, model, page, settings, onSuccess, onFailure) {
+function processGalleryMode(query, model, pageNo, settings, onSuccess, onFailure) {
     // Global accesor used to use the correct URL base for getGalleryImage()
     redditModeActive = false;
 
     if (query) {
-        getGallerySearch(query, model, page, settings, onSuccess, onFailure);
+        getGallerySearch(query, model, pageNo, settings, onSuccess, onFailure);
     }
     else if (settings.mode === "main" || settings.mode === "user" || settings.mode === "score") {
-        getGallery(model, page, settings, onSuccess, onFailure);
+        getGallery(model, pageNo, settings, onSuccess, onFailure);
     } else if (settings.mode === "random") {
-        getRandomGalleryImages(model, page, onSuccess, onFailure);
+        getRandomGalleryImages(model, pageNo, onSuccess, onFailure);
     } else if (settings.mode === "memes") {
-        getMemesSubGallery(model, page, settings, onSuccess, onFailure);
+        getMemesSubGallery(model, pageNo, settings, onSuccess, onFailure);
     } else if (settings.mode === "reddit") {
         redditModeActive = true;
-        getRedditSubGallery(model, page, settings, onSuccess, onFailure);
+        getRedditSubGallery(model, pageNo, settings, onSuccess, onFailure);
 
     } else if (settings.mode === "favorites") {
         getFavorites(model, onSuccess, onFailure);
     } else if (settings.mode === "albums") {
-        getAlbums(model, page, onSuccess, onFailure);
+        getAlbums(model, pageNo, onSuccess, onFailure);
     } else if (settings.mode === "images") {
-        getImages(model, page, onSuccess, onFailure);
+        getImages(model, pageNo, onSuccess, onFailure);
     }
 }
 

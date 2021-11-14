@@ -14,7 +14,7 @@ Page {
 
     property string galleryContentPageTitle : constant.appName;
 
-    property bool prevEnabled: currentIndex > 0 || page > 0;
+    property bool prevEnabled: currentIndex > 0 || pageNo > 0;
 
     GalleryContentModel {
         id: galleryContentModel;
@@ -77,7 +77,7 @@ Page {
     }
 
     function setPrevButton() {
-        if (currentIndex === 0 && page === 0) {
+        if (currentIndex === 0 && pageNo === 0) {
             prevEnabled = false;
         } else {
             prevEnabled = true;

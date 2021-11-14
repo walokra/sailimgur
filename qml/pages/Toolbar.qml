@@ -44,7 +44,7 @@ Column {
                 settings.saveSetting("mode", settings.mode);
                 modeChanged("main");
 
-                page = 0;
+                pageNo = 0;
                 galleryModel.query = "";
                 searchPanel.visible = false;
                 galgrid.scrollToTop();

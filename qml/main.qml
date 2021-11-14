@@ -8,7 +8,7 @@ ApplicationWindow {
 
     property Page currentPage: pageStack.currentPage
 
-    property int page : 0;
+    property int pageNo : 0;
     property int currentIndex : 0;
     property bool loggedIn : false;
 

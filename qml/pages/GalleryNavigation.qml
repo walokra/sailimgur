@@ -15,17 +15,17 @@ Item {
 
     z: 2;
 
-    visible: galleryModel.count > 1 || page > 0;
+    visible: galleryModel.count > 1 || pageNo > 0;
 
     function previous() {
-        //console.log("Previous clicked! curr=" + currentIndex + "; page=" + page);
-        if (currentIndex > 0 && page >= 0) {
+        //console.log("Previous clicked! curr=" + currentIndex + "; page=" + pageNo);
+        if (currentIndex > 0 && pageNo >= 0) {
             currentIndex -= 1;
             load();
         }
-        if (currentIndex === 0 && page >= 1) {
+        if (currentIndex === 0 && pageNo >= 1) {
             //console.log("Getting previous list of images");
-            page -= 1;
+            pageNo -= 1;
 
             loadingRect.visible = true;
             galleryModel.clear();
@@ -36,7 +36,7 @@ Item {
     }
 
     function next() {
-        //console.log("Next clicked! curr=" + currentIndex + "; model=" + galleryModel.count);
+        //console.log("Next clicked! curr=", + currentIndex + "; count=" + galleryModel.count);
         if (currentIndex < galleryModel.count - 1) {
             //console.log("Getting next image");
             currentIndex += 1;
@@ -44,7 +44,7 @@ Item {
         }
         else if (currentIndex === galleryModel.count - 1) {
             //console.log("Getting new list of images");
-            page += 1;
+            pageNo += 1;
             currentIndex = 0;
 
             loadingRect.visible = true;

@@ -275,7 +275,7 @@ Page {
 
         function setCommonValues() {
             currentIndex = 0;
-            page = 0;
+            pageNo = 0;
             galleryModel.query = "";
             galleryModel.clear();
             galleryModel.processGalleryMode();
