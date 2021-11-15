@@ -24,7 +24,7 @@ var ENDPOINT_GALLERY_IMAGE = ENDPOINT_GALLERY + "/image"
 var ENDPOINT_ALBUM = BASEURL + "/album/";
 var ENDPOINT_IMAGE = BASEURL + "/image/";
 
-var IMGUR_IMG_URL = "http://i.imgur.com/";
+var IMGUR_IMG_URL = "https://i.imgur.com/";
 
 // OAUTH
 var AUTHORIZE_URL = "https://api.imgur.com/oauth2/authorize"
@@ -507,9 +507,9 @@ function fillAlbumVariables(output, model) {
     model.images_count = (output.images_count) ? output.images_count : 0;
     model.is_album = (output.is_album) ? output.is_album : false;
     if (output.is_album) {
-        model.gallery_page_link = "http://imgur.com/a/" + output.id;
+        model.gallery_page_link = "https://imgur.com/a/" + output.id;
     } else {
-        model.gallery_page_link = "http://imgur.com/" + output.id;
+        model.gallery_page_link = "https://imgur.com/" + output.id;
     }
 
     var total = 0;
