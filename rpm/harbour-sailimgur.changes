@@ -1,3 +1,10 @@
+* Mon Nov 15 2021 Marko Wallin <mtw@iki.fi> 0.11.0-1
+Fix animations (videos, gifs) behaviour, #28.
+Fix back button, #29.
+Feature Request: display link, #30.
+Fix swiping to go to next image, #27.
+Fix image context menu to show correctly.
+
 * Sat Dec 19 2020 Marko Wallin <mtw@iki.fi> 0.10.0-1
 User interface updates from patch by ichthyosaurus.
 Fix issues with profile info showing.
