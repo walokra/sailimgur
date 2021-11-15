@@ -8,7 +8,7 @@ Component {
         id: root;
         anchors { left: parent.left; right: parent.right; }
 
-        height: Math.max(((video) ? video.height : 0), image.height, 3*loadingVideoIndicator.height);
+        height: Math.max(vHeight * (Screen.width / vWidth), 3*loadingVideoIndicator.height);
         width: Screen.width;
 
         property int start_x;
@@ -35,14 +35,14 @@ Component {
             }
         }
 
-        Image {
+       Image {
             id: image;
             asynchronous: true;
 
             fillMode: Image.PreserveAspectFit;
-            source: link_original;
+            source: thumbnail;
             width: parent.width;
-            height: sourceSize.height * (Screen.width / sourceSize.width);
+            height: vHeight * (Screen.width / vWidth);
 
             visible: (mediaPlayer) ? mediaPlayer.playbackState == MediaPlayer.StoppedState : true;
         }
@@ -50,8 +50,8 @@ Component {
         VideoOutput {
             id: video;
 
-            width: image.width;
-            height: image.height;
+            width: Screen.width;
+            height: Math.min(vHeight * (Screen.width / vWidth), Screen.height)
 
             fillMode: VideoOutput.PreserveAspectFit;
 

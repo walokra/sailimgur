@@ -483,8 +483,11 @@ function fillAlbumImagesModel(output, model) {
         gifv: (output.gifv) ? output.gifv : "",
         mp4: (output.mp4) ? output.mp4 : "",
         webm: (output.webm) ? output.webm : "",
-        looping: (output.looping) ? output.looping : false
+        looping: (output.looping) ? output.looping : false,
+        thumbnail: IMGUR_IMG_URL + output.id+"l.jpg" // s=90x90, b=160x16; t=160x160, m=320x320,l=640x640, h=1024x1024 (aspect)
     };
+
+    //console.debug(JSON.stringify(imageData));
 
     model.push(imageData);
 }

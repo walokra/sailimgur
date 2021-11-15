@@ -21,23 +21,17 @@ Item {
         // webm = video/x-vp8, video/x-h264
         // "No decoder available for type 'video/x-vp8'
         function activateLoader() {
-            //console.debug("link=", link, "; size=",size, "type=",type, "; mp4=",mp4, "; gifv=",gifv, "; webm=",webm);
-            //console.debug("vWidth=" + vWidth + "; vHeight="+vHeight)
+            //console.debug("link=",link, "; size=",size, "type=",type, "; animated=",animated, "; mp4=",mp4, "; gifv=",gifv, "; thumbnail=",thumbnail);
             imageLoader.active = false;
             videoLoader.active = false;
 
-            if (animated === false) {
+            if (!animated) {
                 imageLoader.active = true;
-            } else if ((type === "image/gif" || type === "video/mp4" || (mp4 !== "")) && settings.useVideoLoader === true) {
-                // If gifv video is under maxGifSize, use animatedImage (smoother)
-                if (size && size.indexOf("MiB") > -1) {
-                    var sizeNo = size.replace(" MiB", "");
-                    if (parseInt(sizeNo) > settings.maxGifSize) {
-                        videoLoader.active = true;
-                    }
-                }
-            }
-            if (imageLoader.active == false && videoLoader.active == false) {
+            } else if (type === "video/mp4") {
+                videoLoader.active = true;
+            } else if (type === "image/gif") {
+                imageLoader.active = true;
+            } else {
                 imageLoader.active = true;
             }
         }
@@ -67,7 +61,6 @@ Item {
             height: imageColumn.height;
             backgroundSize: parent.width / 5;
 
-//            background: Item { }
             background: Item {
                 id: drawerContextMenu;
                 anchors.left: parent.left; anchors.right: parent.right;
@@ -106,7 +99,7 @@ Item {
                     asynchronous: true;
 
                     width: Screen.width;
-                    height: (active) ? vHeight : 0;
+                    height: (active) ? Math.min(vHeight * (Screen.width / vWidth), Screen.height) : 0;
 
                     anchors.horizontalCenter: parent.horizontalCenter;
 
