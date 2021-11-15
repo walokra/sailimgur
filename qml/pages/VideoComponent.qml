@@ -11,9 +11,6 @@ Component {
         height: Math.max(vHeight * (Screen.width / vWidth), 3*loadingVideoIndicator.height);
         width: Screen.width;
 
-        property int start_x;
-        property int start_y;
-
         Connections {
             target: galleryContentPage;
             onGgpStatusChanged: {
@@ -84,30 +81,37 @@ Component {
             internal.clickPlay();
         }
 
-//        onPressAndHold: {
-//            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-//            drawer.open = true;
-//        }
+        MouseArea {
+            property int start_x;
+            property int start_y;
 
-        onPressed: {
-            start_x = mouseX;
-            start_y = mouseY;
-        }
+            anchors.fill: parent;
 
-        onPositionChanged: {
-            var x_diff = mouseX - start_x;
-            var y_diff = mouseY - start_y;
+//            onPressAndHold: {
+//                video.height = (video.height < drawerContextMenu.height) ? drawerContextMenu.height : video.height;
+//                drawer.open = true;
+//            }
 
-            var abs_x_diff = Math.abs(x_diff);
-            var abs_y_diff = Math.abs(y_diff);
+            onPressed: {
+                start_x = mouseX;
+                start_y = mouseY;
+            }
 
-            if (abs_x_diff !== abs_y_diff) {
-                if (abs_x_diff > abs_y_diff) {
-                    if (abs_x_diff > 50) {
-                        if (x_diff > 0) {
-                            if (prevEnabled) { galleryNavigation.previous(); }
-                        } else if (x_diff < 0) {
-                            galleryNavigation.next();
+            onPositionChanged: {
+                var x_diff = mouseX - start_x;
+                var y_diff = mouseY - start_y;
+
+                var abs_x_diff = Math.abs(x_diff);
+                var abs_y_diff = Math.abs(y_diff);
+
+                if (abs_x_diff != abs_y_diff) {
+                    if (abs_x_diff > abs_y_diff) {
+                        if (abs_x_diff > 50) {
+                            if (x_diff > 0) {
+                                if (prevEnabled) { galleryNavigation.previous(); }
+                            } else if (x_diff < 0) {
+                                galleryNavigation.next();
+                            }
                         }
                     }
                 }

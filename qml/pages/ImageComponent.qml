@@ -103,31 +103,38 @@ Component {
             internal.clickPlay();
         }
 
-        onPressAndHold: {
-            imageColumn.height = (imageColumn.height < drawerContextMenu.height) ? drawerContextMenu.height : imageColumn.height;
-            drawer.open = true;
-        }
+        MouseArea {
+            property int start_x;
+            property int start_y;
 
-        onPressed: {
-            start_x = mouseX;
-            start_y = mouseY;
-        }
+            anchors.fill: parent;
 
-        onPositionChanged: {
-            if (!isSlideshow && pinchArea.curScale == 1.0) {
-                var x_diff = mouseX - start_x;
-                var y_diff = mouseY - start_y;
+//            onPressAndHold: {
+//                image.height = (image.height < drawerContextMenu.height) ? drawerContextMenu.height : image.height;
+//                drawer.open = true;
+//            }
 
-                var abs_x_diff = Math.abs(x_diff);
-                var abs_y_diff = Math.abs(y_diff);
+            onPressed: {
+                start_x = mouseX;
+                start_y = mouseY;
+            }
 
-                if (abs_x_diff !== abs_y_diff) {
-                    if (abs_x_diff > abs_y_diff) {
-                        if (abs_x_diff > 50) {
-                            if (x_diff > 0) {
-                                if (prevEnabled) { galleryNavigation.previous(); }
-                            } else if (x_diff < 0) {
-                                galleryNavigation.next();
+            onPositionChanged: {
+                if (!isSlideshow && pinchArea.curScale == 1.0) {
+                    var x_diff = mouseX - start_x;
+                    var y_diff = mouseY - start_y;
+
+                    var abs_x_diff = Math.abs(x_diff);
+                    var abs_y_diff = Math.abs(y_diff);
+
+                    if (abs_x_diff !== abs_y_diff) {
+                        if (abs_x_diff > abs_y_diff) {
+                            if (abs_x_diff > 50) {
+                                if (x_diff > 0) {
+                                    if (prevEnabled) { galleryNavigation.previous(); }
+                                } else if (x_diff < 0) {
+                                    galleryNavigation.next();
+                                }
                             }
                         }
                     }
