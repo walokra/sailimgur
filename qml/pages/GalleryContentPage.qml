@@ -254,6 +254,30 @@ Page {
                 }
             } // galleryContentColumn
 
+            Column {
+                id: galleryLinkColumn;
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    leftMargin: constant.paddingMedium;
+                    topMargin: constant.paddingMedium;
+                }
+                height: childrenRect.height;
+
+                Row {
+                    id: linkRow;
+                    spacing: Theme.paddingMedium;
+
+                    Label {
+                        id: linkText;
+                        font.pixelSize: constant.fontSizeIgnore;
+                        text: "Gallery page: " + galleryContentModel.gallery_page_link;
+                        wrapMode: Text.Wrap;
+                        color: constant.colorHighlight;
+                    }
+                }
+            } // galleryLinkColumn
+
             Item {
                 id: pointsColumn;
                 anchors {

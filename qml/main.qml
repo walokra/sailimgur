@@ -48,7 +48,7 @@ ApplicationWindow {
 
     Rectangle {
         id: infoBanner;
-        y: Theme.paddingSmall;
+        y: 4 * Theme.paddingMedium;
         z: 1;
         width: parent.width;
 
@@ -65,7 +65,7 @@ ApplicationWindow {
             width: parent.width - 2 * Theme.paddingSmall
             anchors.top: parent.top;
             anchors.topMargin: Theme.paddingMedium;
-            y: Theme.paddingSmall;
+            y: 4 * Theme.paddingMedium;
             horizontalAlignment: Text.AlignHCenter;
             wrapMode: Text.WrapAnywhere;
 
