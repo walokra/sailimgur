@@ -12,9 +12,6 @@ Component {
         height: Math.max(image.height, 3 * loadingImageIndicator.height);
         width: Screen.width;
 
-        property int start_x;
-        property int start_y;
-
         AnimatedImage {
             id: image;
 

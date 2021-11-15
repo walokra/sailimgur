@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 
     SimpleCrypt *crypto = new SimpleCrypt();
     crypto->setKey(0xd2fa13b37d936b07);
+    //QString secret = crypto->encryptToString(QString(""));
+    //qDebug() << "secret:" << secret;
     QString client_secret = crypto->decryptToString(QString(CLIENT_SECRET));
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));

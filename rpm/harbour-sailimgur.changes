@@ -1,3 +1,6 @@
+* Mon Nov 15 2021 Marko Wallin <mtw@iki.fi> 0.11.1-1
+Fix video actions.
+
 * Mon Nov 15 2021 Marko Wallin <mtw@iki.fi> 0.11.0-1
 Fix animations (videos, gifs) behaviour, #28.
 Fix back button, #29.
