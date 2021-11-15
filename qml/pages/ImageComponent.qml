@@ -109,10 +109,10 @@ Component {
 
             anchors.fill: parent;
 
-//            onPressAndHold: {
-//                image.height = (image.height < drawerContextMenu.height) ? drawerContextMenu.height : image.height;
-//                drawer.open = true;
-//            }
+            onPressAndHold: {
+                image.height = (image.height < drawerContextMenu.height) ? drawerContextMenu.height : image.height;
+                drawer.open = true;
+            }
 
             onPressed: {
                 start_x = mouseX;

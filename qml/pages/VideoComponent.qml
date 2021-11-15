@@ -87,10 +87,10 @@ Component {
 
             anchors.fill: parent;
 
-//            onPressAndHold: {
-//                video.height = (video.height < drawerContextMenu.height) ? drawerContextMenu.height : video.height;
-//                drawer.open = true;
-//            }
+            onPressAndHold: {
+                video.height = (video.height < drawerContextMenu.height) ? drawerContextMenu.height : video.height;
+                drawer.open = true;
+            }
 
             onPressed: {
                 start_x = mouseX;

@@ -57,7 +57,7 @@ Item {
         Drawer {
             id: drawer;
             anchors.left: parent.left; anchors.right: parent.right;
-            dock: page.isPortrait ? Dock.Left : Dock.Bottom;
+            dock: Dock.Bottom;
             height: imageColumn.height;
             backgroundSize: parent.width / 5;
 
@@ -77,7 +77,7 @@ Item {
                 height: imageTitleText.height + ((imageLoader.active) ? imageLoader.height : videoLoader.height);
                 spacing: constant.paddingSmall;
 
-                enabled: !drawer.opened;
+                 enabled: !drawer.opened;
 
                 Label {
                     id: imageTitleText;
@@ -122,8 +122,6 @@ Item {
                 }
             }
         } // Drawer
-
-//        ImageButtons { }
 
         Label {
             id: imageDescText;
