@@ -1,3 +1,10 @@
+/*
+ * This file is part of harbour-sailimgur.
+ * SPDX-FileCopyrightText: 2025 Mirian Margiani
+ * SPDX-FileCopyrightText: 2014 Marko Wallin
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
@@ -7,10 +14,21 @@ Item {
     property Item contextMenu;
     property bool menuOpen: contextMenu != null && contextMenu.parent === galleryContentDelegate;
     property string contextLink;
-    property bool savingInProgress: false;
     property int itemIndex;
     property bool isSlideshow: false;
     property int totalImages: 0;
+
+    readonly property string downloadUrl: {
+        if (type == String("image/gif")
+                && size
+                && size.indexOf("MiB") > -1
+                && parseInt(size.replace(" MiB", "")) > settings.maxGifSize) {
+            return mp4
+        } else {
+            return link_original
+        }
+    }
+    property bool savingInProgress: sailimgurMgr.isDownloading(downloadUrl)
 
     width: albumListView.width;
     height: galleryContainer.height;

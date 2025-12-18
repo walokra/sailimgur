@@ -1,3 +1,10 @@
+/*
+ * This file is part of harbour-sailimgur.
+ * SPDX-FileCopyrightText: 2025 Mirian Margiani
+ * SPDX-FileCopyrightText: 2014 Marko Wallin
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
@@ -46,50 +53,15 @@ ApplicationWindow {
 
     AccountPage { id: accountPage; }
 
-    Rectangle {
-        id: infoBanner;
-        y: 4 * Theme.paddingMedium;
-        z: 1;
-        width: parent.width;
-
-        height: infoLabel.height + 2 * Theme.paddingMedium;
-        color: Theme.highlightBackgroundColor;
-        opacity: 0;
-        visible: false;
-
-        Label {
-            id: infoLabel;
-            text : ''
-            font.pixelSize: Screen.sizeCategory >= Screen.Large
-                                ? constant.fontSizeSmall : constant.fontSizeXSmall
-            width: parent.width - 2 * Theme.paddingSmall
-            anchors.top: parent.top;
-            anchors.topMargin: Theme.paddingMedium;
-            y: 4 * Theme.paddingMedium;
-            horizontalAlignment: Text.AlignHCenter;
-            wrapMode: Text.WrapAnywhere;
-
-            MouseArea {
-                anchors.fill: parent;
-                onClicked: {
-                    infoBanner.opacity = 0.0;
-                    infoBanner.visible = false;
-                }
-            }
-        }
+    QtObject {
+        id: infoBanner
 
         function showText(text) {
-            infoLabel.text = text;
-            opacity = 0.9;
-            infoBanner.visible = true;
-            //console.log("infoBanner: " + text);
-            closeTimer.restart();
+            Notices.show(text, 3000, Notice.Top)
         }
 
         function showError(errorMessage) {
-            infoLabel.text = errorMessage;
-            opacity = 0.9;
-            infoBanner.visible = true;
+            Notices.show(errorMessage, 3000, Notice.Center)
         }
 
         function showHttpError(errorCode, errorMessage) {
@@ -139,17 +111,6 @@ ApplicationWindow {
             }
             */
         }
-
-        Behavior on opacity { FadeAnimation {} }
-
-        Timer {
-            id: closeTimer;
-            interval: 3000;
-            onTriggered: {
-                infoBanner.opacity = 0.0;
-                infoBanner.visible = true;
-            }
-        }
     }
 
     Item {
@@ -173,9 +134,25 @@ ApplicationWindow {
         }
     }
 
+    Connections {
+        target: sailimgurMgr
+
+        onSaveImageSucceeded: {
+            Notices.show(qsTr("Image saved as “%1”").arg(name), 5000, Notice.Bottom)
+        }
+        onSaveImageFailed: {
+            Notices.show(qsTr("Failed to download “%1”").arg(name), 5000, Notice.Bottom)
+        }
+        onErrorImageExists: {
+            Notices.show(qsTr("Image already saved as “%1”").arg(name), 5000, Notice.Bottom)
+        }
+        onErrorSavingDisabled: {
+            // TODO recommend to check the logs
+            Notices.show(qsTr("Saving images is not possible"), 5000, Notice.Bottom)
+        }
+    }
+
     Component.onCompleted: {
         settings.loadSettings();
     }
 }
-
-

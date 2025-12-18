@@ -1,8 +1,15 @@
+/*
+ * This file is part of harbour-sailimgur.
+ * SPDX-FileCopyrightText: 2020-2025 Mirian Margiani
+ * SPDX-FileCopyrightText: 2014 Marko Wallin
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Row {
-    property var iconSize: Theme.itemSizeSmall;
+    readonly property int iconSize: Theme.itemSizeSmall;
 
     height: iconSize + 2 * Theme.paddingMedium;
 
@@ -14,40 +21,22 @@ Row {
 
     spacing: Theme.paddingLarge;
 
-    Component.onCompleted: {
-        sailimgurMgr.saveImageSucceeded.connect(internal.saveImageSucceeded);
-        sailimgurMgr.errorImageExists.connect(internal.errorImageExists);
-    }
-
     IconButton {
-        id: dlIcon;
-        icon.width: parent.iconSize;
-        icon.height: parent.iconSize;
-        icon.source: constant.iconSave;
+        id: dlIcon
 
-        visible: !savingInProgress
+        visible: sailimgurMgr.canDownload
+        enabled: visible && !savingInProgress
+
+        icon {
+            width: parent.iconSize
+            height: parent.iconSize
+            source: savingInProgress ? constant.iconSaving : constant.iconSave
+        }
 
         onClicked: {
             savingInProgress = true;
-            if (type === "image/gif" && size && size.indexOf("MiB") > -1) {
-                var sizeNo = size.replace(" MiB", "");
-                if (parseInt(sizeNo) > settings.maxGifSize) {
-                    sailimgurMgr.saveImage(mp4);
-                } else {
-                    sailimgurMgr.saveImage(link_original);
-                }
-            } else {
-                sailimgurMgr.saveImage(link_original);
-            }
+            sailimgurMgr.saveImage(downloadUrl)
         }
-    }
-
-    IconButton {
-        icon.width: parent.iconSize;
-        icon.height: parent.iconSize;
-        icon.source: constant.iconSaving;
-
-        visible: savingInProgress;
     }
 
     IconButton {
@@ -99,24 +88,11 @@ Row {
         }
     }
 
-    QtObject {
-        id: internal;
-
-        function saveImageSucceeded(name) {
-            if (infoBanner) {
-                infoBanner.showText("Image saved as " + name);
-            }
-            savingInProgress = false;
-            // FIXME: TypeError: Cannot read property of null
-//            dlIcon.icon.source = constant.iconSaveDone;
-        }
-        function errorImageExists(name) {
-            if (infoBanner) {
-                infoBanner.showText("Image already saved as " + name);
-            }
-            savingInProgress = false;
-//            dlIcon.icon.source = constant.iconSaveDone;
-        }
+    Connections {
+        target: sailimgurMgr
+        onSaveImageSucceeded: if (url == downloadUrl) savingInProgress = false
+        onSaveImageFailed: if (url == downloadUrl) savingInProgress = false
+        onErrorImageExists: if (url == downloadUrl) savingInProgress = false
+        onErrorSavingDisabled: if (url == downloadUrl) savingInProgress = false
     }
-
 }

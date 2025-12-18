@@ -4,3 +4,8 @@ X-Nemo-Application-Type=silica-qt5
 Name=Sailimgur
 Icon=harbour-sailimgur
 Exec=harbour-sailimgur
+
+[X-Sailjail]
+Permissions=Internet;Pictures
+OrganizationName=harbour-sailimgur
+ApplicationName=harbour-sailimgur

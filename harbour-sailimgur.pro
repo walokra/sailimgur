@@ -5,7 +5,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_RELEASE=\\\"$$RELEASE\\\"
 
 # Qt Library
-QT += svg network multimedia
+QT += svg network multimedia concurrent
 
 appicons.path = /usr/share/icons/hicolor
 appicons.files = appicons/*
